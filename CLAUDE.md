@@ -41,3 +41,4 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - State stores: `src/stores/` (using Pinia composition API)
 - Testing: Unit tests with Vitest, E2E tests with Playwright
 - PWA enabled with auto-update registration
+- Always run 'npm run format' after changing the code. You don't need to do it for every file changed, but at least once you finish all changes you need.

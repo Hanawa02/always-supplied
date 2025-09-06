@@ -12,10 +12,22 @@ export const ROUTES = {
     path: '/theme-preview',
     component: () => import('~/views/ThemePreview.vue'),
   },
+  SUPPLY_CONFIGURATION: {
+    name: 'SupplyConfiguration',
+    path: '/app/supply-configuration',
+    component: () => import('~/views/SupplyConfiguration.vue'),
+  },
 } as const satisfies Record<string, RouteInfo>
 
-// Generate routes array from ROUTES
-export const routes = Object.values(ROUTES)
+// Generate routes array from ROUTES and add redirect
+export const routes = [
+  ...Object.values(ROUTES),
+  // Redirect root to supply configuration
+  {
+    path: '/',
+    redirect: ROUTES.SUPPLY_CONFIGURATION.path,
+  },
+]
 
 // TypeScript types for type safety
 export type RouteName = typeof ROUTES[keyof typeof ROUTES]['name']

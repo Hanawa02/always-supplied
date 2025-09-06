@@ -17,12 +17,14 @@ export function useTypedRouter() {
 
   // Helper functions for specific routes
   const goToThemePreview = () => navigateToRoute(ROUTES.THEME_PREVIEW.name)
+  const goToSupplyConfiguration = () => navigateToRoute(ROUTES.SUPPLY_CONFIGURATION.name)
 
   return {
     router,
     navigateToRoute,
     navigateToPath,
     goToThemePreview,
+    goToSupplyConfiguration,
     // Export routes for direct access
     ROUTES,
   }
