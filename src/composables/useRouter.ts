@@ -1,0 +1,29 @@
+import { useRouter as useVueRouter } from 'vue-router'
+
+import { ROUTES, type RouteName, type RoutePath } from '~/router/routes'
+
+export function useTypedRouter() {
+  const router = useVueRouter()
+
+  // Type-safe navigation by route name
+  const navigateToRoute = (name: RouteName, params?: Record<string, string>) => {
+    return router.push({ name, params })
+  }
+
+  // Type-safe navigation by path
+  const navigateToPath = (path: RoutePath) => {
+    return router.push(path)
+  }
+
+  // Helper functions for specific routes
+  const goToThemePreview = () => navigateToRoute(ROUTES.THEME_PREVIEW.name)
+
+  return {
+    router,
+    navigateToRoute,
+    navigateToPath,
+    goToThemePreview,
+    // Export routes for direct access
+    ROUTES,
+  }
+}
