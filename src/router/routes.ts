@@ -8,14 +8,14 @@ export interface RouteInfo {
 // Centralized route information
 export const ROUTES = {
   THEME_PREVIEW: {
-    name: 'ThemePreview',
-    path: '/theme-preview',
-    component: () => import('~/views/ThemePreview.vue'),
+    name: "ThemePreview",
+    path: "/theme-preview",
+    component: () => import("~/views/ThemePreview.vue"),
   },
   SUPPLY_CONFIGURATION: {
-    name: 'SupplyConfiguration',
-    path: '/app/supply-configuration',
-    component: () => import('~/views/SupplyConfiguration.vue'),
+    name: "SupplyConfiguration",
+    path: "/app/supply-configuration",
+    component: () => import("~/views/SupplyConfiguration.vue"),
   },
 } as const satisfies Record<string, RouteInfo>
 
@@ -24,11 +24,11 @@ export const routes = [
   ...Object.values(ROUTES),
   // Redirect root to supply configuration
   {
-    path: '/',
+    path: "/",
     redirect: ROUTES.SUPPLY_CONFIGURATION.path,
   },
 ]
 
 // TypeScript types for type safety
-export type RouteName = typeof ROUTES[keyof typeof ROUTES]['name']
-export type RoutePath = typeof ROUTES[keyof typeof ROUTES]['path']
+export type RouteName = (typeof ROUTES)[keyof typeof ROUTES]["name"]
+export type RoutePath = (typeof ROUTES)[keyof typeof ROUTES]["path"]

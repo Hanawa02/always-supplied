@@ -3,18 +3,22 @@
     <!-- Header -->
     <div class="bg-white border-b border-gray-200">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-4 sm:h-16 sm:py-0">
+        <div
+          class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-4 sm:h-16 sm:py-0"
+        >
           <div class="flex items-center">
             <i class="i-mdi:package-variant text-primary-600 text-2xl mr-3"></i>
-            <h1 class="text-xl sm:text-2xl font-bold text-gray-900">Supply Configuration</h1>
+            <h1 class="text-xl sm:text-2xl font-bold text-gray-900">
+              {{ m.supply_configuration.title() }}
+            </h1>
           </div>
           <button
             @click="showCreateModal = true"
             class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg font-medium flex items-center justify-center space-x-2 transition-colors"
           >
             <i class="i-mdi:plus text-lg"></i>
-            <span class="hidden sm:inline">Add Supply Item</span>
-            <span class="sm:hidden">Add Item</span>
+            <span class="hidden sm:inline">{{ m.supply_configuration.add_supply_item() }}</span>
+            <span class="sm:hidden">{{ m.supply_configuration.add_item_short() }}</span>
           </button>
         </div>
       </div>
@@ -28,7 +32,9 @@
           <div class="bg-white rounded-lg border border-gray-200 p-4">
             <div class="flex items-center">
               <div class="flex-1">
-                <p class="text-sm font-medium text-gray-600">Total Items</p>
+                <p class="text-sm font-medium text-gray-600">
+                  {{ m.supply_configuration.total_items() }}
+                </p>
                 <p class="text-2xl font-bold text-gray-900">{{ totalItems }}</p>
               </div>
               <div class="ml-4">
@@ -48,9 +54,9 @@
               <input
                 v-model="searchQuery"
                 type="text"
-                placeholder="Search supply items..."
+                :placeholder="m.supply_configuration.search_placeholder()"
                 class="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-              >
+              />
             </div>
           </div>
 
@@ -60,7 +66,7 @@
               v-model="selectedCategory"
               class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
             >
-              <option value="">All Categories</option>
+              <option value="">{{ m.supply_configuration.all_categories() }}</option>
               <option v-for="category in categories" :key="category" :value="category">
                 {{ category }}
               </option>
@@ -81,7 +87,9 @@
             <div class="flex items-start justify-between mb-4">
               <div class="flex-1">
                 <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ item.name }}</h3>
-                <p v-if="item.description" class="text-sm text-gray-600 mb-2">{{ item.description }}</p>
+                <p v-if="item.description" class="text-sm text-gray-600 mb-2">
+                  {{ item.description }}
+                </p>
               </div>
               <div class="ml-4 flex space-x-1">
                 <button
@@ -105,21 +113,31 @@
             <div class="space-y-3">
               <!-- Quantity -->
               <div class="flex items-center justify-between">
-                <span class="text-sm font-medium text-gray-700">Quantity:</span>
+                <span class="text-sm font-medium text-gray-700"
+                  >{{ m.supply_configuration.item.quantity() }}:</span
+                >
                 <span class="text-lg font-bold text-primary-600">{{ item.quantity }}</span>
               </div>
 
               <!-- Category & Storage Room -->
               <div class="grid grid-cols-2 gap-4">
                 <div v-if="item.category">
-                  <span class="text-xs text-gray-500">Category</span>
-                  <div class="bg-primary-50 text-primary-700 px-2 py-1 rounded-full text-xs font-medium mt-1">
+                  <span class="text-xs text-gray-500">{{
+                    m.supply_configuration.item.category()
+                  }}</span>
+                  <div
+                    class="bg-primary-50 text-primary-700 px-2 py-1 rounded-full text-xs font-medium mt-1"
+                  >
                     {{ item.category }}
                   </div>
                 </div>
                 <div v-if="item.storageRoom">
-                  <span class="text-xs text-gray-500">Storage</span>
-                  <div class="bg-info-50 text-info-700 px-2 py-1 rounded-full text-xs font-medium mt-1">
+                  <span class="text-xs text-gray-500">{{
+                    m.supply_configuration.item.storage()
+                  }}</span>
+                  <div
+                    class="bg-info-50 text-info-700 px-2 py-1 rounded-full text-xs font-medium mt-1"
+                  >
                     {{ item.storageRoom }}
                   </div>
                 </div>
@@ -128,14 +146,18 @@
               <!-- Shopping Hint -->
               <div v-if="item.shoppingHint" class="bg-warning-50 p-3 rounded-lg">
                 <div class="flex items-start">
-                  <i class="i-mdi:lightbulb-outline text-warning-600 text-sm mt-0.5 mr-2 flex-shrink-0"></i>
+                  <i
+                    class="i-mdi:lightbulb-outline text-warning-600 text-sm mt-0.5 mr-2 flex-shrink-0"
+                  ></i>
                   <p class="text-xs text-warning-700">{{ item.shoppingHint }}</p>
                 </div>
               </div>
 
               <!-- Preferred Brands -->
               <div v-if="item.preferredBrands && item.preferredBrands.length > 0">
-                <span class="text-xs text-gray-500 mb-2 block">Preferred Brands</span>
+                <span class="text-xs text-gray-500 mb-2 block">{{
+                  m.supply_configuration.item.preferred_brands()
+                }}</span>
                 <div class="flex flex-wrap gap-1">
                   <span
                     v-for="brand in item.preferredBrands"
@@ -152,25 +174,32 @@
       </div>
 
       <!-- Empty State -->
-      <div
-        v-if="filteredItems.length === 0"
-        class="text-center py-12"
-      >
-        <div class="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+      <div v-if="filteredItems.length === 0" class="text-center py-12">
+        <div
+          class="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4"
+        >
           <i class="i-mdi:package-variant-closed text-gray-400 text-4xl"></i>
         </div>
         <h3 class="text-lg font-medium text-gray-900 mb-2">
-          {{ searchQuery || selectedCategory ? 'No items found' : 'No supply items yet' }}
+          {{
+            searchQuery || selectedCategory
+              ? m.supply_configuration.empty_state.no_items_found_title()
+              : m.supply_configuration.empty_state.no_items_title()
+          }}
         </h3>
         <p class="text-gray-600 mb-6">
-          {{ searchQuery || selectedCategory ? 'Try adjusting your search or filters.' : 'Start by adding your first supply item.' }}
+          {{
+            searchQuery || selectedCategory
+              ? m.supply_configuration.empty_state.no_items_found_description()
+              : m.supply_configuration.empty_state.no_items_description()
+          }}
         </p>
         <button
           v-if="!searchQuery && !selectedCategory"
           @click="showCreateModal = true"
           class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-lg font-medium"
         >
-          Add Your First Item
+          {{ m.supply_configuration.empty_state.add_first_item() }}
         </button>
       </div>
     </div>
@@ -194,12 +223,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed } from "vue"
 
-import DeleteConfirmationModal from '~/components/DeleteConfirmationModal.vue'
-import SupplyItemModal from '~/components/SupplyItemModal.vue'
-import { useSupplyItems } from '~/composables/useSupplyItems'
-import type { SupplyItem, CreateSupplyItem, UpdateSupplyItem } from '~/types/supply'
+import DeleteConfirmationModal from "~/components/DeleteConfirmationModal.vue"
+import SupplyItemModal from "~/components/SupplyItemModal.vue"
+import { useI18n } from "~/composables/useI18n"
+import { useSupplyItems } from "~/composables/useSupplyItems"
+import type { SupplyItem, CreateSupplyItem, UpdateSupplyItem } from "~/types/supply"
 
 const {
   supplyItems,
@@ -212,12 +242,14 @@ const {
   filterByCategory,
 } = useSupplyItems()
 
+const { m } = useI18n()
+
 // Local state
 const showCreateModal = ref(false)
 const editingItem = ref<SupplyItem | null>(null)
 const itemToDelete = ref<SupplyItem | null>(null)
-const searchQuery = ref('')
-const selectedCategory = ref('')
+const searchQuery = ref("")
+const selectedCategory = ref("")
 
 // Computed
 const filteredItems = computed(() => {
@@ -228,7 +260,7 @@ const filteredItems = computed(() => {
   }
 
   if (selectedCategory.value) {
-    items = items.filter(item => item.category === selectedCategory.value)
+    items = items.filter((item) => item.category === selectedCategory.value)
   }
 
   return items
@@ -259,7 +291,7 @@ const handleSave = async (itemData: CreateSupplyItem | UpdateSupplyItem) => {
     }
     closeModal()
   } catch (error) {
-    console.error('Failed to save item:', error)
+    console.error("Failed to save item:", error)
   }
 }
 
@@ -270,7 +302,7 @@ const handleDelete = async () => {
     await deleteSupplyItem(itemToDelete.value.id)
     itemToDelete.value = null
   } catch (error) {
-    console.error('Failed to delete item:', error)
+    console.error("Failed to delete item:", error)
   }
 }
 </script>

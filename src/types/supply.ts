@@ -25,31 +25,31 @@ export interface UpdateSupplyItem extends Partial<CreateSupplyItem> {
 
 // Common categories for supply items
 export const COMMON_CATEGORIES = [
-  'Cleaning Supplies',
-  'Personal Care',
-  'Food & Beverages',
-  'Paper Products',
-  'Health & Medicine',
-  'Laundry & Fabric Care',
-  'Office Supplies',
-  'Maintenance & Tools',
-  'Pet Supplies',
-  'Other',
+  "Cleaning Supplies",
+  "Personal Care",
+  "Food & Beverages",
+  "Paper Products",
+  "Health & Medicine",
+  "Laundry & Fabric Care",
+  "Office Supplies",
+  "Maintenance & Tools",
+  "Pet Supplies",
+  "Other",
 ] as const
 
 // Common storage rooms
 export const COMMON_STORAGE_ROOMS = [
-  'Kitchen',
-  'Bathroom',
-  'Bedroom',
-  'Living Room',
-  'Garage',
-  'Pantry',
-  'Closet',
-  'Office',
-  'Storage Room',
-  'Other',
+  "Kitchen",
+  "Bathroom",
+  "Bedroom",
+  "Living Room",
+  "Garage",
+  "Pantry",
+  "Closet",
+  "Office",
+  "Storage Room",
+  "Other",
 ] as const
 
-export type Category = typeof COMMON_CATEGORIES[number]
-export type StorageRoom = typeof COMMON_STORAGE_ROOMS[number]
+export type Category = (typeof COMMON_CATEGORIES)[number]
+export type StorageRoom = (typeof COMMON_STORAGE_ROOMS)[number]

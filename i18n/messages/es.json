@@ -1,0 +1,92 @@
+{
+  "app": {
+    "name": "Siempre Abastecido",
+    "navigation": {
+      "supply_configuration": "Configuración de Suministros",
+      "theme_preview": "Vista Previa del Tema"
+    }
+  },
+  "supply_configuration": {
+    "title": "Configuración de Suministros",
+    "add_supply_item": "Agregar Artículo",
+    "add_item_short": "Agregar",
+    "total_items": "Total de Artículos",
+    "search_placeholder": "Buscar artículos...",
+    "all_categories": "Todas las Categorías",
+    "empty_state": {
+      "no_items_title": "Sin artículos aún",
+      "no_items_description": "Comienza agregando tu primer artículo.",
+      "no_items_found_title": "No se encontraron artículos",
+      "no_items_found_description": "Intenta ajustar tu búsqueda o filtros.",
+      "add_first_item": "Agregar Primer Artículo"
+    },
+    "item": {
+      "edit_tooltip": "Editar artículo",
+      "delete_tooltip": "Eliminar artículo",
+      "quantity": "Cantidad",
+      "category": "Categoría",
+      "storage": "Almacén",
+      "preferred_brands": "Marcas Preferidas"
+    }
+  },
+  "supply_item_modal": {
+    "title_add": "Agregar Artículo",
+    "title_edit": "Editar Artículo",
+    "name_label": "Nombre",
+    "name_placeholder": "ej., Toallas de Papel",
+    "description_label": "Descripción",
+    "description_placeholder": "Breve descripción del artículo...",
+    "quantity_label": "Cantidad",
+    "quantity_placeholder": "0",
+    "category_label": "Categoría",
+    "category_placeholder": "Seleccionar categoría",
+    "category_custom": "+ Agregar categoría personalizada",
+    "category_custom_placeholder": "Ingrese categoría personalizada...",
+    "storage_room_label": "Cuarto de Almacén",
+    "storage_room_placeholder": "Seleccionar cuarto",
+    "storage_room_custom": "+ Agregar cuarto personalizado",
+    "storage_room_custom_placeholder": "Ingrese cuarto personalizado...",
+    "shopping_hint_label": "Consejo de Compra",
+    "shopping_hint_placeholder": "Instrucciones especiales para comprar...",
+    "preferred_brands_label": "Marcas Preferidas",
+    "preferred_brands_placeholder": "Agregar una marca...",
+    "required_field": "*",
+    "cancel": "Cancelar",
+    "create_item": "Crear Artículo",
+    "update_item": "Actualizar Artículo",
+    "validation": {
+      "name_required": "El nombre del artículo es obligatorio y no puede estar vacío.",
+      "quantity_negative": "La cantidad no puede ser negativa."
+    }
+  },
+  "delete_confirmation": {
+    "title": "Eliminar Artículo",
+    "message": "¿Estás seguro de que quieres eliminar \"{itemName}\"? Esta acción no se puede deshacer.",
+    "cancel": "Cancelar",
+    "delete": "Eliminar"
+  },
+  "categories": {
+    "cleaning_supplies": "Productos de Limpieza",
+    "personal_care": "Cuidado Personal",
+    "food_beverages": "Alimentos y Bebidas",
+    "paper_products": "Productos de Papel",
+    "health_medicine": "Salud y Medicina",
+    "laundry_fabric_care": "Cuidado de Ropa",
+    "office_supplies": "Suministros de Oficina",
+    "maintenance_tools": "Herramientas de Mantenimiento",
+    "pet_supplies": "Suministros para Mascotas",
+    "other": "Otro"
+  },
+  "storage_rooms": {
+    "kitchen": "Cocina",
+    "bathroom": "Baño",
+    "bedroom": "Dormitorio",
+    "living_room": "Sala de Estar",
+    "garage": "Garaje",
+    "pantry": "Despensa",
+    "closet": "Armario",
+    "office": "Oficina",
+    "storage_room": "Cuarto de Almacén",
+    "other": "Otro"
+  }
+}

@@ -2,18 +2,20 @@
   <div class="fixed inset-0 z-50 overflow-y-auto">
     <div class="flex min-h-full items-center justify-center p-4 text-center">
       <!-- Background overlay -->
-      <div 
+      <div
         class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
         @click="emit('close')"
       ></div>
 
       <!-- Modal panel -->
-      <div class="relative w-full max-w-lg transform overflow-hidden rounded-lg bg-white p-6 text-left shadow-xl transition-all">
+      <div
+        class="relative w-full max-w-lg transform overflow-hidden rounded-lg bg-white p-6 text-left shadow-xl transition-all"
+      >
         <!-- Header -->
         <div class="mb-6">
           <div class="flex items-center justify-between">
             <h3 class="text-lg font-semibold text-gray-900">
-              {{ isEditing ? 'Edit Supply Item' : 'Add Supply Item' }}
+              {{ isEditing ? "Edit Supply Item" : "Add Supply Item" }}
             </h3>
             <button
               @click="emit('close')"
@@ -38,7 +40,7 @@
               required
               placeholder="e.g., Paper Towels"
               class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-            >
+            />
           </div>
 
           <!-- Description -->
@@ -68,7 +70,7 @@
               required
               placeholder="0"
               class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-            >
+            />
           </div>
 
           <!-- Category and Storage Room -->
@@ -99,7 +101,7 @@
                   class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   @blur="handleCustomCategory"
                   @keyup.enter="handleCustomCategory"
-                >
+                />
               </div>
             </div>
 
@@ -129,7 +131,7 @@
                   class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   @blur="handleCustomStorageRoom"
                   @keyup.enter="handleCustomStorageRoom"
-                >
+                />
               </div>
             </div>
           </div>
@@ -150,12 +152,13 @@
 
           <!-- Preferred Brands -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              Preferred Brands
-            </label>
+            <label class="block text-sm font-medium text-gray-700 mb-2"> Preferred Brands </label>
             <div class="space-y-2">
               <!-- Existing brands -->
-              <div v-if="form.preferredBrands && form.preferredBrands.length > 0" class="flex flex-wrap gap-2">
+              <div
+                v-if="form.preferredBrands && form.preferredBrands.length > 0"
+                class="flex flex-wrap gap-2"
+              >
                 <div
                   v-for="(brand, index) in form.preferredBrands"
                   :key="index"
@@ -171,7 +174,7 @@
                   </button>
                 </div>
               </div>
-              
+
               <!-- Add new brand -->
               <div class="flex space-x-2">
                 <input
@@ -180,7 +183,7 @@
                   placeholder="Add a brand..."
                   class="flex-1 px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   @keyup.enter="addBrand"
-                >
+                />
                 <button
                   type="button"
                   @click="addBrand"
@@ -206,7 +209,7 @@
               type="submit"
               class="px-4 py-2 text-sm font-medium text-white bg-primary-500 hover:bg-primary-600 rounded-lg transition-colors"
             >
-              {{ isEditing ? 'Update Item' : 'Create Item' }}
+              {{ isEditing ? "Update Item" : "Create Item" }}
             </button>
           </div>
         </form>
@@ -216,10 +219,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted } from "vue"
 
-import { COMMON_CATEGORIES, COMMON_STORAGE_ROOMS } from '~/types/supply'
-import type { SupplyItem, CreateSupplyItem, UpdateSupplyItem } from '~/types/supply'
+import { COMMON_CATEGORIES, COMMON_STORAGE_ROOMS } from "~/types/supply"
+import type { SupplyItem, CreateSupplyItem, UpdateSupplyItem } from "~/types/supply"
 
 interface Props {
   item?: SupplyItem | null
@@ -234,20 +237,20 @@ const emit = defineEmits<{
 
 // Form state
 const form = reactive<CreateSupplyItem>({
-  name: '',
-  description: '',
+  name: "",
+  description: "",
   quantity: 0,
-  category: '',
-  storageRoom: '',
-  shoppingHint: '',
+  category: "",
+  storageRoom: "",
+  shoppingHint: "",
   preferredBrands: [],
 })
 
-const newBrand = ref('')
+const newBrand = ref("")
 const categorySelectMode = ref(true)
 const storageSelectMode = ref(true)
-const customCategory = ref('')
-const customStorageRoom = ref('')
+const customCategory = ref("")
+const customStorageRoom = ref("")
 
 // Computed
 const isEditing = computed(() => !!props.item)
@@ -258,7 +261,7 @@ const addBrand = () => {
   if (brand && !form.preferredBrands?.includes(brand)) {
     if (!form.preferredBrands) form.preferredBrands = []
     form.preferredBrands.push(brand)
-    newBrand.value = ''
+    newBrand.value = ""
   }
 }
 
@@ -273,9 +276,9 @@ const handleCustomCategory = () => {
   if (category) {
     form.category = category
     categorySelectMode.value = true
-    customCategory.value = ''
+    customCategory.value = ""
   } else {
-    form.category = ''
+    form.category = ""
     categorySelectMode.value = true
   }
 }
@@ -285,9 +288,9 @@ const handleCustomStorageRoom = () => {
   if (room) {
     form.storageRoom = room
     storageSelectMode.value = true
-    customStorageRoom.value = ''
+    customStorageRoom.value = ""
   } else {
-    form.storageRoom = ''
+    form.storageRoom = ""
     storageSelectMode.value = true
   }
 }
@@ -296,12 +299,12 @@ const handleSubmit = () => {
   // Validate required fields
   const trimmedName = form.name?.trim()
   if (!trimmedName) {
-    alert('Item name is required and cannot be empty or just spaces.')
+    alert("Item name is required and cannot be empty or just spaces.")
     return
   }
 
   if (form.quantity < 0) {
-    alert('Quantity cannot be negative.')
+    alert("Quantity cannot be negative.")
     return
   }
 
@@ -313,7 +316,7 @@ const handleSubmit = () => {
     category: form.category?.trim() || undefined,
     storageRoom: form.storageRoom?.trim() || undefined,
     shoppingHint: form.shoppingHint?.trim() || undefined,
-    preferredBrands: form.preferredBrands?.filter(brand => brand.trim()) || undefined,
+    preferredBrands: form.preferredBrands?.filter((brand) => brand.trim()) || undefined,
   }
 
   if (isEditing.value && props.item) {
@@ -322,9 +325,9 @@ const handleSubmit = () => {
       id: props.item.id,
       ...itemData,
     }
-    emit('save', updateData)
+    emit("save", updateData)
   } else {
-    emit('save', itemData)
+    emit("save", itemData)
   }
 }
 
@@ -333,22 +336,22 @@ onMounted(() => {
   if (props.item) {
     Object.assign(form, {
       name: props.item.name,
-      description: props.item.description || '',
+      description: props.item.description || "",
       quantity: props.item.quantity,
-      category: props.item.category || '',
-      storageRoom: props.item.storageRoom || '',
-      shoppingHint: props.item.shoppingHint || '',
+      category: props.item.category || "",
+      storageRoom: props.item.storageRoom || "",
+      shoppingHint: props.item.shoppingHint || "",
       preferredBrands: [...(props.item.preferredBrands || [])],
     })
-    
+
     // Check if existing category/storage room are custom (not in predefined lists)
     if (props.item.category && !COMMON_CATEGORIES.includes(props.item.category as any)) {
       // This is a custom category, keep it in the form but select mode stays true
       categorySelectMode.value = true
     }
-    
+
     if (props.item.storageRoom && !COMMON_STORAGE_ROOMS.includes(props.item.storageRoom as any)) {
-      // This is a custom storage room, keep it in the form but select mode stays true  
+      // This is a custom storage room, keep it in the form but select mode stays true
       storageSelectMode.value = true
     }
   }
