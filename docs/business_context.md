@@ -33,3 +33,7 @@ The shopping list is a list of all the supply items that currently need to be bo
 ## Shopping History
 
 The shopping history is a list of all the supplies that were ever bought, it also includes information about who bought which supply and when.
+
+## Usage
+
+The app will be mainly used by people on their mobile devices in places with poor to no internet connection (supermarkets).
