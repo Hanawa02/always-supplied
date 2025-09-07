@@ -95,14 +95,14 @@
                 <button
                   @click="editItem(item)"
                   class="p-2 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors flex items-center justify-center"
-                  title="Edit item"
+                  :title="m.supply_configuration.item.edit_tooltip()"
                 >
                   <i class="i-mdi:pencil text-lg"></i>
                 </button>
                 <button
                   @click="confirmDelete(item)"
                   class="p-2 text-gray-400 hover:text-danger-600 hover:bg-danger-50 rounded-lg transition-colors flex items-center justify-center"
-                  title="Delete item"
+                  :title="m.supply_configuration.item.delete_tooltip()"
                 >
                   <i class="i-mdi:delete text-lg"></i>
                 </button>

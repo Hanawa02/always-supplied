@@ -55,6 +55,8 @@ export function useI18n() {
       search_placeholder: (): string => m["supply_configuration.search_placeholder"](),
       all_categories: (): string => m["supply_configuration.all_categories"](),
       item: {
+        edit_tooltip: (): string => m["supply_configuration.item.edit_tooltip"](),
+        delete_tooltip: (): string => m["supply_configuration.item.delete_tooltip"](),
         quantity: (): string => m["supply_configuration.item.quantity"](),
         category: (): string => m["supply_configuration.item.category"](),
         storage: (): string => m["supply_configuration.item.storage"](),
@@ -69,6 +71,39 @@ export function useI18n() {
         no_items_found_description: (): string =>
           m["supply_configuration.empty_state.no_items_found_description"](),
         add_first_item: (): string => m["supply_configuration.empty_state.add_first_item"](),
+      },
+    },
+    supply_item_modal: {
+      title_add: (): string => m["supply_item_modal.title_add"](),
+      title_edit: (): string => m["supply_item_modal.title_edit"](),
+      name_label: (): string => m["supply_item_modal.name_label"](),
+      name_placeholder: (): string => m["supply_item_modal.name_placeholder"](),
+      description_label: (): string => m["supply_item_modal.description_label"](),
+      description_placeholder: (): string => m["supply_item_modal.description_placeholder"](),
+      quantity_label: (): string => m["supply_item_modal.quantity_label"](),
+      quantity_placeholder: (): string => m["supply_item_modal.quantity_placeholder"](),
+      category_label: (): string => m["supply_item_modal.category_label"](),
+      category_placeholder: (): string => m["supply_item_modal.category_placeholder"](),
+      category_custom: (): string => m["supply_item_modal.category_custom"](),
+      category_custom_placeholder: (): string =>
+        m["supply_item_modal.category_custom_placeholder"](),
+      storage_room_label: (): string => m["supply_item_modal.storage_room_label"](),
+      storage_room_placeholder: (): string => m["supply_item_modal.storage_room_placeholder"](),
+      storage_room_custom: (): string => m["supply_item_modal.storage_room_custom"](),
+      storage_room_custom_placeholder: (): string =>
+        m["supply_item_modal.storage_room_custom_placeholder"](),
+      shopping_hint_label: (): string => m["supply_item_modal.shopping_hint_label"](),
+      shopping_hint_placeholder: (): string => m["supply_item_modal.shopping_hint_placeholder"](),
+      preferred_brands_label: (): string => m["supply_item_modal.preferred_brands_label"](),
+      preferred_brands_placeholder: (): string =>
+        m["supply_item_modal.preferred_brands_placeholder"](),
+      required_field: (): string => m["supply_item_modal.required_field"](),
+      cancel: (): string => m["supply_item_modal.cancel"](),
+      create_item: (): string => m["supply_item_modal.create_item"](),
+      update_item: (): string => m["supply_item_modal.update_item"](),
+      validation: {
+        name_required: (): string => m["supply_item_modal.validation.name_required"](),
+        quantity_negative: (): string => m["supply_item_modal.validation.quantity_negative"](),
       },
     },
     delete_confirmation: {

@@ -3,38 +3,7 @@ import { computed, ref } from "vue"
 import type { CreateSupplyItem, SupplyItem, UpdateSupplyItem } from "~/types/supply"
 
 // Mock data for development (no storage as per requirements)
-const mockSupplyItems: SupplyItem[] = [
-  {
-    id: "1",
-    name: "Paper Towels",
-    description: "Absorbent paper towels for kitchen use",
-    quantity: 6,
-    category: "Paper Products",
-    storageRoom: "Kitchen",
-    shoppingHint: "Buy bulk pack for better value",
-    preferredBrands: ["Bounty", "Scott"],
-  },
-  {
-    id: "2",
-    name: "Dish Soap",
-    description: "Liquid dish soap for washing dishes",
-    quantity: 2,
-    category: "Cleaning Supplies",
-    storageRoom: "Kitchen",
-    shoppingHint: "Look for eco-friendly options",
-    preferredBrands: ["Dawn", "Palmolive"],
-  },
-  {
-    id: "3",
-    name: "Toilet Paper",
-    description: "Soft toilet paper rolls",
-    quantity: 12,
-    category: "Paper Products",
-    storageRoom: "Bathroom",
-    shoppingHint: "2-ply preferred",
-    preferredBrands: ["Charmin", "Cottonelle"],
-  },
-]
+const mockSupplyItems: SupplyItem[] = []
 
 export function useSupplyItems() {
   const supplyItems = ref<SupplyItem[]>([...mockSupplyItems])

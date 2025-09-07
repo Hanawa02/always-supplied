@@ -15,7 +15,7 @@
         <div class="mb-6">
           <div class="flex items-center justify-between">
             <h3 class="text-lg font-semibold text-gray-900">
-              {{ isEditing ? "Edit Supply Item" : "Add Supply Item" }}
+              {{ isEditing ? m.supply_item_modal.title_edit() : m.supply_item_modal.title_add() }}
             </h3>
             <button
               @click="emit('close')"
@@ -31,14 +31,15 @@
           <!-- Name (Required) -->
           <div>
             <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-              Name <span class="text-danger-500">*</span>
+              {{ m.supply_item_modal.name_label() }}
+              <span class="text-danger-500">{{ m.supply_item_modal.required_field() }}</span>
             </label>
             <input
               id="name"
               v-model="form.name"
               type="text"
               required
-              placeholder="e.g., Paper Towels"
+              :placeholder="m.supply_item_modal.name_placeholder()"
               class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
             />
           </div>
@@ -46,13 +47,13 @@
           <!-- Description -->
           <div>
             <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
-              Description
+              {{ m.supply_item_modal.description_label() }}
             </label>
             <textarea
               id="description"
               v-model="form.description"
               rows="3"
-              placeholder="Brief description of the item..."
+              :placeholder="m.supply_item_modal.description_placeholder()"
               class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
             ></textarea>
           </div>
@@ -60,7 +61,8 @@
           <!-- Quantity (Required) -->
           <div>
             <label for="quantity" class="block text-sm font-medium text-gray-700 mb-2">
-              Quantity <span class="text-danger-500">*</span>
+              {{ m.supply_item_modal.quantity_label() }}
+              <span class="text-danger-500">{{ m.supply_item_modal.required_field() }}</span>
             </label>
             <input
               id="quantity"
@@ -68,7 +70,7 @@
               type="number"
               min="0"
               required
-              placeholder="0"
+              :placeholder="m.supply_item_modal.quantity_placeholder()"
               class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
             />
           </div>
@@ -78,7 +80,7 @@
             <!-- Category -->
             <div>
               <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
-                Category
+                {{ m.supply_item_modal.category_label() }}
               </label>
               <div class="space-y-2">
                 <select
@@ -87,17 +89,17 @@
                   class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   @change="categorySelectMode = form.category !== 'custom'"
                 >
-                  <option value="">Select category</option>
+                  <option value="">{{ m.supply_item_modal.category_placeholder() }}</option>
                   <option v-for="category in COMMON_CATEGORIES" :key="category" :value="category">
                     {{ category }}
                   </option>
-                  <option value="custom">+ Add custom category</option>
+                  <option value="custom">{{ m.supply_item_modal.category_custom() }}</option>
                 </select>
                 <input
                   v-if="!categorySelectMode"
                   v-model="customCategory"
                   type="text"
-                  placeholder="Enter custom category..."
+                  :placeholder="m.supply_item_modal.category_custom_placeholder()"
                   class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   @blur="handleCustomCategory"
                   @keyup.enter="handleCustomCategory"
@@ -108,7 +110,7 @@
             <!-- Storage Room -->
             <div>
               <label for="storage-room" class="block text-sm font-medium text-gray-700 mb-2">
-                Storage Room
+                {{ m.supply_item_modal.storage_room_label() }}
               </label>
               <div class="space-y-2">
                 <select
@@ -117,17 +119,17 @@
                   class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   @change="storageSelectMode = form.storageRoom !== 'custom'"
                 >
-                  <option value="">Select storage room</option>
+                  <option value="">{{ m.supply_item_modal.storage_room_placeholder() }}</option>
                   <option v-for="room in COMMON_STORAGE_ROOMS" :key="room" :value="room">
                     {{ room }}
                   </option>
-                  <option value="custom">+ Add custom storage room</option>
+                  <option value="custom">{{ m.supply_item_modal.storage_room_custom() }}</option>
                 </select>
                 <input
                   v-if="!storageSelectMode"
                   v-model="customStorageRoom"
                   type="text"
-                  placeholder="Enter custom storage room..."
+                  :placeholder="m.supply_item_modal.storage_room_custom_placeholder()"
                   class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   @blur="handleCustomStorageRoom"
                   @keyup.enter="handleCustomStorageRoom"
@@ -139,20 +141,22 @@
           <!-- Shopping Hint -->
           <div>
             <label for="shopping-hint" class="block text-sm font-medium text-gray-700 mb-2">
-              Shopping Hint
+              {{ m.supply_item_modal.shopping_hint_label() }}
             </label>
             <textarea
               id="shopping-hint"
               v-model="form.shoppingHint"
               rows="2"
-              placeholder="Any special instructions for shopping..."
+              :placeholder="m.supply_item_modal.shopping_hint_placeholder()"
               class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
             ></textarea>
           </div>
 
           <!-- Preferred Brands -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2"> Preferred Brands </label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">{{
+              m.supply_item_modal.preferred_brands_label()
+            }}</label>
             <div class="space-y-2">
               <!-- Existing brands -->
               <div
@@ -180,7 +184,7 @@
                 <input
                   v-model="newBrand"
                   type="text"
-                  placeholder="Add a brand..."
+                  :placeholder="m.supply_item_modal.preferred_brands_placeholder()"
                   class="flex-1 px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   @keyup.enter="addBrand"
                 />
@@ -203,13 +207,15 @@
               @click="emit('close')"
               class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
             >
-              Cancel
+              {{ m.supply_item_modal.cancel() }}
             </button>
             <button
               type="submit"
               class="px-4 py-2 text-sm font-medium text-white bg-primary-500 hover:bg-primary-600 rounded-lg transition-colors"
             >
-              {{ isEditing ? "Update Item" : "Create Item" }}
+              {{
+                isEditing ? m.supply_item_modal.update_item() : m.supply_item_modal.create_item()
+              }}
             </button>
           </div>
         </form>
@@ -221,6 +227,7 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from "vue"
 
+import { useI18n } from "~/composables/useI18n"
 import type { CreateSupplyItem, SupplyItem, UpdateSupplyItem } from "~/types/supply"
 import { COMMON_CATEGORIES, COMMON_STORAGE_ROOMS } from "~/types/supply"
 
@@ -251,6 +258,9 @@ const categorySelectMode = ref(true)
 const storageSelectMode = ref(true)
 const customCategory = ref("")
 const customStorageRoom = ref("")
+
+// Initialize i18n
+const { m } = useI18n()
 
 // Computed
 const isEditing = computed(() => !!props.item)
@@ -299,12 +309,12 @@ const handleSubmit = () => {
   // Validate required fields
   const trimmedName = form.name?.trim()
   if (!trimmedName) {
-    alert("Item name is required and cannot be empty or just spaces.")
+    alert(m.supply_item_modal.validation.name_required())
     return
   }
 
   if (form.quantity < 0) {
-    alert("Quantity cannot be negative.")
+    alert(m.supply_item_modal.validation.quantity_negative())
     return
   }
 

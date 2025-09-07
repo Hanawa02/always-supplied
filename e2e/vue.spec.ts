@@ -4,5 +4,8 @@ import { expect,test } from '@playwright/test';
 // https://playwright.dev/docs/intro
 test('visits the app root url', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('h1')).toHaveText('You did it!');
+  // Check for the app header
+  await expect(page.getByRole('heading', { name: 'Always Supplied' })).toBeVisible();
+  // Check for the supply configuration page
+  await expect(page.getByRole('heading', { name: 'Supply Configuration' })).toBeVisible();
 })

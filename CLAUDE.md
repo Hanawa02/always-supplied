@@ -47,3 +47,5 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Testing: Unit tests with Vitest, E2E tests with Playwright
 - PWA enabled with auto-update registration
 - Always run 'npm run validate-code' after changing the code. You don't need to do it for every file changed, but at least once you finish all changes you need.
+- Css classes should not be used as selectors for tests
+- Whenever you do some task that involves generating code, follow the steps described in the file docs\task_flow.md

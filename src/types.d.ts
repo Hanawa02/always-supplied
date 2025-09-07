@@ -28,10 +28,38 @@ declare module "~i18n/generated/messages" {
     "supply_configuration.empty_state.no_items_found_title": MessageFunction
     "supply_configuration.empty_state.no_items_found_description": MessageFunction
     "supply_configuration.empty_state.add_first_item": MessageFunction
+    "supply_configuration.item.edit_tooltip": MessageFunction
+    "supply_configuration.item.delete_tooltip": MessageFunction
     "supply_configuration.item.quantity": MessageFunction
     "supply_configuration.item.category": MessageFunction
     "supply_configuration.item.storage": MessageFunction
     "supply_configuration.item.preferred_brands": MessageFunction
+    "supply_item_modal.title_add": MessageFunction
+    "supply_item_modal.title_edit": MessageFunction
+    "supply_item_modal.name_label": MessageFunction
+    "supply_item_modal.name_placeholder": MessageFunction
+    "supply_item_modal.description_label": MessageFunction
+    "supply_item_modal.description_placeholder": MessageFunction
+    "supply_item_modal.quantity_label": MessageFunction
+    "supply_item_modal.quantity_placeholder": MessageFunction
+    "supply_item_modal.category_label": MessageFunction
+    "supply_item_modal.category_placeholder": MessageFunction
+    "supply_item_modal.category_custom": MessageFunction
+    "supply_item_modal.category_custom_placeholder": MessageFunction
+    "supply_item_modal.storage_room_label": MessageFunction
+    "supply_item_modal.storage_room_placeholder": MessageFunction
+    "supply_item_modal.storage_room_custom": MessageFunction
+    "supply_item_modal.storage_room_custom_placeholder": MessageFunction
+    "supply_item_modal.shopping_hint_label": MessageFunction
+    "supply_item_modal.shopping_hint_placeholder": MessageFunction
+    "supply_item_modal.preferred_brands_label": MessageFunction
+    "supply_item_modal.preferred_brands_placeholder": MessageFunction
+    "supply_item_modal.required_field": MessageFunction
+    "supply_item_modal.cancel": MessageFunction
+    "supply_item_modal.create_item": MessageFunction
+    "supply_item_modal.update_item": MessageFunction
+    "supply_item_modal.validation.name_required": MessageFunction
+    "supply_item_modal.validation.quantity_negative": MessageFunction
     "delete_confirmation.title": MessageFunction
     "delete_confirmation.message": MessageFunctionWithParams<{ itemName: string }>
     "delete_confirmation.cancel": MessageFunction
