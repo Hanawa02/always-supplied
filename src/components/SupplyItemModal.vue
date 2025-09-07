@@ -322,7 +322,7 @@ const emit = defineEmits<{
 const form = reactive<CreateSupplyItem>({
   name: "",
   description: "",
-  quantity: 0,
+  quantity: 1,
   category: "",
   storageRoom: "",
   shoppingHint: "",
