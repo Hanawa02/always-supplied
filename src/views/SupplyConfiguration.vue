@@ -23,14 +23,14 @@
               </p>
             </div>
           </div>
-          <button
+          <BaseButton
+            variant="primary"
+            icon="i-mdi:plus"
             @click="showCreateModal = true"
-            class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg font-medium flex items-center justify-center space-x-2 transition-colors cursor-pointer"
           >
-            <i class="i-mdi:plus text-lg"></i>
             <span class="hidden sm:inline">{{ m.supply_configuration.add_supply_item() }}</span>
             <span class="sm:hidden">{{ m.supply_configuration.add_item_short() }}</span>
-          </button>
+          </BaseButton>
         </div>
       </div>
     </div>
@@ -40,21 +40,12 @@
       <div class="mb-6">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <!-- Stats Card -->
-          <div class="bg-white rounded-lg border border-gray-200 p-4">
-            <div class="flex items-center">
-              <div class="flex-1">
-                <p class="text-sm font-medium text-gray-600">
-                  {{ m.supply_configuration.total_items() }}
-                </p>
-                <p class="text-2xl font-bold text-gray-900">{{ totalItems }}</p>
-              </div>
-              <div class="ml-4">
-                <div class="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center">
-                  <i class="i-mdi:format-list-numbered text-primary-600"></i>
-                </div>
-              </div>
-            </div>
-          </div>
+          <StatsCard
+            :title="m.supply_configuration.total_items()"
+            :value="totalItems"
+            icon="i-mdi:format-list-numbered"
+            icon-color="primary"
+          />
 
           <!-- Search -->
           <div class="md:col-span-2">
@@ -88,131 +79,34 @@
 
       <!-- Supply Items Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div
+        <SupplyItemCard
           v-for="item in filteredItems"
           :key="item.id"
-          class="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
-        >
-          <div class="p-6">
-            <!-- Item Header -->
-            <div class="flex items-start justify-between mb-4">
-              <div class="flex-1">
-                <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ item.name }}</h3>
-                <p v-if="item.description" class="text-sm text-gray-600 mb-2">
-                  {{ item.description }}
-                </p>
-              </div>
-              <div class="ml-4 flex space-x-1">
-                <button
-                  @click="editItem(item)"
-                  class="p-2 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors flex items-center justify-center w-8 h-8 cursor-pointer"
-                  :title="m.supply_configuration.item.edit_tooltip()"
-                >
-                  <i class="i-mdi:pencil text-lg"></i>
-                </button>
-                <button
-                  @click="confirmDelete(item)"
-                  class="p-2 text-gray-400 hover:text-danger-600 hover:bg-danger-50 rounded-lg transition-colors flex items-center justify-center w-8 h-8 cursor-pointer"
-                  :title="m.supply_configuration.item.delete_tooltip()"
-                >
-                  <i class="i-mdi:delete text-lg"></i>
-                </button>
-              </div>
-            </div>
-
-            <!-- Item Details -->
-            <div class="space-y-3">
-              <!-- Quantity -->
-              <div class="flex items-center justify-between">
-                <span class="text-sm font-medium text-gray-700"
-                  >{{ m.supply_configuration.item.quantity() }}:</span
-                >
-                <span class="text-lg font-bold text-primary-600">{{ item.quantity }}</span>
-              </div>
-
-              <!-- Category & Storage Room -->
-              <div class="grid grid-cols-2 gap-4">
-                <div v-if="item.category">
-                  <span class="text-xs text-gray-500">{{
-                    m.supply_configuration.item.category()
-                  }}</span>
-                  <div
-                    class="bg-primary-50 text-primary-700 px-2 py-1 rounded-full text-xs font-medium mt-1"
-                  >
-                    {{ item.category }}
-                  </div>
-                </div>
-                <div v-if="item.storageRoom">
-                  <span class="text-xs text-gray-500">{{
-                    m.supply_configuration.item.storage()
-                  }}</span>
-                  <div
-                    class="bg-info-50 text-info-700 px-2 py-1 rounded-full text-xs font-medium mt-1"
-                  >
-                    {{ item.storageRoom }}
-                  </div>
-                </div>
-              </div>
-
-              <!-- Shopping Hint -->
-              <div v-if="item.shoppingHint" class="bg-warning-50 p-3 rounded-lg">
-                <div class="flex items-start">
-                  <i
-                    class="i-mdi:lightbulb-outline text-warning-600 text-sm mt-0.5 mr-2 flex-shrink-0"
-                  ></i>
-                  <p class="text-xs text-warning-700">{{ item.shoppingHint }}</p>
-                </div>
-              </div>
-
-              <!-- Preferred Brands -->
-              <div v-if="item.preferredBrands && item.preferredBrands.length > 0">
-                <span class="text-xs text-gray-500 mb-2 block">{{
-                  m.supply_configuration.item.preferred_brands()
-                }}</span>
-                <div class="flex flex-wrap gap-1">
-                  <span
-                    v-for="brand in item.preferredBrands"
-                    :key="brand"
-                    class="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs"
-                  >
-                    {{ brand }}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+          :item="item"
+          :edit-tooltip="m.supply_configuration.item.edit_tooltip()"
+          :delete-tooltip="m.supply_configuration.item.delete_tooltip()"
+          :quantity-label="m.supply_configuration.item.quantity()"
+          :category-label="m.supply_configuration.item.category()"
+          :storage-label="m.supply_configuration.item.storage()"
+          :preferred-brands-label="m.supply_configuration.item.preferred_brands()"
+          @edit="editItem"
+          @delete="confirmDelete"
+        />
       </div>
 
       <!-- Empty State -->
-      <div v-if="filteredItems.length === 0" class="text-center py-12">
-        <div
-          class="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4"
-        >
-          <i class="i-mdi:package-variant-closed text-gray-400 text-4xl"></i>
-        </div>
-        <h3 class="text-lg font-medium text-gray-900 mb-2">
-          {{
-            searchQuery || selectedCategory
-              ? m.supply_configuration.empty_state.no_items_found_title()
-              : m.supply_configuration.empty_state.no_items_title()
-          }}
-        </h3>
-        <p class="text-gray-600 mb-6">
-          {{
-            searchQuery || selectedCategory
-              ? m.supply_configuration.empty_state.no_items_found_description()
-              : m.supply_configuration.empty_state.no_items_description()
-          }}
-        </p>
-        <button
-          v-if="!searchQuery && !selectedCategory"
-          @click="showCreateModal = true"
-          class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-lg font-medium cursor-pointer"
-        >
-          {{ m.supply_configuration.empty_state.add_first_item() }}
-        </button>
-      </div>
+      <EmptyState
+        v-if="filteredItems.length === 0"
+        icon="i-mdi:package-variant-closed"
+        :title="searchQuery || selectedCategory
+          ? m.supply_configuration.empty_state.no_items_found_title()
+          : m.supply_configuration.empty_state.no_items_title()"
+        :description="searchQuery || selectedCategory
+          ? m.supply_configuration.empty_state.no_items_found_description()
+          : m.supply_configuration.empty_state.no_items_description()"
+        :action-label="!searchQuery && !selectedCategory ? m.supply_configuration.empty_state.add_first_item() : undefined"
+        @action="showCreateModal = true"
+      />
     </div>
 
     <!-- Create/Edit Modal -->
@@ -239,9 +133,13 @@ import { useRoute, useRouter } from "vue-router"
 
 import DeleteConfirmationModal from "~/components/DeleteConfirmationModal.vue"
 import SupplyItemModal from "~/components/SupplyItemModal.vue"
+import BaseButton from "~/components/ui/BaseButton.vue"
+import EmptyState from "~/components/ui/EmptyState.vue"
+import StatsCard from "~/components/ui/StatsCard.vue"
+import SupplyItemCard from "~/components/ui/SupplyItemCard.vue"
 import { useI18n } from "~/composables/useI18n"
-import { useSupplyItems } from "~/composables/useSupplyItems"
 import { useSuppliedBuildings } from "~/composables/useSuppliedBuildings"
+import { useSupplyItems } from "~/composables/useSupplyItems"
 import { ROUTES } from "~/router/routes"
 import { useSelectedBuildingStore } from "~/stores/selectedBuilding"
 import type { CreateSupplyItem, SupplyItem, UpdateSupplyItem } from "~/types/supply"

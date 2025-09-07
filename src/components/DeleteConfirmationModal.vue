@@ -30,18 +30,20 @@
 
         <!-- Actions -->
         <div class="flex space-x-3">
-          <button
+          <BaseButton
+            variant="secondary"
+            full-width
             @click="emit('cancel')"
-            class="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
           >
             {{ m.delete_confirmation.cancel() }}
-          </button>
-          <button
+          </BaseButton>
+          <BaseButton
+            variant="danger"
+            full-width
             @click="emit('confirm')"
-            class="flex-1 px-4 py-2 text-sm font-medium text-white bg-danger-500 hover:bg-danger-600 rounded-lg transition-colors cursor-pointer"
           >
             {{ m.delete_confirmation.delete() }}
-          </button>
+          </BaseButton>
         </div>
       </div>
     </div>
@@ -49,6 +51,7 @@
 </template>
 
 <script setup lang="ts">
+import BaseButton from "~/components/ui/BaseButton.vue"
 import { useI18n } from "~/composables/useI18n"
 
 interface Props {

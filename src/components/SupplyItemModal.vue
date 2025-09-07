@@ -278,21 +278,20 @@
 
           <!-- Actions -->
           <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
-            <button
-              type="button"
+            <BaseButton
+              variant="secondary"
               @click="emit('close')"
-              class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
             >
               {{ m.supply_item_modal.cancel() }}
-            </button>
-            <button
+            </BaseButton>
+            <BaseButton
+              variant="primary"
               type="submit"
-              class="px-4 py-2 text-sm font-medium text-white bg-primary-500 hover:bg-primary-600 rounded-lg transition-colors cursor-pointer"
             >
               {{
                 isEditing ? m.supply_item_modal.update_item() : m.supply_item_modal.create_item()
               }}
-            </button>
+            </BaseButton>
           </div>
         </form>
       </div>
@@ -303,6 +302,7 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from "vue"
 
+import BaseButton from "~/components/ui/BaseButton.vue"
 import { useI18n } from "~/composables/useI18n"
 import type { CreateSupplyItem, SupplyItem, UpdateSupplyItem } from "~/types/supply"
 import { COMMON_CATEGORIES, COMMON_STORAGE_ROOMS } from "~/types/supply"

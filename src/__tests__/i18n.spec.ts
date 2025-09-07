@@ -1,6 +1,6 @@
-import { describe, expect, it } from 'vitest'
 import fs from 'fs'
 import path from 'path'
+import { describe, expect, it } from 'vitest'
 
 // Helper function to extract all keys from a nested object
 function extractKeys(obj: any, prefix = ''): string[] {
@@ -34,7 +34,7 @@ function loadTranslations(locale: string): any {
 
 describe('Translation Key Consistency', () => {
   const supportedLocales = ['en', 'es', 'pt']
-  let translationKeys: Record<string, string[]> = {}
+  const translationKeys: Record<string, string[]> = {}
   
   // Load all translation files and extract their keys
   supportedLocales.forEach(locale => {

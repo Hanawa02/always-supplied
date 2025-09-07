@@ -60,19 +60,18 @@
 
           <!-- Actions -->
           <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
-            <button
-              type="button"
+            <BaseButton
+              variant="secondary"
               @click="emit('close')"
-              class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
             >
               {{ m.building_modal.cancel() }}
-            </button>
-            <button
+            </BaseButton>
+            <BaseButton
+              variant="primary"
               type="submit"
-              class="px-4 py-2 text-sm font-medium text-white bg-primary-500 hover:bg-primary-600 rounded-lg transition-colors cursor-pointer"
             >
               {{ isEditing ? m.building_modal.update_building() : m.building_modal.create_building() }}
-            </button>
+            </BaseButton>
           </div>
         </form>
       </div>
@@ -82,6 +81,8 @@
 
 <script setup lang="ts">
 import { computed, onMounted, reactive } from "vue"
+
+import BaseButton from "~/components/ui/BaseButton.vue"
 import { useI18n } from "~/composables/useI18n"
 import type { CreateSuppliedBuilding, SuppliedBuilding, UpdateSuppliedBuilding } from "~/types/suppliedBuilding"
 

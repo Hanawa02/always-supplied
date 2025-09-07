@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
+
 import type { SuppliedBuilding } from '~/types/suppliedBuilding'
 
 export const useSelectedBuildingStore = defineStore('selectedBuilding', () => {

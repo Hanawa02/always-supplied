@@ -9,13 +9,13 @@
           <h2 class="text-xl sm:text-2xl font-bold text-gray-900">
             {{ m.supplied_buildings.title() }}
           </h2>
-          <button
+          <BaseButton
+            variant="primary"
+            icon="i-mdi:plus"
             @click="showCreateModal = true"
-            class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg font-medium flex items-center justify-center space-x-2 transition-colors cursor-pointer"
           >
-            <i class="i-mdi:plus text-lg"></i>
-            <span>{{ m.supplied_buildings.add_building() }}</span>
-          </button>
+            {{ m.supplied_buildings.add_building() }}
+          </BaseButton>
         </div>
       </div>
     </div>
@@ -25,19 +25,12 @@
       <div class="mb-6">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <!-- Stats Card -->
-          <div class="bg-white rounded-lg border border-gray-200 p-4">
-            <div class="flex items-center">
-              <div class="flex-1">
-                <p class="text-sm font-medium text-gray-600">{{ m.supplied_buildings.total_buildings() }}</p>
-                <p class="text-2xl font-bold text-gray-900">{{ totalBuildings }}</p>
-              </div>
-              <div class="ml-4">
-                <div class="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center">
-                  <i class="i-mdi:office-building text-primary-600"></i>
-                </div>
-              </div>
-            </div>
-          </div>
+          <StatsCard
+            :title="m.supplied_buildings.total_buildings()"
+            :value="totalBuildings"
+            icon="i-mdi:office-building"
+            icon-color="primary"
+          />
 
           <!-- Search -->
           <div class="md:col-span-2">
@@ -58,86 +51,28 @@
 
       <!-- Buildings Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div
+        <BuildingCard
           v-for="building in filteredBuildings"
           :key="building.id"
-          class="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
-        >
-          <div class="p-6">
-            <!-- Building Header -->
-            <div class="flex items-start justify-between mb-4">
-              <div class="flex-1">
-                <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ building.name }}</h3>
-                <p v-if="building.description" class="text-sm text-gray-600 mb-2">
-                  {{ building.description }}
-                </p>
-              </div>
-              <div class="ml-4 flex space-x-1">
-                <button
-                  @click="viewSupplies(building)"
-                  class="p-2 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors flex items-center justify-center w-8 h-8 cursor-pointer"
-                  title="View supplies"
-                >
-                  <i class="i-mdi:package-variant text-lg"></i>
-                </button>
-                <button
-                  @click="editBuilding(building)"
-                  class="p-2 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors flex items-center justify-center w-8 h-8 cursor-pointer"
-                  title="Edit building"
-                >
-                  <i class="i-mdi:pencil text-lg"></i>
-                </button>
-                <button
-                  @click="confirmDelete(building)"
-                  class="p-2 text-gray-400 hover:text-danger-600 hover:bg-danger-50 rounded-lg transition-colors flex items-center justify-center w-8 h-8 cursor-pointer"
-                  title="Delete building"
-                >
-                  <i class="i-mdi:delete text-lg"></i>
-                </button>
-              </div>
-            </div>
-
-            <!-- Building Details -->
-            <div class="space-y-3">
-              <!-- Supply Count -->
-              <div class="flex items-center justify-between">
-                <span class="text-sm font-medium text-gray-700">{{ m.supplied_buildings.supplies_count() }}</span>
-                <span class="text-lg font-bold text-primary-600">{{ getSupplyCount(building.id) }}</span>
-              </div>
-
-              <!-- View Supplies Button -->
-              <button
-                @click="viewSupplies(building)"
-                class="w-full mt-4 bg-primary-50 hover:bg-primary-100 text-primary-700 px-4 py-2 rounded-lg font-medium transition-colors cursor-pointer"
-              >
-                {{ m.supplied_buildings.manage_supplies() }}
-              </button>
-            </div>
-          </div>
-        </div>
+          :building="building"
+          :supply-count="getSupplyCount(building.id)"
+          :supplies-count-label="m.supplied_buildings.supplies_count()"
+          :manage-supplies-label="m.supplied_buildings.manage_supplies()"
+          @view-supplies="viewSupplies"
+          @edit="editBuilding"
+          @delete="confirmDelete"
+        />
       </div>
 
       <!-- Empty State -->
-      <div v-if="filteredBuildings.length === 0" class="text-center py-12">
-        <div
-          class="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4"
-        >
-          <i class="i-mdi:office-building text-gray-400 text-4xl"></i>
-        </div>
-        <h3 class="text-lg font-medium text-gray-900 mb-2">
-          {{ searchQuery ? m.supplied_buildings.empty_state.no_buildings_found_title() : m.supplied_buildings.empty_state.no_buildings_title() }}
-        </h3>
-        <p class="text-gray-600 mb-6">
-          {{ searchQuery ? m.supplied_buildings.empty_state.no_buildings_found_description() : m.supplied_buildings.empty_state.no_buildings_description() }}
-        </p>
-        <button
-          v-if="!searchQuery"
-          @click="showCreateModal = true"
-          class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-lg font-medium cursor-pointer"
-        >
-          {{ m.supplied_buildings.add_first_building() }}
-        </button>
-      </div>
+      <EmptyState
+        v-if="filteredBuildings.length === 0"
+        icon="i-mdi:office-building"
+        :title="searchQuery ? m.supplied_buildings.empty_state.no_buildings_found_title() : m.supplied_buildings.empty_state.no_buildings_title()"
+        :description="searchQuery ? m.supplied_buildings.empty_state.no_buildings_found_description() : m.supplied_buildings.empty_state.no_buildings_description()"
+        :action-label="!searchQuery ? m.supplied_buildings.add_first_building() : undefined"
+        @action="showCreateModal = true"
+      />
     </div>
 
     <!-- Create/Edit Modal -->
@@ -164,6 +99,10 @@ import { useRouter } from 'vue-router'
 
 import DeleteConfirmationModal from '~/components/DeleteConfirmationModal.vue'
 import SuppliedBuildingModal from '~/components/SuppliedBuildingModal.vue'
+import BaseButton from '~/components/ui/BaseButton.vue'
+import BuildingCard from '~/components/ui/BuildingCard.vue'
+import EmptyState from '~/components/ui/EmptyState.vue'
+import StatsCard from '~/components/ui/StatsCard.vue'
 import { useI18n } from '~/composables/useI18n'
 import { useSuppliedBuildings } from '~/composables/useSuppliedBuildings'
 import { useSupplyItems } from '~/composables/useSupplyItems'

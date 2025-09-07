@@ -1,4 +1,5 @@
 import { computed, ref } from 'vue'
+
 import type { CreateSuppliedBuilding, SuppliedBuilding, UpdateSuppliedBuilding } from '~/types/suppliedBuilding'
 
 // In-memory storage (as per spec: no storage of data)
