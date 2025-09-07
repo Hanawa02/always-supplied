@@ -290,14 +290,49 @@ test.describe("Supply Configuration Page", () => {
 
     // Enter custom category
     await page.getByPlaceholder("Enter custom category...").fill("My Custom Category")
-    await page.getByPlaceholder("Enter custom category...").press("Enter")
+    
+    // Click the save button (checkmark icon)
+    await page.getByTitle("Save custom category").click()
 
-    // Submit form
+    // Submit the main form
     await page.getByRole("button", { name: "Create Item" }).click()
 
     // Verify item was created with custom category
     await expect(page.getByText("Custom Item")).toBeVisible()
-    await expect(page.getByText("My Custom Category")).toBeVisible()
+    // Check that the category appears in the item display (not the dropdown)
+    await expect(page.locator('div').filter({ hasText: /^My Custom Category$/ })).toBeVisible()
+  })
+
+  test("can add custom storage room", async ({ page }) => {
+    // Open modal
+    await page
+      .getByRole("button", { name: /Add.*item/i })
+      .first()
+      .click()
+
+    // Fill required fields
+    await page.getByLabel("Name", { exact: false }).fill("Storage Item")
+    await page.getByLabel("Quantity").fill("1")
+
+    // Select custom storage room option
+    await page.getByLabel("Storage Room").selectOption("custom")
+
+    // Custom storage room input should appear
+    await expect(page.getByPlaceholder("Enter custom storage room...")).toBeVisible()
+
+    // Enter custom storage room
+    await page.getByPlaceholder("Enter custom storage room...").fill("My Custom Storage")
+    
+    // Click the save button (checkmark icon)
+    await page.getByTitle("Save custom storage room").click()
+
+    // Submit the main form
+    await page.getByRole("button", { name: "Create Item" }).click()
+
+    // Verify item was created with custom storage room
+    await expect(page.getByText("Storage Item")).toBeVisible()
+    // Check that the storage room appears in the item display
+    await expect(page.locator('div').filter({ hasText: /^My Custom Storage$/ })).toBeVisible()
   })
 
   test("can manage preferred brands", async ({ page }) => {

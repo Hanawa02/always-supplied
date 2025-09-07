@@ -62,7 +62,18 @@
             <label for="quantity" class="block text-sm font-medium text-gray-700 mb-2">
               {{ m.supply_item_modal.quantity_label() }}
               <span class="text-danger-500">{{ m.supply_item_modal.required_field() }}</span>
+              <button
+                type="button"
+                @click="showQuantityHelp = !showQuantityHelp"
+                class="ml-1 text-gray-400 hover:text-gray-600 w-4 h-4 inline-flex items-center justify-center rounded-full hover:bg-gray-100 cursor-pointer"
+                :title="m.supply_item_modal.quantity_help()"
+              >
+                <i class="i-mdi:help-circle-outline text-xs"></i>
+              </button>
             </label>
+            <div v-if="showQuantityHelp" class="text-xs text-blue-600 bg-blue-50 p-2 rounded mb-2">
+              {{ m.supply_item_modal.quantity_help() }}
+            </div>
             <input
               id="quantity"
               v-model.number="form.quantity"
@@ -74,65 +85,106 @@
             />
           </div>
 
-          <!-- Category and Storage Room -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <!-- Category -->
-            <div>
-              <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
-                {{ m.supply_item_modal.category_label() }}
-              </label>
-              <div class="space-y-2">
+          <!-- Category -->
+          <div>
+            <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
+              {{ m.supply_item_modal.category_label() }}
+            </label>
+            <div class="space-y-2">
+              <!-- Category selector and custom input row -->
+              <div class="flex space-x-2">
                 <select
                   id="category"
                   v-model="form.category"
-                  class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                  @change="categorySelectMode = form.category !== 'custom'"
+                  :class="categorySelectMode ? 'flex-1' : 'w-36 flex-shrink-0'"
+                  class="px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  @change="handleCategoryChange"
                 >
                   <option value="">{{ m.supply_item_modal.category_placeholder() }}</option>
-                  <option v-for="category in COMMON_CATEGORIES" :key="category" :value="category">
+                  <option value="custom">{{ m.supply_item_modal.category_custom() }}</option>
+                  <option v-for="category in availableCategories" :key="category" :value="category">
                     {{ category }}
                   </option>
-                  <option value="custom">{{ m.supply_item_modal.category_custom() }}</option>
                 </select>
-                <input
-                  v-if="!categorySelectMode"
-                  v-model="customCategory"
-                  type="text"
-                  :placeholder="m.supply_item_modal.category_custom_placeholder()"
-                  class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                  @blur="handleCustomCategory"
-                  @keyup.enter="handleCustomCategory"
-                />
+                <!-- Inline custom input when custom is selected -->
+                <template v-if="!categorySelectMode">
+                  <input
+                    v-model="customCategory"
+                    type="text"
+                    :placeholder="m.supply_item_modal.category_custom_placeholder()"
+                    class="flex-1 px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    @keyup.enter="handleCustomCategory"
+                  />
+                  <button
+                    type="button"
+                    @click="handleCustomCategory"
+                    :disabled="!customCategory.trim()"
+                    class="bg-primary-100 hover:bg-primary-200 disabled:bg-gray-50 disabled:text-gray-400 text-primary-700 px-3 py-2 rounded-lg transition-colors flex items-center justify-center w-10 h-10 cursor-pointer disabled:cursor-not-allowed"
+                    title="Save custom category"
+                  >
+                    <i class="i-mdi:check text-lg"></i>
+                  </button>
+                  <button
+                    type="button"
+                    @click="cancelCustomCategory"
+                    class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-lg transition-colors flex items-center justify-center w-10 h-10 cursor-pointer"
+                    title="Cancel custom category creation"
+                  >
+                    <i class="i-mdi:close text-lg"></i>
+                  </button>
+                </template>
               </div>
             </div>
+          </div>
 
-            <!-- Storage Room -->
-            <div>
-              <label for="storage-room" class="block text-sm font-medium text-gray-700 mb-2">
-                {{ m.supply_item_modal.storage_room_label() }}
-              </label>
-              <div class="space-y-2">
+          <!-- Storage Room -->
+          <div>
+            <label for="storage-room" class="block text-sm font-medium text-gray-700 mb-2">
+              {{ m.supply_item_modal.storage_room_label() }}
+            </label>
+            <div class="space-y-2">
+              <!-- Storage room selector and custom input row -->
+              <div class="flex space-x-2">
                 <select
                   id="storage-room"
                   v-model="form.storageRoom"
-                  class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                  @change="storageSelectMode = form.storageRoom !== 'custom'"
+                  :class="storageSelectMode ? 'flex-1' : 'w-36 flex-shrink-0'"
+                  class="px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  @change="handleStorageChange"
                 >
                   <option value="">{{ m.supply_item_modal.storage_room_placeholder() }}</option>
-                  <option v-for="room in COMMON_STORAGE_ROOMS" :key="room" :value="room">
+                  <option value="custom">{{ m.supply_item_modal.storage_room_custom() }}</option>
+                  <option v-for="room in availableStorageRooms" :key="room" :value="room">
                     {{ room }}
                   </option>
-                  <option value="custom">{{ m.supply_item_modal.storage_room_custom() }}</option>
                 </select>
-                <input
-                  v-if="!storageSelectMode"
-                  v-model="customStorageRoom"
-                  type="text"
-                  :placeholder="m.supply_item_modal.storage_room_custom_placeholder()"
-                  class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                  @blur="handleCustomStorageRoom"
-                  @keyup.enter="handleCustomStorageRoom"
-                />
+                <!-- Inline custom input when custom is selected -->
+                <template v-if="!storageSelectMode">
+                  <input
+                    v-model="customStorageRoom"
+                    type="text"
+                    :placeholder="m.supply_item_modal.storage_room_custom_placeholder()"
+                    class="flex-1 px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    @keyup.enter="handleCustomStorageRoom"
+                  />
+                  <button
+                    type="button"
+                    @click="handleCustomStorageRoom"
+                    :disabled="!customStorageRoom.trim()"
+                    class="bg-primary-100 hover:bg-primary-200 disabled:bg-gray-50 disabled:text-gray-400 text-primary-700 px-3 py-2 rounded-lg transition-colors flex items-center justify-center w-10 h-10 cursor-pointer disabled:cursor-not-allowed"
+                    title="Save custom storage room"
+                  >
+                    <i class="i-mdi:check text-lg"></i>
+                  </button>
+                  <button
+                    type="button"
+                    @click="cancelCustomStorageRoom"
+                    class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-lg transition-colors flex items-center justify-center w-10 h-10 cursor-pointer"
+                    title="Cancel custom storage room creation"
+                  >
+                    <i class="i-mdi:close text-lg"></i>
+                  </button>
+                </template>
               </div>
             </div>
           </div>
@@ -141,7 +193,21 @@
           <div>
             <label for="shopping-hint" class="block text-sm font-medium text-gray-700 mb-2">
               {{ m.supply_item_modal.shopping_hint_label() }}
+              <button
+                type="button"
+                @click="showShoppingHintHelp = !showShoppingHintHelp"
+                class="ml-1 text-gray-400 hover:text-gray-600 w-4 h-4 inline-flex items-center justify-center rounded-full hover:bg-gray-100 cursor-pointer"
+                :title="m.supply_item_modal.shopping_hint_help()"
+              >
+                <i class="i-mdi:help-circle-outline text-xs"></i>
+              </button>
             </label>
+            <div
+              v-if="showShoppingHintHelp"
+              class="text-xs text-blue-600 bg-blue-50 p-2 rounded mb-2"
+            >
+              {{ m.supply_item_modal.shopping_hint_help() }}
+            </div>
             <textarea
               id="shopping-hint"
               v-model="form.shoppingHint"
@@ -153,9 +219,20 @@
 
           <!-- Preferred Brands -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">{{
-              m.supply_item_modal.preferred_brands_label()
-            }}</label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              {{ m.supply_item_modal.preferred_brands_label() }}
+              <button
+                type="button"
+                @click="showBrandsHelp = !showBrandsHelp"
+                class="ml-1 text-gray-400 hover:text-gray-600 w-4 h-4 inline-flex items-center justify-center rounded-full hover:bg-gray-100 cursor-pointer"
+                :title="m.supply_item_modal.preferred_brands_help()"
+              >
+                <i class="i-mdi:help-circle-outline text-xs"></i>
+              </button>
+            </label>
+            <div v-if="showBrandsHelp" class="text-xs text-blue-600 bg-blue-50 p-2 rounded mb-2">
+              {{ m.supply_item_modal.preferred_brands_help() }}
+            </div>
             <div class="space-y-2">
               <!-- Existing brands -->
               <div
@@ -258,11 +335,35 @@ const storageSelectMode = ref(true)
 const customCategory = ref("")
 const customStorageRoom = ref("")
 
+// Help tooltip visibility state
+const showQuantityHelp = ref(false)
+const showShoppingHintHelp = ref(false)
+const showBrandsHelp = ref(false)
+
 // Initialize i18n
 const { m } = useI18n()
 
 // Computed
 const isEditing = computed(() => !!props.item)
+
+// Include current custom values in dropdown options
+const availableCategories = computed(() => {
+  const categories = [...COMMON_CATEGORIES] as string[]
+  // Add current category if it's not in common categories and not empty
+  if (form.category && !categories.includes(form.category)) {
+    categories.push(form.category)
+  }
+  return categories
+})
+
+const availableStorageRooms = computed(() => {
+  const rooms = [...COMMON_STORAGE_ROOMS] as string[]
+  // Add current storage room if it's not in common rooms and not empty
+  if (form.storageRoom && !rooms.includes(form.storageRoom)) {
+    rooms.push(form.storageRoom)
+  }
+  return rooms
+})
 
 // Methods
 const addBrand = () => {
@@ -280,15 +381,32 @@ const removeBrand = (index: number) => {
   }
 }
 
+const handleCategoryChange = () => {
+  categorySelectMode.value = form.category !== "custom"
+  if (form.category === "custom") {
+    customCategory.value = ""
+  }
+}
+
 const handleCustomCategory = () => {
   const category = customCategory.value.trim()
   if (category) {
     form.category = category
     categorySelectMode.value = true
     customCategory.value = ""
-  } else {
-    form.category = ""
-    categorySelectMode.value = true
+  }
+}
+
+const cancelCustomCategory = () => {
+  form.category = ""
+  categorySelectMode.value = true
+  customCategory.value = ""
+}
+
+const handleStorageChange = () => {
+  storageSelectMode.value = form.storageRoom !== "custom"
+  if (form.storageRoom === "custom") {
+    customStorageRoom.value = ""
   }
 }
 
@@ -298,10 +416,13 @@ const handleCustomStorageRoom = () => {
     form.storageRoom = room
     storageSelectMode.value = true
     customStorageRoom.value = ""
-  } else {
-    form.storageRoom = ""
-    storageSelectMode.value = true
   }
+}
+
+const cancelCustomStorageRoom = () => {
+  form.storageRoom = ""
+  storageSelectMode.value = true
+  customStorageRoom.value = ""
 }
 
 const handleSubmit = () => {
@@ -354,21 +475,10 @@ onMounted(() => {
     })
 
     // Check if existing category/storage room are custom (not in predefined lists)
-    if (
-      props.item.category &&
-      !(COMMON_CATEGORIES as readonly string[]).includes(props.item.category)
-    ) {
-      // This is a custom category, keep it in the form but select mode stays true
-      categorySelectMode.value = true
-    }
-
-    if (
-      props.item.storageRoom &&
-      !(COMMON_STORAGE_ROOMS as readonly string[]).includes(props.item.storageRoom)
-    ) {
-      // This is a custom storage room, keep it in the form but select mode stays true
-      storageSelectMode.value = true
-    }
+    // Custom values will be included in the dropdown via computed properties
+    // so we keep select mode active
+    categorySelectMode.value = true
+    storageSelectMode.value = true
   }
 })
 </script>
