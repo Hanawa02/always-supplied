@@ -54,7 +54,7 @@ export class SuppliedBuildingsStorage implements StorageService<SuppliedBuilding
     const lowercaseQuery = query.toLowerCase()
     
     return await db.suppliedBuildings
-      .filter((building) => {
+      .filter((building: SuppliedBuilding) => {
         return fields.some((field) => {
           const value = building[field]
           return value && typeof value === 'string' && value.toLowerCase().includes(lowercaseQuery)

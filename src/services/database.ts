@@ -1,12 +1,16 @@
-import Dexie, { type EntityTable } from 'dexie'
+import Dexie, { type EntityTable, type Table } from 'dexie'
 import type { SuppliedBuilding } from '~/types/suppliedBuilding'
 import type { SupplyItem } from '~/types/supply'
 
-// Database interface extending our application types
+// Database interface extending our application types with proper typing
 interface AlwaysSuppliedDB extends Dexie {
   suppliedBuildings: EntityTable<SuppliedBuilding, 'id'>
   supplyItems: EntityTable<SupplyItem, 'id'>
 }
+
+// Type-safe table references
+type SuppliedBuildingTable = Table<SuppliedBuilding, string>
+type SupplyItemTable = Table<SupplyItem, string>
 
 // Database instance
 const db = new Dexie('AlwaysSuppliedDB') as AlwaysSuppliedDB
@@ -17,29 +21,27 @@ db.version(1).stores({
   supplyItems: 'id, name, buildingId, category, storageRoom, quantity, createdAt, updatedAt'
 })
 
-// Optional: Add hooks for data validation or transformation
-db.suppliedBuildings.hook('creating', function (primKey, obj, trans) {
+// TypeScript hooks for data validation and transformation
+db.suppliedBuildings.hook('creating', (primKey: string, obj: SuppliedBuilding, trans) => {
   // Ensure timestamps are set
-  const building = obj as SuppliedBuilding
-  building.createdAt = building.createdAt || new Date()
-  building.updatedAt = building.updatedAt || new Date()
+  obj.createdAt = obj.createdAt || new Date()
+  obj.updatedAt = obj.updatedAt || new Date()
 })
 
-db.suppliedBuildings.hook('updating', function (modifications, primKey, obj, trans) {
+db.suppliedBuildings.hook('updating', (modifications: Partial<SuppliedBuilding>, primKey: string, obj: SuppliedBuilding, trans) => {
   // Update timestamp on modification
-  ;(modifications as any).updatedAt = new Date()
+  modifications.updatedAt = new Date()
 })
 
-db.supplyItems.hook('creating', function (primKey, obj, trans) {
+db.supplyItems.hook('creating', (primKey: string, obj: SupplyItem, trans) => {
   // Ensure timestamps are set
-  const item = obj as SupplyItem
-  item.createdAt = item.createdAt || new Date()
-  item.updatedAt = item.updatedAt || new Date()
+  obj.createdAt = obj.createdAt || new Date()
+  obj.updatedAt = obj.updatedAt || new Date()
 })
 
-db.supplyItems.hook('updating', function (modifications, primKey, obj, trans) {
+db.supplyItems.hook('updating', (modifications: Partial<SupplyItem>, primKey: string, obj: SupplyItem, trans) => {
   // Update timestamp on modification
-  ;(modifications as any).updatedAt = new Date()
+  modifications.updatedAt = new Date()
 })
 
 export { db }
@@ -59,3 +61,20 @@ export interface StorageService<T> {
 export function generateId(): string {
   return Date.now().toString(36) + Math.random().toString(36).substr(2)
 }
+
+// Type-safe query builders
+export const queries = {
+  suppliedBuildings: {
+    byName: (name: string) => db.suppliedBuildings.where('name').equals(name),
+    byNamePattern: (pattern: string) => db.suppliedBuildings.where('name').startsWithIgnoreCase(pattern),
+    recent: (limit: number = 10) => db.suppliedBuildings.orderBy('createdAt').reverse().limit(limit)
+  },
+  supplyItems: {
+    byBuilding: (buildingId: string) => db.supplyItems.where('buildingId').equals(buildingId),
+    byCategory: (category: string) => db.supplyItems.where('category').equals(category),
+    byBuildingAndCategory: (buildingId: string, category: string) => 
+      db.supplyItems.where('[buildingId+category]').equals([buildingId, category]),
+    lowStock: (threshold: number = 5) => db.supplyItems.where('quantity').below(threshold),
+    recent: (limit: number = 10) => db.supplyItems.orderBy('createdAt').reverse().limit(limit)
+  }
+} as const

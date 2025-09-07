@@ -72,7 +72,7 @@ export class SupplyItemsStorage implements StorageService<SupplyItem> {
     const lowercaseQuery = query.toLowerCase()
     
     return await db.supplyItems
-      .filter((item) => {
+      .filter((item: SupplyItem) => {
         return fields.some((field) => {
           const value = item[field]
           return value && typeof value === 'string' && value.toLowerCase().includes(lowercaseQuery)
