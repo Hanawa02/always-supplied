@@ -1,6 +1,6 @@
-import { ref, computed } from "vue"
+import { computed, ref } from "vue"
 
-import type { SupplyItem, CreateSupplyItem, UpdateSupplyItem } from "~/types/supply"
+import type { CreateSupplyItem, SupplyItem, UpdateSupplyItem } from "~/types/supply"
 
 // Mock data for development (no storage as per requirements)
 const mockSupplyItems: SupplyItem[] = [

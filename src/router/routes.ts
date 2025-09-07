@@ -1,8 +1,10 @@
+import type { Component } from "vue"
+
 // Route info type definition
 export interface RouteInfo {
   name: string
   path: string
-  component: () => Promise<any>
+  component: () => Promise<Component>
 }
 
 // Centralized route information

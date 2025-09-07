@@ -219,10 +219,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from "vue"
+import { computed, onMounted, reactive, ref } from "vue"
 
+import type { CreateSupplyItem, SupplyItem, UpdateSupplyItem } from "~/types/supply"
 import { COMMON_CATEGORIES, COMMON_STORAGE_ROOMS } from "~/types/supply"
-import type { SupplyItem, CreateSupplyItem, UpdateSupplyItem } from "~/types/supply"
 
 interface Props {
   item?: SupplyItem | null
@@ -345,12 +345,18 @@ onMounted(() => {
     })
 
     // Check if existing category/storage room are custom (not in predefined lists)
-    if (props.item.category && !COMMON_CATEGORIES.includes(props.item.category as any)) {
+    if (
+      props.item.category &&
+      !(COMMON_CATEGORIES as readonly string[]).includes(props.item.category)
+    ) {
       // This is a custom category, keep it in the form but select mode stays true
       categorySelectMode.value = true
     }
 
-    if (props.item.storageRoom && !COMMON_STORAGE_ROOMS.includes(props.item.storageRoom as any)) {
+    if (
+      props.item.storageRoom &&
+      !(COMMON_STORAGE_ROOMS as readonly string[]).includes(props.item.storageRoom)
+    ) {
       // This is a custom storage room, keep it in the form but select mode stays true
       storageSelectMode.value = true
     }

@@ -223,13 +223,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue"
+import { computed, ref } from "vue"
 
 import DeleteConfirmationModal from "~/components/DeleteConfirmationModal.vue"
 import SupplyItemModal from "~/components/SupplyItemModal.vue"
 import { useI18n } from "~/composables/useI18n"
 import { useSupplyItems } from "~/composables/useSupplyItems"
-import type { SupplyItem, CreateSupplyItem, UpdateSupplyItem } from "~/types/supply"
+import type { CreateSupplyItem, SupplyItem, UpdateSupplyItem } from "~/types/supply"
 
 const {
   supplyItems,
@@ -239,7 +239,6 @@ const {
   updateSupplyItem,
   deleteSupplyItem,
   searchSupplyItems,
-  filterByCategory,
 } = useSupplyItems()
 
 const { m } = useI18n()

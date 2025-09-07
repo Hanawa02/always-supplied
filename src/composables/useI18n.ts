@@ -1,8 +1,11 @@
 import { computed, ref } from "vue"
-// @ts-ignore - ParaglideJS runtime doesn't have type declarations
-import { locales, setLocale, getLocale, isLocale } from "~i18n/generated/runtime"
-// @ts-ignore - ParaglideJS messages doesn't have type declarations
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore - ParaglideJS generated files don't have proper TypeScript declarations
 import { m } from "~i18n/generated/messages"
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore - ParaglideJS generated files don't have proper TypeScript declarations
+import { getLocale, isLocale, locales, setLocale } from "~i18n/generated/runtime"
 
 // Current locale state
 const currentLocale = ref(getLocale())
@@ -22,14 +25,14 @@ export function useI18n() {
   })
 
   // Initialize from localStorage
-  const initializeLocale = () => {
+  const initializeLocale = (): void => {
     const savedLocale = localStorage.getItem("locale")
     if (savedLocale && isLocale(savedLocale)) {
       locale.value = savedLocale
     } else {
       // Try to detect from browser
       const browserLocale = navigator.language.split("-")[0]
-      if (isLocale(browserLocale)) {
+      if (browserLocale && isLocale(browserLocale)) {
         locale.value = browserLocale
       }
     }
@@ -38,41 +41,43 @@ export function useI18n() {
   // Create a nested m object for better syntax
   const messages = {
     app: {
-      name: () => m["app.name"](),
+      name: (): string => m["app.name"](),
       navigation: {
-        supply_configuration: () => m["app.navigation.supply_configuration"](),
-        theme_preview: () => m["app.navigation.theme_preview"](),
+        supply_configuration: (): string => m["app.navigation.supply_configuration"](),
+        theme_preview: (): string => m["app.navigation.theme_preview"](),
       },
     },
     supply_configuration: {
-      title: () => m["supply_configuration.title"](),
-      add_supply_item: () => m["supply_configuration.add_supply_item"](),
-      add_item_short: () => m["supply_configuration.add_item_short"](),
-      total_items: () => m["supply_configuration.total_items"](),
-      search_placeholder: () => m["supply_configuration.search_placeholder"](),
-      all_categories: () => m["supply_configuration.all_categories"](),
+      title: (): string => m["supply_configuration.title"](),
+      add_supply_item: (): string => m["supply_configuration.add_supply_item"](),
+      add_item_short: (): string => m["supply_configuration.add_item_short"](),
+      total_items: (): string => m["supply_configuration.total_items"](),
+      search_placeholder: (): string => m["supply_configuration.search_placeholder"](),
+      all_categories: (): string => m["supply_configuration.all_categories"](),
       item: {
-        quantity: () => m["supply_configuration.item.quantity"](),
-        category: () => m["supply_configuration.item.category"](),
-        storage: () => m["supply_configuration.item.storage"](),
-        preferred_brands: () => m["supply_configuration.item.preferred_brands"](),
+        quantity: (): string => m["supply_configuration.item.quantity"](),
+        category: (): string => m["supply_configuration.item.category"](),
+        storage: (): string => m["supply_configuration.item.storage"](),
+        preferred_brands: (): string => m["supply_configuration.item.preferred_brands"](),
       },
       empty_state: {
-        no_items_title: () => m["supply_configuration.empty_state.no_items_title"](),
-        no_items_description: () => m["supply_configuration.empty_state.no_items_description"](),
-        no_items_found_title: () => m["supply_configuration.empty_state.no_items_found_title"](),
-        no_items_found_description: () =>
+        no_items_title: (): string => m["supply_configuration.empty_state.no_items_title"](),
+        no_items_description: (): string =>
+          m["supply_configuration.empty_state.no_items_description"](),
+        no_items_found_title: (): string =>
+          m["supply_configuration.empty_state.no_items_found_title"](),
+        no_items_found_description: (): string =>
           m["supply_configuration.empty_state.no_items_found_description"](),
-        add_first_item: () => m["supply_configuration.empty_state.add_first_item"](),
+        add_first_item: (): string => m["supply_configuration.empty_state.add_first_item"](),
       },
     },
     delete_confirmation: {
-      title: () => m["delete_confirmation.title"](),
-      message: (params: { itemName: string }) => m["delete_confirmation.message"](params),
-      cancel: () => m["delete_confirmation.cancel"](),
-      delete: () => m["delete_confirmation.delete"](),
+      title: (): string => m["delete_confirmation.title"](),
+      message: (params: { itemName: string }): string => m["delete_confirmation.message"](params),
+      cancel: (): string => m["delete_confirmation.cancel"](),
+      delete: (): string => m["delete_confirmation.delete"](),
     },
-  }
+  } as const
 
   return {
     // Current locale

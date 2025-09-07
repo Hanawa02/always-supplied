@@ -1,6 +1,6 @@
 import { useRouter as useVueRouter } from "vue-router"
 
-import { ROUTES, type RouteName, type RoutePath } from "~/router/routes"
+import { type RouteName, type RoutePath, ROUTES } from "~/router/routes"
 
 export function useTypedRouter() {
   const router = useVueRouter()

@@ -15,7 +15,8 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "validate-code": "npm run lint && npm run format && npm run type-check"
   },
   "dependencies": {
     "@inlang/paraglide-js": "^2.2.0",
