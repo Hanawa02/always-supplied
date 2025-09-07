@@ -13,13 +13,6 @@
         </div>
         <div class="ml-4 flex space-x-1">
           <button
-            @click="$emit('viewSupplies', building)"
-            class="p-2 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors flex items-center justify-center w-8 h-8 cursor-pointer"
-            title="View supplies"
-          >
-            <i class="i-mdi:package-variant text-lg"></i>
-          </button>
-          <button
             @click="$emit('edit', building)"
             class="p-2 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors flex items-center justify-center w-8 h-8 cursor-pointer"
             title="Edit building"
@@ -40,13 +33,13 @@
       <div class="space-y-3">
         <!-- Supply Count -->
         <div class="flex items-center justify-between">
-          <span class="text-sm font-medium text-gray-700">{{ suppliesCountLabel }}:</span>
+          <span class="text-sm font-medium text-gray-700">{{ suppliesCountLabel }}</span>
           <span class="text-lg font-bold text-primary-600">{{ supplyCount }}</span>
         </div>
 
         <!-- View Supplies Button -->
-        <BaseButton variant="ghost" full-width @click="$emit('viewSupplies', building)">
-          {{ manageSuppliesLabel }}
+        <BaseButton variant="primary" full-width @click="$emit('viewSupplies', building)">
+          <i class="i-mdi:package-variant text-lg mr-2"></i>{{ manageSuppliesLabel }}
         </BaseButton>
       </div>
     </div>
