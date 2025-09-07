@@ -1,5 +1,4 @@
 import "virtual:uno.css"
-import "@unocss/reset/tailwind.css"
 
 import { createPinia } from "pinia"
 import { createApp } from "vue"
