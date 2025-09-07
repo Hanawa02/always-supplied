@@ -19,7 +19,6 @@ export function useSuppliedBuildings() {
       id: generateId(),
       name: buildingData.name,
       description: buildingData.description,
-      address: buildingData.address,
       createdAt: new Date(),
       updatedAt: new Date(),
     }
@@ -39,7 +38,6 @@ export function useSuppliedBuildings() {
       ...suppliedBuildings.value[index],
       name: buildingData.name,
       description: buildingData.description,
-      address: buildingData.address,
       updatedAt: new Date(),
     }
 
@@ -69,8 +67,7 @@ export function useSuppliedBuildings() {
     const lowercaseQuery = query.toLowerCase()
     return suppliedBuildings.value.filter(building =>
       building.name.toLowerCase().includes(lowercaseQuery) ||
-      building.description?.toLowerCase().includes(lowercaseQuery) ||
-      building.address?.toLowerCase().includes(lowercaseQuery)
+      building.description?.toLowerCase().includes(lowercaseQuery)
     )
   }
 

@@ -4,7 +4,8 @@
     "name": "Sempre Abastecido",
     "navigation": {
       "supply_configuration": "Configuração de Suprimentos",
-      "theme_preview": "Prévia do Tema"
+      "theme_preview": "Prévia do Tema",
+      "supplied_buildings": "Edifícios Abastecidos"
     }
   },
   "supply_configuration": {
@@ -93,5 +94,36 @@
     "office": "Escritório",
     "storage_room": "Depósito",
     "other": "Outro"
+  },
+  "supplied_buildings": {
+    "title": "Edifícios Abastecidos",
+    "add_building": "Adicionar Edifício",
+    "add_first_building": "Adicionar Seu Primeiro Edifício",
+    "total_buildings": "Total de Edifícios",
+    "search_placeholder": "Pesquisar edifícios...",
+    "manage_supplies": "Gerenciar Suprimentos",
+    "supplies_count": "Suprimentos:",
+    "empty_state": {
+      "no_buildings_title": "Nenhum edifício ainda",
+      "no_buildings_description": "Comece adicionando seu primeiro edifício.",
+      "no_buildings_found_title": "Nenhum edifício encontrado",
+      "no_buildings_found_description": "Tente ajustar sua pesquisa."
+    }
+  },
+  "building_modal": {
+    "title_add": "Adicionar Edifício",
+    "title_edit": "Editar Edifício",
+    "name_label": "Nome do Edifício",
+    "name_placeholder": "ex., Escritório Principal, Cozinha de Casa",
+    "description_label": "Descrição",
+    "description_placeholder": "Breve descrição do edifício...",
+    "required_field": "*",
+    "cancel": "Cancelar",
+    "create_building": "Criar Edifício",
+    "update_building": "Atualizar Edifício",
+    "close_tooltip": "Fechar modal",
+    "validation": {
+      "name_required": "O nome do edifício é obrigatório e não pode estar vazio."
+    }
   }
 }

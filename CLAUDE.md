@@ -49,3 +49,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Always run 'npm run validate-code' after changing the code. You don't need to do it for every file changed, but at least once you finish all changes you need.
 - Css classes should not be used as selectors for tests
 - Whenever you do some task that involves generating code, follow the steps described in the file docs\task_flow.md
+
+## Quality assurance
+
+- run tests
+- do type checks
+- run lint and formatting command: `npm run validate-code`
+- check if any translation is present on english, but missing in other language files

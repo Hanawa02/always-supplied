@@ -44,6 +44,7 @@ export function useI18n() {
       name: (): string => m["app.name"](),
       navigation: {
         supply_configuration: (): string => m["app.navigation.supply_configuration"](),
+        supplied_buildings: (): string => (m as any)["app.navigation.supplied_buildings"](),
         theme_preview: (): string => m["app.navigation.theme_preview"](),
       },
     },
@@ -115,6 +116,37 @@ export function useI18n() {
       message: (params: { itemName: string }): string => m["delete_confirmation.message"](params),
       cancel: (): string => m["delete_confirmation.cancel"](),
       delete: (): string => m["delete_confirmation.delete"](),
+    },
+    supplied_buildings: {
+      title: (): string => (m as any)["supplied_buildings.title"](),
+      add_building: (): string => (m as any)["supplied_buildings.add_building"](),
+      add_first_building: (): string => (m as any)["supplied_buildings.add_first_building"](),
+      total_buildings: (): string => (m as any)["supplied_buildings.total_buildings"](),
+      search_placeholder: (): string => (m as any)["supplied_buildings.search_placeholder"](),
+      manage_supplies: (): string => (m as any)["supplied_buildings.manage_supplies"](),
+      supplies_count: (): string => (m as any)["supplied_buildings.supplies_count"](),
+      empty_state: {
+        no_buildings_title: (): string => (m as any)["supplied_buildings.empty_state.no_buildings_title"](),
+        no_buildings_description: (): string => (m as any)["supplied_buildings.empty_state.no_buildings_description"](),
+        no_buildings_found_title: (): string => (m as any)["supplied_buildings.empty_state.no_buildings_found_title"](),
+        no_buildings_found_description: (): string => (m as any)["supplied_buildings.empty_state.no_buildings_found_description"](),
+      },
+    },
+    building_modal: {
+      title_add: (): string => (m as any)["building_modal.title_add"](),
+      title_edit: (): string => (m as any)["building_modal.title_edit"](),
+      name_label: (): string => (m as any)["building_modal.name_label"](),
+      name_placeholder: (): string => (m as any)["building_modal.name_placeholder"](),
+      description_label: (): string => (m as any)["building_modal.description_label"](),
+      description_placeholder: (): string => (m as any)["building_modal.description_placeholder"](),
+      required_field: (): string => (m as any)["building_modal.required_field"](),
+      cancel: (): string => (m as any)["building_modal.cancel"](),
+      create_building: (): string => (m as any)["building_modal.create_building"](),
+      update_building: (): string => (m as any)["building_modal.update_building"](),
+      close_tooltip: (): string => (m as any)["building_modal.close_tooltip"](),
+      validation: {
+        name_required: (): string => (m as any)["building_modal.validation.name_required"](),
+      },
     },
   } as const
 

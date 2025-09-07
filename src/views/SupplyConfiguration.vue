@@ -6,9 +6,23 @@
         <div
           class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-4 sm:h-16 sm:py-0"
         >
-          <h1 class="text-xl sm:text-2xl font-bold text-gray-900">
-            {{ m.supply_configuration.title() }}
-          </h1>
+          <div class="flex items-center space-x-3">
+            <button
+              @click="router.push(ROUTES.SUPPLIED_BUILDINGS.path)"
+              class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors flex items-center justify-center cursor-pointer"
+              title="Back to Buildings"
+            >
+              <i class="i-mdi:arrow-left text-xl"></i>
+            </button>
+            <div>
+              <h1 class="text-xl sm:text-2xl font-bold text-gray-900">
+                {{ m.supply_configuration.title() }}
+              </h1>
+              <p v-if="selectedBuilding" class="text-sm text-gray-600 mt-1">
+                {{ selectedBuilding.name }}
+              </p>
+            </div>
+          </div>
           <button
             @click="showCreateModal = true"
             class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg font-medium flex items-center justify-center space-x-2 transition-colors cursor-pointer"
@@ -220,12 +234,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { computed, onMounted, ref } from "vue"
+import { useRoute, useRouter } from "vue-router"
 
 import DeleteConfirmationModal from "~/components/DeleteConfirmationModal.vue"
 import SupplyItemModal from "~/components/SupplyItemModal.vue"
 import { useI18n } from "~/composables/useI18n"
 import { useSupplyItems } from "~/composables/useSupplyItems"
+import { useSuppliedBuildings } from "~/composables/useSuppliedBuildings"
+import { ROUTES } from "~/router/routes"
+import { useSelectedBuildingStore } from "~/stores/selectedBuilding"
 import type { CreateSupplyItem, SupplyItem, UpdateSupplyItem } from "~/types/supply"
 
 const {
@@ -238,7 +256,43 @@ const {
   searchSupplyItems,
 } = useSupplyItems()
 
+const { getBuildingById } = useSuppliedBuildings()
+const selectedBuildingStore = useSelectedBuildingStore()
 const { m } = useI18n()
+const route = useRoute()
+const router = useRouter()
+
+// Check for required building selection
+const selectedBuildingId = computed(() => {
+  // First priority: query parameter
+  const queryId = route.query.buildingId as string | undefined
+  if (queryId) return queryId
+  
+  // Second priority: selected building from store
+  return selectedBuildingStore.selectedBuildingId
+})
+
+const selectedBuilding = computed(() => {
+  if (!selectedBuildingId.value) return null
+  return getBuildingById(selectedBuildingId.value)
+})
+
+// Redirect to buildings page if no building is selected
+onMounted(() => {
+  // Load selected building from storage if not already loaded
+  selectedBuildingStore.loadFromStorage()
+  
+  // If we still don't have a selected building, redirect
+  if (!selectedBuildingId.value) {
+    router.replace(ROUTES.SUPPLIED_BUILDINGS.path)
+  } else if (!route.query.buildingId && selectedBuildingStore.selectedBuildingId) {
+    // If we have a selected building but no query param, update the URL
+    router.replace({
+      name: route.name,
+      query: { ...route.query, buildingId: selectedBuildingStore.selectedBuildingId }
+    })
+  }
+})
 
 // Local state
 const showCreateModal = ref(false)
@@ -250,6 +304,11 @@ const selectedCategory = ref("")
 // Computed
 const filteredItems = computed(() => {
   let items = supplyItems.value
+
+  // Filter by selected building
+  if (selectedBuildingId.value) {
+    items = items.filter((item) => item.buildingId === selectedBuildingId.value)
+  }
 
   if (searchQuery.value) {
     items = searchSupplyItems(searchQuery.value)
@@ -282,8 +341,12 @@ const handleSave = async (itemData: CreateSupplyItem | UpdateSupplyItem) => {
       // Update existing item
       await updateSupplyItem(itemData as UpdateSupplyItem)
     } else {
-      // Create new item
-      await createSupplyItem(itemData as CreateSupplyItem)
+      // Create new item - add building ID
+      const createData: CreateSupplyItem = {
+        ...itemData as CreateSupplyItem,
+        buildingId: selectedBuildingId.value!
+      }
+      await createSupplyItem(createData)
     }
     closeModal()
   } catch (error) {

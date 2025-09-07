@@ -14,12 +14,12 @@
         <!-- Header -->
         <div class="flex items-center justify-between mb-6">
           <h3 class="text-lg font-semibold text-gray-900">
-            {{ isEditing ? 'Edit Building' : 'Add Building' }}
+            {{ isEditing ? m.building_modal.title_edit() : m.building_modal.title_add() }}
           </h3>
           <button
             @click="emit('close')"
             class="text-gray-400 hover:text-gray-600 transition-colors w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 cursor-pointer"
-            title="Close modal"
+            :title="m.building_modal.close_tooltip()"
           >
             <i class="i-mdi:close text-xl"></i>
           </button>
@@ -30,15 +30,15 @@
           <!-- Name (Required) -->
           <div>
             <label for="building-name" class="block text-sm font-medium text-gray-700 mb-2">
-              Building Name
-              <span class="text-danger-500">*</span>
+              {{ m.building_modal.name_label() }}
+              <span class="text-danger-500">{{ m.building_modal.required_field() }}</span>
             </label>
             <input
               id="building-name"
               v-model="form.name"
               type="text"
               required
-              placeholder="e.g., Main Office, Home Kitchen"
+              :placeholder="m.building_modal.name_placeholder()"
               class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
             />
           </div>
@@ -46,30 +46,17 @@
           <!-- Description -->
           <div>
             <label for="building-description" class="block text-sm font-medium text-gray-700 mb-2">
-              Description
+              {{ m.building_modal.description_label() }}
             </label>
             <textarea
               id="building-description"
               v-model="form.description"
               rows="3"
-              placeholder="Brief description of the building..."
+              :placeholder="m.building_modal.description_placeholder()"
               class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
             ></textarea>
           </div>
 
-          <!-- Address -->
-          <div>
-            <label for="building-address" class="block text-sm font-medium text-gray-700 mb-2">
-              Address
-            </label>
-            <textarea
-              id="building-address"
-              v-model="form.address"
-              rows="2"
-              placeholder="Full address of the building..."
-              class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-            ></textarea>
-          </div>
 
           <!-- Actions -->
           <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
@@ -78,13 +65,13 @@
               @click="emit('close')"
               class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
             >
-              Cancel
+              {{ m.building_modal.cancel() }}
             </button>
             <button
               type="submit"
               class="px-4 py-2 text-sm font-medium text-white bg-primary-500 hover:bg-primary-600 rounded-lg transition-colors cursor-pointer"
             >
-              {{ isEditing ? 'Update Building' : 'Create Building' }}
+              {{ isEditing ? m.building_modal.update_building() : m.building_modal.create_building() }}
             </button>
           </div>
         </form>
@@ -95,6 +82,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, reactive } from "vue"
+import { useI18n } from "~/composables/useI18n"
 import type { CreateSuppliedBuilding, SuppliedBuilding, UpdateSuppliedBuilding } from "~/types/suppliedBuilding"
 
 interface Props {
@@ -108,11 +96,12 @@ const emit = defineEmits<{
   save: [building: CreateSuppliedBuilding | UpdateSuppliedBuilding]
 }>()
 
+const { m } = useI18n()
+
 // Form state
 const form = reactive<CreateSuppliedBuilding>({
   name: "",
   description: "",
-  address: "",
 })
 
 // Computed
@@ -123,16 +112,13 @@ const handleSubmit = () => {
   // Validate required fields
   const trimmedName = form.name?.trim()
   if (!trimmedName) {
-    alert('Building name is required and cannot be empty.')
+    alert(m.building_modal.validation.name_required())
     return
   }
 
   const buildingData = {
-    ...form,
-    name: trimmedName, // Use trimmed name
-    // Clean up empty strings
+    name: trimmedName,
     description: form.description?.trim() || undefined,
-    address: form.address?.trim() || undefined,
   }
 
   if (isEditing.value && props.building) {
@@ -153,7 +139,6 @@ onMounted(() => {
     Object.assign(form, {
       name: props.building.name,
       description: props.building.description || "",
-      address: props.building.address || "",
     })
   }
 })

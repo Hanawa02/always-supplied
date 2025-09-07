@@ -2,11 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(npm install:*)",
-      "Bash(npm run *)",
       "Bash(npx paraglide-js init:*)",
       "Bash(npx vue-tsc:*)",
       "Bash(npx tsc:*)",
       "Bash(git add:*)"
+      "Bash(npm run type-check:*)"
     ],
     "deny": [],
     "ask": []

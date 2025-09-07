@@ -4,7 +4,8 @@
     "name": "Always Supplied",
     "navigation": {
       "supply_configuration": "Supply Configuration",
-      "theme_preview": "Theme Preview"
+      "theme_preview": "Theme Preview",
+      "supplied_buildings": "Supplied Buildings"
     }
   },
   "supply_configuration": {
@@ -93,5 +94,36 @@
     "office": "Office",
     "storage_room": "Storage Room",
     "other": "Other"
+  },
+  "supplied_buildings": {
+    "title": "Supplied Buildings",
+    "add_building": "Add Building",
+    "add_first_building": "Add Your First Building",
+    "total_buildings": "Total Buildings",
+    "search_placeholder": "Search buildings...",
+    "manage_supplies": "Manage Supplies",
+    "supplies_count": "Supplies:",
+    "empty_state": {
+      "no_buildings_title": "No buildings yet",
+      "no_buildings_description": "Start by adding your first building.",
+      "no_buildings_found_title": "No buildings found",
+      "no_buildings_found_description": "Try adjusting your search."
+    }
+  },
+  "building_modal": {
+    "title_add": "Add Building",
+    "title_edit": "Edit Building",
+    "name_label": "Building Name",
+    "name_placeholder": "e.g., Main Office, Home Kitchen",
+    "description_label": "Description",
+    "description_placeholder": "Brief description of the building...",
+    "required_field": "*",
+    "cancel": "Cancel",
+    "create_building": "Create Building",
+    "update_building": "Update Building",
+    "close_tooltip": "Close modal",
+    "validation": {
+      "name_required": "Building name is required and cannot be empty."
+    }
   }
 }

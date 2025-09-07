@@ -40,7 +40,6 @@ test.describe("Supplied Buildings Page", () => {
     // Fill out the form
     await page.getByLabel("Building Name", { exact: false }).fill("Main Office")
     await page.getByLabel("Description").fill("Corporate headquarters building")
-    await page.getByLabel("Address").fill("123 Business St, New York, NY 10001")
 
     // Submit the form
     await page.getByRole("button", { name: "Create Building" }).click()
@@ -49,7 +48,6 @@ test.describe("Supplied Buildings Page", () => {
     await expect(page.getByRole("heading", { name: "Add Building" })).toBeHidden()
     await expect(page.getByText("Main Office")).toBeVisible()
     await expect(page.getByText("Corporate headquarters building")).toBeVisible()
-    await expect(page.getByText("123 Business St, New York, NY 10001")).toBeVisible()
 
     // Stats should update
     await expect(page.getByText("1").first()).toBeVisible() // total buildings count
@@ -75,7 +73,6 @@ test.describe("Supplied Buildings Page", () => {
     // Edit the building
     await page.getByLabel("Building Name", { exact: false }).fill("Updated Building")
     await page.getByLabel("Description").fill("Updated description")
-    await page.getByLabel("Address").fill("456 New Address, Chicago, IL 60601")
 
     // Submit
     await page.getByRole("button", { name: "Update Building" }).click()
@@ -84,7 +81,6 @@ test.describe("Supplied Buildings Page", () => {
     await expect(page.getByText("Updated Building")).toBeVisible()
     await expect(page.getByText("Original Building")).toBeHidden()
     await expect(page.getByText("Updated description")).toBeVisible()
-    await expect(page.getByText("456 New Address, Chicago, IL 60601")).toBeVisible()
   })
 
   test("can delete a building", async ({ page }) => {

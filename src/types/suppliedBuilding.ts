@@ -2,7 +2,6 @@ export interface SuppliedBuilding {
   id: string
   name: string
   description?: string
-  address?: string
   createdAt: Date
   updatedAt: Date
 }
@@ -10,14 +9,12 @@ export interface SuppliedBuilding {
 export interface CreateSuppliedBuilding {
   name: string
   description?: string
-  address?: string
 }
 
 export interface UpdateSuppliedBuilding {
   id: string
   name: string
   description?: string
-  address?: string
 }
 
 // Common building types for quick selection
