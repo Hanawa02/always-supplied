@@ -1,4 +1,5 @@
 import Dexie, { type EntityTable, type Table } from 'dexie'
+
 import type { SuppliedBuilding } from '~/types/suppliedBuilding'
 import type { SupplyItem } from '~/types/supply'
 

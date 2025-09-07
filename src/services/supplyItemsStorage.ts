@@ -1,5 +1,6 @@
-import { db, generateId, type StorageService } from './database'
 import type { CreateSupplyItem, SupplyItem, UpdateSupplyItem } from '~/types/supply'
+
+import { db, generateId, type StorageService } from './database'
 
 export class SupplyItemsStorage implements StorageService<SupplyItem> {
   async create(itemData: CreateSupplyItem): Promise<SupplyItem> {
