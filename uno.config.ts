@@ -1,4 +1,5 @@
 import { defineConfig, presetAttributify, presetIcons, presetWind4 } from "unocss"
+import { presetShadcn } from "unocss-preset-shadcn"
 
 export default defineConfig({
   presets: [
@@ -9,7 +10,18 @@ export default defineConfig({
         mdi: () => import("@iconify-json/mdi/icons.json").then((i) => i.default),
       },
     }),
+    presetShadcn({ color: "green" }),
   ],
+  content: {
+    pipeline: {
+      include: [
+        // the default
+        /\.(vue|svelte|[jt]sx|mdx?|astro|elm|php|phtml|html)($|\?)/,
+        // include js/ts files
+        "(components|src)/**/*.{js,ts}",
+      ],
+    },
+  },
   theme: {
     colors: {
       // Primary colors - Emerald green for freshness & supplies
