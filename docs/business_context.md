@@ -10,9 +10,9 @@ The supply configuration is the list of all supply items the user expects to be 
 
 A supply item has a name to identify them, and a quantity representing how many items should be ideally in stock.
 
-## Supply Building
+## Supplied Building
 
-The supply building is the physical building where the supplies are used and stored. The building has one or more rooms (storage rooms), and the supplies are distributed between them.
+The supplied building is the physical building where the supplies are used and stored. The building has one or more rooms (storage rooms), and the supplies are distributed between them.
 
 Examples of supply building: a family's house, a company's office.
 
