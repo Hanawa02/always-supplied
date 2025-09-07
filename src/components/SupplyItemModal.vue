@@ -12,18 +12,17 @@
         class="relative w-full max-w-lg transform overflow-hidden rounded-lg bg-white p-6 text-left shadow-xl transition-all"
       >
         <!-- Header -->
-        <div class="mb-6">
-          <div class="flex items-center justify-between">
-            <h3 class="text-lg font-semibold text-gray-900">
-              {{ isEditing ? m.supply_item_modal.title_edit() : m.supply_item_modal.title_add() }}
-            </h3>
-            <button
-              @click="emit('close')"
-              class="text-gray-400 hover:text-gray-600 transition-colors"
-            >
-              <i class="i-mdi:close text-xl"></i>
-            </button>
-          </div>
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-lg font-semibold text-gray-900">
+            {{ isEditing ? m.supply_item_modal.title_edit() : m.supply_item_modal.title_add() }}
+          </h3>
+          <button
+            @click="emit('close')"
+            class="text-gray-400 hover:text-gray-600 transition-colors w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 cursor-pointer"
+            :title="m.supply_item_modal.close_tooltip()"
+          >
+            <i class="i-mdi:close text-xl"></i>
+          </button>
         </div>
 
         <!-- Form -->
@@ -172,7 +171,7 @@
                   <button
                     type="button"
                     @click="removeBrand(index)"
-                    class="ml-2 text-gray-400 hover:text-gray-600"
+                    class="ml-2 text-gray-400 hover:text-gray-600 w-4 h-4 flex items-center justify-center cursor-pointer"
                   >
                     <i class="i-mdi:close text-sm"></i>
                   </button>
@@ -192,7 +191,7 @@
                   type="button"
                   @click="addBrand"
                   :disabled="!newBrand.trim()"
-                  class="bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 disabled:text-gray-400 text-gray-700 px-3 py-2 rounded-lg transition-colors flex items-center justify-center"
+                  class="bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 disabled:text-gray-400 text-gray-700 px-3 py-2 rounded-lg transition-colors flex items-center justify-center w-10 h-10 cursor-pointer disabled:cursor-not-allowed"
                 >
                   <i class="i-mdi:plus text-lg"></i>
                 </button>
@@ -205,13 +204,13 @@
             <button
               type="button"
               @click="emit('close')"
-              class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
             >
               {{ m.supply_item_modal.cancel() }}
             </button>
             <button
               type="submit"
-              class="px-4 py-2 text-sm font-medium text-white bg-primary-500 hover:bg-primary-600 rounded-lg transition-colors"
+              class="px-4 py-2 text-sm font-medium text-white bg-primary-500 hover:bg-primary-600 rounded-lg transition-colors cursor-pointer"
             >
               {{
                 isEditing ? m.supply_item_modal.update_item() : m.supply_item_modal.create_item()

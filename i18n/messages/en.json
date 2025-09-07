@@ -1,4 +1,5 @@
 {
+  "$schema": "https://inlang.com/schema/inlang-message-format",
   "app": {
     "name": "Always Supplied",
     "navigation": {
@@ -57,7 +58,11 @@
     "validation": {
       "name_required": "Item name is required and cannot be empty or just spaces.",
       "quantity_negative": "Quantity cannot be negative."
-    }
+    },
+    "shopping_hint_help": "Optional notes to help with shopping, like specific sizes, locations in store, or alternatives",
+    "preferred_brands_help": "List your preferred brands to make shopping decisions easier",
+    "quantity_help": "Ideal number of items that should be kept in stock",
+    "close_tooltip": "Close modal"
   },
   "delete_confirmation": {
     "title": "Delete Supply Item",

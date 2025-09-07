@@ -1,4 +1,5 @@
 {
+  "$schema": "https://inlang.com/schema/inlang-message-format",
   "app": {
     "name": "Siempre Abastecido",
     "navigation": {
@@ -57,7 +58,11 @@
     "validation": {
       "name_required": "El nombre del artículo es obligatorio y no puede estar vacío.",
       "quantity_negative": "La cantidad no puede ser negativa."
-    }
+    },
+    "shopping_hint_help": "Notas opcionales para ayudar con las compras, como tamaños específicos, ubicaciones en la tienda o alternativas",
+    "preferred_brands_help": "Lista tus marcas preferidas para facilitar las decisiones de compra",
+    "quantity_help": "Número ideal de artículos que deben mantenerse en stock",
+    "close_tooltip": "Cerrar modal"
   },
   "delete_confirmation": {
     "title": "Eliminar Artículo",

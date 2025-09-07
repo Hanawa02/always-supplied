@@ -2,9 +2,12 @@
   <nav class="bg-white border-b border-gray-200 px-4 py-3">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div class="flex items-center space-x-4">
-        <h1 class="flex items-center space-x-3">
+        <router-link 
+          :to="{ name: ROUTES.SUPPLY_CONFIGURATION.name }"
+          class="flex items-center space-x-3 hover:opacity-80 transition-opacity"
+        >
           <AppLogo class="h-8" variant="full" />
-        </h1>
+        </router-link>
 
         <div class="hidden sm:flex space-x-4">
           <!-- Type-safe navigation using routes -->

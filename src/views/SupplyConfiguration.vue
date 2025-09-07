@@ -11,7 +11,7 @@
           </h1>
           <button
             @click="showCreateModal = true"
-            class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg font-medium flex items-center justify-center space-x-2 transition-colors"
+            class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg font-medium flex items-center justify-center space-x-2 transition-colors cursor-pointer"
           >
             <i class="i-mdi:plus text-lg"></i>
             <span class="hidden sm:inline">{{ m.supply_configuration.add_supply_item() }}</span>
@@ -91,14 +91,14 @@
               <div class="ml-4 flex space-x-1">
                 <button
                   @click="editItem(item)"
-                  class="p-2 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors flex items-center justify-center"
+                  class="p-2 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors flex items-center justify-center w-8 h-8 cursor-pointer"
                   :title="m.supply_configuration.item.edit_tooltip()"
                 >
                   <i class="i-mdi:pencil text-lg"></i>
                 </button>
                 <button
                   @click="confirmDelete(item)"
-                  class="p-2 text-gray-400 hover:text-danger-600 hover:bg-danger-50 rounded-lg transition-colors flex items-center justify-center"
+                  class="p-2 text-gray-400 hover:text-danger-600 hover:bg-danger-50 rounded-lg transition-colors flex items-center justify-center w-8 h-8 cursor-pointer"
                   :title="m.supply_configuration.item.delete_tooltip()"
                 >
                   <i class="i-mdi:delete text-lg"></i>
@@ -194,7 +194,7 @@
         <button
           v-if="!searchQuery && !selectedCategory"
           @click="showCreateModal = true"
-          class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-lg font-medium"
+          class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-lg font-medium cursor-pointer"
         >
           {{ m.supply_configuration.empty_state.add_first_item() }}
         </button>

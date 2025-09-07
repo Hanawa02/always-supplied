@@ -32,13 +32,13 @@
         <div class="flex space-x-3">
           <button
             @click="emit('cancel')"
-            class="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            class="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
           >
             {{ m.delete_confirmation.cancel() }}
           </button>
           <button
             @click="emit('confirm')"
-            class="flex-1 px-4 py-2 text-sm font-medium text-white bg-danger-500 hover:bg-danger-600 rounded-lg transition-colors"
+            class="flex-1 px-4 py-2 text-sm font-medium text-white bg-danger-500 hover:bg-danger-600 rounded-lg transition-colors cursor-pointer"
           >
             {{ m.delete_confirmation.delete() }}
           </button>
