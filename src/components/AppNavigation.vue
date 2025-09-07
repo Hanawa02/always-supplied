@@ -2,10 +2,9 @@
   <nav class="bg-white border-b border-gray-200 px-4 py-3">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div class="flex items-center space-x-4">
-        <div class="flex items-center space-x-3">
-          <AppLogo :size="32" />
-          <h1 class="text-xl font-bold text-primary-700">{{ m.app.name() }}</h1>
-        </div>
+        <h1 class="flex items-center space-x-3">
+          <AppLogo class="h-8" variant="full" />
+        </h1>
 
         <div class="hidden sm:flex space-x-4">
           <!-- Type-safe navigation using routes -->

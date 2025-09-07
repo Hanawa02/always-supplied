@@ -14,6 +14,11 @@ export const ROUTES = {
     path: "/theme-preview",
     component: () => import("~/views/ThemePreview.vue"),
   },
+  LOGO_PREVIEW: {
+    name: "LogoPreview",
+    path: "/logo-preview",
+    component: () => import("~/views/LogoPreview.vue"),
+  },
   SUPPLY_CONFIGURATION: {
     name: "SupplyConfiguration",
     path: "/app/supply-configuration",
