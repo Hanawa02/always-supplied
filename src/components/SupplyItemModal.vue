@@ -1,302 +1,295 @@
 <template>
-  <div class="fixed inset-0 z-50 overflow-y-auto">
-    <div class="flex min-h-full items-center justify-center p-4 text-center">
-      <!-- Background overlay -->
-      <div
-        class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-        @click="emit('close')"
-      ></div>
-
-      <!-- Modal panel -->
-      <div
-        class="relative w-full max-w-lg transform overflow-hidden rounded-lg bg-white p-6 text-left shadow-xl transition-all"
-      >
-        <!-- Header -->
-        <div class="flex items-center justify-between mb-6">
-          <h3 class="text-lg font-semibold text-gray-900">
-            {{ isEditing ? m.supply_item_modal.title_edit() : m.supply_item_modal.title_add() }}
-          </h3>
-          <button
-            @click="emit('close')"
-            class="text-gray-400 hover:text-gray-600 transition-colors w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 cursor-pointer"
-            :title="m.supply_item_modal.close_tooltip()"
-          >
-            <i class="i-mdi:close text-xl"></i>
-          </button>
-        </div>
+  <Dialog :open="true" @update:open="(open) => !open && emit('close')">
+    <DialogContent class="max-w-lg max-h-[80vh] overflow-y-auto">
+      <DialogHeader>
+        <DialogTitle>
+          {{ isEditing ? m.supply_item_modal.title_edit() : m.supply_item_modal.title_add() }}
+        </DialogTitle>
+      </DialogHeader>
 
         <!-- Form -->
         <form @submit.prevent="handleSubmit" class="space-y-6">
-          <!-- Name (Required) -->
-          <div>
-            <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ m.supply_item_modal.name_label() }}
-              <span class="text-danger-500">{{ m.supply_item_modal.required_field() }}</span>
-            </label>
-            <input
-              id="name"
-              v-model="form.name"
-              type="text"
-              required
-              :placeholder="m.supply_item_modal.name_placeholder()"
-              class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-            />
-          </div>
+        <!-- Name (Required) -->
+        <div class="grid gap-2">
+          <Label for="name">
+            {{ m.supply_item_modal.name_label() }}
+            <span class="text-destructive">{{ m.supply_item_modal.required_field() }}</span>
+          </Label>
+          <Input
+            id="name"
+            v-model="form.name"
+            type="text"
+            required
+            :placeholder="m.supply_item_modal.name_placeholder()"
+          />
+        </div>
 
-          <!-- Description -->
-          <div>
-            <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ m.supply_item_modal.description_label() }}
-            </label>
-            <textarea
-              id="description"
-              v-model="form.description"
-              rows="3"
-              :placeholder="m.supply_item_modal.description_placeholder()"
-              class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-            ></textarea>
-          </div>
+        <!-- Description -->
+        <div class="grid gap-2">
+          <Label for="description">
+            {{ m.supply_item_modal.description_label() }}
+          </Label>
+          <Textarea
+            id="description"
+            v-model="form.description"
+            rows="3"
+            :placeholder="m.supply_item_modal.description_placeholder()"
+          />
+        </div>
 
-          <!-- Quantity (Required) -->
-          <div>
-            <label for="quantity" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ m.supply_item_modal.quantity_label() }}
-              <span class="text-danger-500">{{ m.supply_item_modal.required_field() }}</span>
-              <button
-                type="button"
-                @click="showQuantityHelp = !showQuantityHelp"
-                class="ml-1 text-gray-400 hover:text-gray-600 w-4 h-4 inline-flex items-center justify-center rounded-full hover:bg-gray-100 cursor-pointer"
-                :title="m.supply_item_modal.quantity_help()"
-              >
-                <i class="i-mdi:help-circle-outline text-xs"></i>
-              </button>
-            </label>
-            <div v-if="showQuantityHelp" class="text-xs text-blue-600 bg-blue-50 p-2 rounded mb-2">
-              {{ m.supply_item_modal.quantity_help() }}
-            </div>
-            <input
-              id="quantity"
-              v-model.number="form.quantity"
-              type="number"
-              min="0"
-              required
-              :placeholder="m.supply_item_modal.quantity_placeholder()"
-              class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-            />
-          </div>
-
-          <!-- Category -->
-          <div>
-            <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ m.supply_item_modal.category_label() }}
-            </label>
-            <div class="space-y-2">
-              <!-- Category selector and custom input row -->
-              <div class="flex space-x-2">
-                <select
-                  id="category"
-                  v-model="form.category"
-                  :class="categorySelectMode ? 'flex-1' : 'w-36 flex-shrink-0'"
-                  class="px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                  @change="handleCategoryChange"
-                >
-                  <option value="">{{ m.supply_item_modal.category_placeholder() }}</option>
-                  <option value="custom">{{ m.supply_item_modal.category_custom() }}</option>
-                  <option v-for="category in availableCategories" :key="category" :value="category">
-                    {{ category }}
-                  </option>
-                </select>
-                <!-- Inline custom input when custom is selected -->
-                <template v-if="!categorySelectMode">
-                  <input
-                    v-model="customCategory"
-                    type="text"
-                    :placeholder="m.supply_item_modal.category_custom_placeholder()"
-                    class="flex-1 px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                    @keyup.enter="handleCustomCategory"
-                  />
-                  <button
-                    type="button"
-                    @click="handleCustomCategory"
-                    :disabled="!customCategory.trim()"
-                    class="bg-primary-100 hover:bg-primary-200 disabled:bg-gray-50 disabled:text-gray-400 text-primary-700 px-3 py-2 rounded-lg transition-colors flex items-center justify-center w-10 h-10 cursor-pointer disabled:cursor-not-allowed"
-                    title="Save custom category"
-                  >
-                    <i class="i-mdi:check text-lg"></i>
-                  </button>
-                  <button
-                    type="button"
-                    @click="cancelCustomCategory"
-                    class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-lg transition-colors flex items-center justify-center w-10 h-10 cursor-pointer"
-                    title="Cancel custom category creation"
-                  >
-                    <i class="i-mdi:close text-lg"></i>
-                  </button>
-                </template>
-              </div>
-            </div>
-          </div>
-
-          <!-- Storage Room -->
-          <div>
-            <label for="storage-room" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ m.supply_item_modal.storage_room_label() }}
-            </label>
-            <div class="space-y-2">
-              <!-- Storage room selector and custom input row -->
-              <div class="flex space-x-2">
-                <select
-                  id="storage-room"
-                  v-model="form.storageRoom"
-                  :class="storageSelectMode ? 'flex-1' : 'w-36 flex-shrink-0'"
-                  class="px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                  @change="handleStorageChange"
-                >
-                  <option value="">{{ m.supply_item_modal.storage_room_placeholder() }}</option>
-                  <option value="custom">{{ m.supply_item_modal.storage_room_custom() }}</option>
-                  <option v-for="room in availableStorageRooms" :key="room" :value="room">
-                    {{ room }}
-                  </option>
-                </select>
-                <!-- Inline custom input when custom is selected -->
-                <template v-if="!storageSelectMode">
-                  <input
-                    v-model="customStorageRoom"
-                    type="text"
-                    :placeholder="m.supply_item_modal.storage_room_custom_placeholder()"
-                    class="flex-1 px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                    @keyup.enter="handleCustomStorageRoom"
-                  />
-                  <button
-                    type="button"
-                    @click="handleCustomStorageRoom"
-                    :disabled="!customStorageRoom.trim()"
-                    class="bg-primary-100 hover:bg-primary-200 disabled:bg-gray-50 disabled:text-gray-400 text-primary-700 px-3 py-2 rounded-lg transition-colors flex items-center justify-center w-10 h-10 cursor-pointer disabled:cursor-not-allowed"
-                    title="Save custom storage room"
-                  >
-                    <i class="i-mdi:check text-lg"></i>
-                  </button>
-                  <button
-                    type="button"
-                    @click="cancelCustomStorageRoom"
-                    class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-lg transition-colors flex items-center justify-center w-10 h-10 cursor-pointer"
-                    title="Cancel custom storage room creation"
-                  >
-                    <i class="i-mdi:close text-lg"></i>
-                  </button>
-                </template>
-              </div>
-            </div>
-          </div>
-
-          <!-- Shopping Hint -->
-          <div>
-            <label for="shopping-hint" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ m.supply_item_modal.shopping_hint_label() }}
-              <button
-                type="button"
-                @click="showShoppingHintHelp = !showShoppingHintHelp"
-                class="ml-1 text-gray-400 hover:text-gray-600 w-4 h-4 inline-flex items-center justify-center rounded-full hover:bg-gray-100 cursor-pointer"
-                :title="m.supply_item_modal.shopping_hint_help()"
-              >
-                <i class="i-mdi:help-circle-outline text-xs"></i>
-              </button>
-            </label>
-            <div
-              v-if="showShoppingHintHelp"
-              class="text-xs text-blue-600 bg-blue-50 p-2 rounded mb-2"
+        <!-- Quantity (Required) -->
+        <div class="grid gap-2">
+          <Label for="quantity">
+            {{ m.supply_item_modal.quantity_label() }}
+            <span class="text-destructive">{{ m.supply_item_modal.required_field() }}</span>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              @click="showQuantityHelp = !showQuantityHelp"
+              class="ml-1 h-4 w-4"
+              :title="m.supply_item_modal.quantity_help()"
             >
-              {{ m.supply_item_modal.shopping_hint_help() }}
-            </div>
-            <textarea
-              id="shopping-hint"
-              v-model="form.shoppingHint"
-              rows="2"
-              :placeholder="m.supply_item_modal.shopping_hint_placeholder()"
-              class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-            ></textarea>
+              <i class="i-mdi:help-circle-outline text-xs"></i>
+            </Button>
+          </Label>
+          <div v-if="showQuantityHelp" class="text-xs text-blue-600 bg-blue-50 p-2 rounded mb-2">
+            {{ m.supply_item_modal.quantity_help() }}
           </div>
+          <Input
+            id="quantity"
+            v-model.number="form.quantity"
+            type="number"
+            min="0"
+            required
+            :placeholder="m.supply_item_modal.quantity_placeholder()"
+          />
+        </div>
 
-          <!-- Preferred Brands -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              {{ m.supply_item_modal.preferred_brands_label() }}
-              <button
-                type="button"
-                @click="showBrandsHelp = !showBrandsHelp"
-                class="ml-1 text-gray-400 hover:text-gray-600 w-4 h-4 inline-flex items-center justify-center rounded-full hover:bg-gray-100 cursor-pointer"
-                :title="m.supply_item_modal.preferred_brands_help()"
-              >
-                <i class="i-mdi:help-circle-outline text-xs"></i>
-              </button>
-            </label>
-            <div v-if="showBrandsHelp" class="text-xs text-blue-600 bg-blue-50 p-2 rounded mb-2">
-              {{ m.supply_item_modal.preferred_brands_help() }}
-            </div>
-            <div class="space-y-2">
-              <!-- Existing brands -->
-              <div
-                v-if="form.preferredBrands && form.preferredBrands.length > 0"
-                class="flex flex-wrap gap-2"
-              >
-                <div
-                  v-for="(brand, index) in form.preferredBrands"
-                  :key="index"
-                  class="flex items-center bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm"
-                >
-                  <span>{{ brand }}</span>
-                  <button
-                    type="button"
-                    @click="removeBrand(index)"
-                    class="ml-2 text-gray-400 hover:text-gray-600 w-4 h-4 flex items-center justify-center cursor-pointer"
-                  >
-                    <i class="i-mdi:close text-sm"></i>
-                  </button>
-                </div>
-              </div>
-
-              <!-- Add new brand -->
-              <div class="flex space-x-2">
-                <input
-                  v-model="newBrand"
+        <!-- Category -->
+        <div class="grid gap-2">
+          <Label for="category">
+            {{ m.supply_item_modal.category_label() }}
+          </Label>
+          <div class="space-y-2">
+            <!-- Category selector and custom input row -->
+            <div class="flex space-x-2">
+              <Select :model-value="form.category" @update:model-value="handleCategoryChange">
+                <SelectTrigger :class="categorySelectMode ? 'flex-1' : 'w-36 flex-shrink-0'">
+                  <SelectValue :placeholder="m.supply_item_modal.category_placeholder()" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="custom">{{ m.supply_item_modal.category_custom() }}</SelectItem>
+                  <SelectItem v-for="category in availableCategories" :key="category" :value="category">
+                    {{ category }}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+              <!-- Inline custom input when custom is selected -->
+              <template v-if="!categorySelectMode">
+                <Input
+                  v-model="customCategory"
                   type="text"
-                  :placeholder="m.supply_item_modal.preferred_brands_placeholder()"
-                  class="flex-1 px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                  @keyup.enter="addBrand"
+                  :placeholder="m.supply_item_modal.category_custom_placeholder()"
+                  class="flex-1"
+                  @keyup.enter="handleCustomCategory"
                 />
-                <button
+                <Button
                   type="button"
-                  @click="addBrand"
-                  :disabled="!newBrand.trim()"
-                  class="bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 disabled:text-gray-400 text-gray-700 px-3 py-2 rounded-lg transition-colors flex items-center justify-center w-10 h-10 cursor-pointer disabled:cursor-not-allowed"
+                  @click="handleCustomCategory"
+                  :disabled="!customCategory.trim()"
+                  size="icon"
+                  variant="secondary"
+                  title="Save custom category"
                 >
-                  <i class="i-mdi:plus text-lg"></i>
-                </button>
-              </div>
+                  <i class="i-mdi:check text-lg"></i>
+                </Button>
+                <Button
+                  type="button"
+                  @click="cancelCustomCategory"
+                  size="icon"
+                  variant="outline"
+                  title="Cancel custom category creation"
+                >
+                  <i class="i-mdi:close text-lg"></i>
+                </Button>
+              </template>
             </div>
           </div>
+        </div>
 
-          <!-- Actions -->
-          <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
-            <BaseButton variant="secondary" @click="emit('close')">
-              {{ m.supply_item_modal.cancel() }}
-            </BaseButton>
-            <BaseButton variant="primary" type="submit">
-              {{
-                isEditing ? m.supply_item_modal.update_item() : m.supply_item_modal.create_item()
-              }}
-            </BaseButton>
+        <!-- Storage Room -->
+        <div class="grid gap-2">
+          <Label for="storage-room">
+            {{ m.supply_item_modal.storage_room_label() }}
+          </Label>
+          <div class="space-y-2">
+            <!-- Storage room selector and custom input row -->
+            <div class="flex space-x-2">
+              <Select :model-value="form.storageRoom" @update:model-value="handleStorageChange">
+                <SelectTrigger :class="storageSelectMode ? 'flex-1' : 'w-36 flex-shrink-0'">
+                  <SelectValue :placeholder="m.supply_item_modal.storage_room_placeholder()" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="custom">{{ m.supply_item_modal.storage_room_custom() }}</SelectItem>
+                  <SelectItem v-for="room in availableStorageRooms" :key="room" :value="room">
+                    {{ room }}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+              <!-- Inline custom input when custom is selected -->
+              <template v-if="!storageSelectMode">
+                <Input
+                  v-model="customStorageRoom"
+                  type="text"
+                  :placeholder="m.supply_item_modal.storage_room_custom_placeholder()"
+                  class="flex-1"
+                  @keyup.enter="handleCustomStorageRoom"
+                />
+                <Button
+                  type="button"
+                  @click="handleCustomStorageRoom"
+                  :disabled="!customStorageRoom.trim()"
+                  size="icon"
+                  variant="secondary"
+                  title="Save custom storage room"
+                >
+                  <i class="i-mdi:check text-lg"></i>
+                </Button>
+                <Button
+                  type="button"
+                  @click="cancelCustomStorageRoom"
+                  size="icon"
+                  variant="outline"
+                  title="Cancel custom storage room creation"
+                >
+                  <i class="i-mdi:close text-lg"></i>
+                </Button>
+              </template>
+            </div>
           </div>
-        </form>
-      </div>
-    </div>
-  </div>
+        </div>
+
+        <!-- Shopping Hint -->
+        <div class="grid gap-2">
+          <Label for="shopping-hint">
+            {{ m.supply_item_modal.shopping_hint_label() }}
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              @click="showShoppingHintHelp = !showShoppingHintHelp"
+              class="ml-1 h-4 w-4"
+              :title="m.supply_item_modal.shopping_hint_help()"
+            >
+              <i class="i-mdi:help-circle-outline text-xs"></i>
+            </Button>
+          </Label>
+          <div
+            v-if="showShoppingHintHelp"
+            class="text-xs text-blue-600 bg-blue-50 p-2 rounded mb-2"
+          >
+            {{ m.supply_item_modal.shopping_hint_help() }}
+          </div>
+          <Textarea
+            id="shopping-hint"
+            v-model="form.shoppingHint"
+            rows="2"
+            :placeholder="m.supply_item_modal.shopping_hint_placeholder()"
+          />
+        </div>
+
+        <!-- Preferred Brands -->
+        <div class="grid gap-2">
+          <Label>
+            {{ m.supply_item_modal.preferred_brands_label() }}
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              @click="showBrandsHelp = !showBrandsHelp"
+              class="ml-1 h-4 w-4"
+              :title="m.supply_item_modal.preferred_brands_help()"
+            >
+              <i class="i-mdi:help-circle-outline text-xs"></i>
+            </Button>
+          </Label>
+          <div v-if="showBrandsHelp" class="text-xs text-blue-600 bg-blue-50 p-2 rounded mb-2">
+            {{ m.supply_item_modal.preferred_brands_help() }}
+          </div>
+          <div class="space-y-2">
+            <!-- Existing brands -->
+            <div
+              v-if="form.preferredBrands && form.preferredBrands.length > 0"
+              class="flex flex-wrap gap-2"
+            >
+              <Badge
+                v-for="(brand, index) in form.preferredBrands"
+                :key="index"
+                variant="secondary"
+                class="flex items-center gap-1"
+              >
+                <span>{{ brand }}</span>
+                <Button
+                  type="button"
+                  @click="removeBrand(index)"
+                  variant="ghost"
+                  size="icon"
+                  class="h-4 w-4 p-0 hover:bg-transparent"
+                >
+                  <i class="i-mdi:close text-xs"></i>
+                </Button>
+              </Badge>
+            </div>
+
+            <!-- Add new brand -->
+            <div class="flex space-x-2">
+              <Input
+                v-model="newBrand"
+                type="text"
+                :placeholder="m.supply_item_modal.preferred_brands_placeholder()"
+                class="flex-1"
+                @keyup.enter="addBrand"
+              />
+              <Button
+                type="button"
+                @click="addBrand"
+                :disabled="!newBrand.trim()"
+                size="icon"
+                variant="outline"
+              >
+                <i class="i-mdi:plus text-lg"></i>
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <DialogFooter class="flex justify-end space-x-3 pt-6">
+          <Button variant="outline" @click="emit('close')">
+            {{ m.supply_item_modal.cancel() }}
+          </Button>
+          <Button type="submit">
+            {{
+              isEditing ? m.supply_item_modal.update_item() : m.supply_item_modal.create_item()
+            }}
+          </Button>
+        </DialogFooter>
+      </form>
+    </DialogContent>
+  </Dialog>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from "vue"
 
-import BaseButton from "~/components/ui/BaseButton.vue"
+import { Badge } from "~/components/ui/badge"
+import { Button } from "~/components/ui/button"
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "~/components/ui/dialog"
+import { Input } from "~/components/ui/input"
+import { Label } from "~/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select"
+import { Textarea } from "~/components/ui/textarea"
 import { useI18n } from "~/composables/useI18n"
 import type { CreateSupplyItem, SupplyItem, UpdateSupplyItem } from "~/types/supply"
 import { COMMON_CATEGORIES, COMMON_STORAGE_ROOMS } from "~/types/supply"
@@ -375,9 +368,10 @@ const removeBrand = (index: number) => {
   }
 }
 
-const handleCategoryChange = () => {
-  categorySelectMode.value = form.category !== "custom"
-  if (form.category === "custom") {
+const handleCategoryChange = (value: string | null) => {
+  form.category = value || ""
+  categorySelectMode.value = value !== "custom"
+  if (value === "custom") {
     customCategory.value = ""
   }
 }
@@ -397,9 +391,10 @@ const cancelCustomCategory = () => {
   customCategory.value = ""
 }
 
-const handleStorageChange = () => {
-  storageSelectMode.value = form.storageRoom !== "custom"
-  if (form.storageRoom === "custom") {
+const handleStorageChange = (value: string) => {
+  form.storageRoom = value
+  storageSelectMode.value = value !== "custom"
+  if (value === "custom") {
     customStorageRoom.value = ""
   }
 }

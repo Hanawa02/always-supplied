@@ -1,10 +1,10 @@
 <template>
-  <div class="bg-white rounded-lg border border-gray-200 p-4">
+  <Card class="p-4">
     <div class="flex items-center">
       <div class="flex-1">
-        <p class="text-sm font-medium text-gray-600">{{ title }}</p>
-        <p class="text-2xl font-bold text-gray-900">{{ value }}</p>
-        <p v-if="subtitle" class="text-xs text-gray-500 mt-1">{{ subtitle }}</p>
+        <p class="text-sm font-medium text-muted-foreground">{{ title }}</p>
+        <p class="text-2xl font-bold text-foreground">{{ value }}</p>
+        <p v-if="subtitle" class="text-xs text-muted-foreground mt-1">{{ subtitle }}</p>
       </div>
       <div v-if="icon" class="ml-4">
         <div :class="iconWrapperClasses">
@@ -12,11 +12,13 @@
         </div>
       </div>
     </div>
-  </div>
+  </Card>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue"
+
+import { Card } from "~/components/ui/card"
 
 interface Props {
   title: string

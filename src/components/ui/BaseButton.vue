@@ -1,13 +1,23 @@
 <template>
-  <button :type="type" :disabled="disabled" :class="buttonClasses" @click="$emit('click', $event)">
+  <Button
+    :variant="shadcnVariant"
+    :size="shadcnSize"
+    :type="type"
+    :disabled="disabled"
+    :class="fullWidth ? 'w-full' : ''"
+    @click="$emit('click', $event)"
+  >
     <i v-if="icon && iconPosition === 'left'" :class="iconClasses" />
     <slot />
     <i v-if="icon && iconPosition === 'right'" :class="iconClasses" />
-  </button>
+  </Button>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue"
+
+import type { ButtonVariants } from "~/components/ui/button"
+import { Button } from "~/components/ui/button"
 
 interface Props {
   variant?: "primary" | "secondary" | "danger" | "ghost"
@@ -32,40 +42,26 @@ defineEmits<{
   click: [event: MouseEvent]
 }>()
 
-const baseClasses =
-  "inline-flex items-center justify-center font-medium rounded-lg transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-
-const variantClasses = computed(() => {
-  const variants = {
-    primary: "bg-primary-500 hover:bg-primary-600 text-white focus:ring-primary-500",
-    secondary:
-      "bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 focus:ring-primary-500",
-    danger: "bg-danger-500 hover:bg-danger-600 text-white focus:ring-danger-500",
-    ghost: "text-gray-600 hover:text-primary-600 hover:bg-primary-50 focus:ring-primary-500",
+// Map our custom variants to shadcn variants
+const shadcnVariant = computed((): ButtonVariants["variant"] => {
+  const variantMap = {
+    primary: "default" as const,
+    secondary: "outline" as const,
+    danger: "destructive" as const,
+    ghost: "ghost" as const,
   }
-  return variants[props.variant]
+  return variantMap[props.variant]
 })
 
-const sizeClasses = computed(() => {
-  const sizes = {
-    sm: "px-3 py-1.5 text-sm",
-    md: "px-4 py-2 text-sm",
-    lg: "px-6 py-3 text-base",
+// Map our custom sizes to shadcn sizes
+const shadcnSize = computed((): ButtonVariants["size"] => {
+  const sizeMap = {
+    sm: "sm" as const,
+    md: "default" as const,
+    lg: "lg" as const,
   }
-  return sizes[props.size]
+  return sizeMap[props.size]
 })
-
-const buttonClasses = computed(() =>
-  [
-    baseClasses,
-    variantClasses.value,
-    sizeClasses.value,
-    props.fullWidth ? "w-full" : "",
-    props.disabled ? "disabled:bg-gray-100 disabled:text-gray-400" : "",
-  ]
-    .filter(Boolean)
-    .join(" "),
-)
 
 const iconClasses = computed(() => {
   const spacingClasses = {

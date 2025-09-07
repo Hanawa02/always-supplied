@@ -1,83 +1,66 @@
 <template>
-  <div class="fixed inset-0 z-50 overflow-y-auto">
-    <div class="flex min-h-full items-center justify-center p-4 text-center">
-      <!-- Background overlay -->
-      <div
-        class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-        @click="emit('close')"
-      ></div>
-
-      <!-- Modal panel -->
-      <div
-        class="relative w-full max-w-lg transform overflow-hidden rounded-lg bg-white p-6 text-left shadow-xl transition-all"
-      >
-        <!-- Header -->
-        <div class="flex items-center justify-between mb-6">
-          <h3 class="text-lg font-semibold text-gray-900">
-            {{ isEditing ? m.building_modal.title_edit() : m.building_modal.title_add() }}
-          </h3>
-          <button
-            @click="emit('close')"
-            class="text-gray-400 hover:text-gray-600 transition-colors w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 cursor-pointer"
-            :title="m.building_modal.close_tooltip()"
-          >
-            <i class="i-mdi:close text-xl"></i>
-          </button>
-        </div>
+  <Dialog :open="true" @update:open="(open) => !open && emit('close')">
+    <DialogContent class="max-w-lg">
+      <DialogHeader>
+        <DialogTitle>
+          {{ isEditing ? m.building_modal.title_edit() : m.building_modal.title_add() }}
+        </DialogTitle>
+      </DialogHeader>
 
         <!-- Form -->
         <form @submit.prevent="handleSubmit" class="space-y-6">
-          <!-- Name (Required) -->
-          <div>
-            <label for="building-name" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ m.building_modal.name_label() }}
-              <span class="text-danger-500">{{ m.building_modal.required_field() }}</span>
-            </label>
-            <input
-              id="building-name"
-              v-model="form.name"
-              type="text"
-              required
-              :placeholder="m.building_modal.name_placeholder()"
-              class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-            />
-          </div>
+        <!-- Name (Required) -->
+        <div class="grid gap-2">
+          <Label for="building-name">
+            {{ m.building_modal.name_label() }}
+            <span class="text-destructive">{{ m.building_modal.required_field() }}</span>
+          </Label>
+          <Input
+            id="building-name"
+            v-model="form.name"
+            type="text"
+            required
+            :placeholder="m.building_modal.name_placeholder()"
+          />
+        </div>
 
-          <!-- Description -->
-          <div>
-            <label for="building-description" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ m.building_modal.description_label() }}
-            </label>
-            <textarea
-              id="building-description"
-              v-model="form.description"
-              rows="3"
-              :placeholder="m.building_modal.description_placeholder()"
-              class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-            ></textarea>
-          </div>
+        <!-- Description -->
+        <div class="grid gap-2">
+          <Label for="building-description">
+            {{ m.building_modal.description_label() }}
+          </Label>
+          <Textarea
+            id="building-description"
+            v-model="form.description"
+            rows="3"
+            :placeholder="m.building_modal.description_placeholder()"
+          />
+        </div>
 
-          <!-- Actions -->
-          <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
-            <BaseButton variant="secondary" @click="emit('close')">
-              {{ m.building_modal.cancel() }}
-            </BaseButton>
-            <BaseButton variant="primary" type="submit">
-              {{
-                isEditing ? m.building_modal.update_building() : m.building_modal.create_building()
-              }}
-            </BaseButton>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
+        <!-- Actions -->
+        <DialogFooter class="flex justify-end space-x-3 pt-6">
+          <Button variant="outline" @click="emit('close')">
+            {{ m.building_modal.cancel() }}
+          </Button>
+          <Button type="submit">
+            {{
+              isEditing ? m.building_modal.update_building() : m.building_modal.create_building()
+            }}
+          </Button>
+        </DialogFooter>
+      </form>
+    </DialogContent>
+  </Dialog>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, reactive } from "vue"
 
-import BaseButton from "~/components/ui/BaseButton.vue"
+import { Button } from "~/components/ui/button"
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "~/components/ui/dialog"
+import { Input } from "~/components/ui/input"
+import { Label } from "~/components/ui/label"
+import { Textarea } from "~/components/ui/textarea"
 import { useI18n } from "~/composables/useI18n"
 import type {
   CreateSuppliedBuilding,
