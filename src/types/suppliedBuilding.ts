@@ -19,16 +19,16 @@ export interface UpdateSuppliedBuilding {
 
 // Common building types for quick selection
 export const COMMON_BUILDING_TYPES = [
-  'Home',
-  'Office',
-  'Warehouse', 
-  'Retail Store',
-  'Restaurant',
-  'Hotel',
-  'School',
-  'Hospital',
-  'Factory',
-  'Other'
+  "Home",
+  "Office",
+  "Warehouse",
+  "Retail Store",
+  "Restaurant",
+  "Hotel",
+  "School",
+  "Hospital",
+  "Factory",
+  "Other",
 ] as const
 
-export type CommonBuildingType = typeof COMMON_BUILDING_TYPES[number]
+export type CommonBuildingType = (typeof COMMON_BUILDING_TYPES)[number]

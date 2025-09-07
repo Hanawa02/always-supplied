@@ -23,11 +23,7 @@
               </p>
             </div>
           </div>
-          <BaseButton
-            variant="primary"
-            icon="i-mdi:plus"
-            @click="showCreateModal = true"
-          >
+          <BaseButton variant="primary" icon="i-mdi:plus" @click="showCreateModal = true">
             <span class="hidden sm:inline">{{ m.supply_configuration.add_supply_item() }}</span>
             <span class="sm:hidden">{{ m.supply_configuration.add_item_short() }}</span>
           </BaseButton>
@@ -98,13 +94,21 @@
       <EmptyState
         v-if="filteredItems.length === 0"
         icon="i-mdi:package-variant-closed"
-        :title="searchQuery || selectedCategory
-          ? m.supply_configuration.empty_state.no_items_found_title()
-          : m.supply_configuration.empty_state.no_items_title()"
-        :description="searchQuery || selectedCategory
-          ? m.supply_configuration.empty_state.no_items_found_description()
-          : m.supply_configuration.empty_state.no_items_description()"
-        :action-label="!searchQuery && !selectedCategory ? m.supply_configuration.empty_state.add_first_item() : undefined"
+        :title="
+          searchQuery || selectedCategory
+            ? m.supply_configuration.empty_state.no_items_found_title()
+            : m.supply_configuration.empty_state.no_items_title()
+        "
+        :description="
+          searchQuery || selectedCategory
+            ? m.supply_configuration.empty_state.no_items_found_description()
+            : m.supply_configuration.empty_state.no_items_description()
+        "
+        :action-label="
+          !searchQuery && !selectedCategory
+            ? m.supply_configuration.empty_state.add_first_item()
+            : undefined
+        "
         @action="showCreateModal = true"
       />
     </div>
@@ -165,7 +169,7 @@ const selectedBuildingId = computed(() => {
   // First priority: query parameter
   const queryId = route.query.buildingId as string | undefined
   if (queryId) return queryId
-  
+
   // Second priority: selected building from store
   return selectedBuildingStore.selectedBuildingId
 })
@@ -179,7 +183,7 @@ const selectedBuilding = computed(() => {
 onMounted(() => {
   // Load selected building from storage if not already loaded
   selectedBuildingStore.loadFromStorage()
-  
+
   // If we still don't have a selected building, redirect
   if (!selectedBuildingId.value) {
     router.replace(ROUTES.SUPPLIED_BUILDINGS.path)
@@ -187,7 +191,7 @@ onMounted(() => {
     // If we have a selected building but no query param, update the URL
     router.replace({
       name: route.name,
-      query: { ...route.query, buildingId: selectedBuildingStore.selectedBuildingId }
+      query: { ...route.query, buildingId: selectedBuildingStore.selectedBuildingId },
     })
   }
 })
@@ -241,8 +245,8 @@ const handleSave = async (itemData: CreateSupplyItem | UpdateSupplyItem) => {
     } else {
       // Create new item - add building ID
       const createData: CreateSupplyItem = {
-        ...itemData as CreateSupplyItem,
-        buildingId: selectedBuildingId.value!
+        ...(itemData as CreateSupplyItem),
+        buildingId: selectedBuildingId.value!,
       }
       await createSupplyItem(createData)
     }

@@ -126,10 +126,14 @@ export function useI18n() {
       manage_supplies: (): string => (m as any)["supplied_buildings.manage_supplies"](),
       supplies_count: (): string => (m as any)["supplied_buildings.supplies_count"](),
       empty_state: {
-        no_buildings_title: (): string => (m as any)["supplied_buildings.empty_state.no_buildings_title"](),
-        no_buildings_description: (): string => (m as any)["supplied_buildings.empty_state.no_buildings_description"](),
-        no_buildings_found_title: (): string => (m as any)["supplied_buildings.empty_state.no_buildings_found_title"](),
-        no_buildings_found_description: (): string => (m as any)["supplied_buildings.empty_state.no_buildings_found_description"](),
+        no_buildings_title: (): string =>
+          (m as any)["supplied_buildings.empty_state.no_buildings_title"](),
+        no_buildings_description: (): string =>
+          (m as any)["supplied_buildings.empty_state.no_buildings_description"](),
+        no_buildings_found_title: (): string =>
+          (m as any)["supplied_buildings.empty_state.no_buildings_found_title"](),
+        no_buildings_found_description: (): string =>
+          (m as any)["supplied_buildings.empty_state.no_buildings_found_description"](),
       },
     },
     building_modal: {

@@ -1,5 +1,7 @@
 <template>
-  <div class="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+  <div
+    class="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+  >
     <div class="p-6">
       <!-- Item Header -->
       <div class="flex items-start justify-between mb-4">
@@ -39,7 +41,9 @@
         <div class="grid grid-cols-2 gap-4">
           <div v-if="item.category">
             <span class="text-xs text-gray-500">{{ categoryLabel }}</span>
-            <div class="bg-primary-50 text-primary-700 px-2 py-1 rounded-full text-xs font-medium mt-1">
+            <div
+              class="bg-primary-50 text-primary-700 px-2 py-1 rounded-full text-xs font-medium mt-1"
+            >
               {{ item.category }}
             </div>
           </div>
@@ -54,7 +58,9 @@
         <!-- Shopping Hint -->
         <div v-if="item.shoppingHint" class="bg-warning-50 p-3 rounded-lg">
           <div class="flex items-start">
-            <i class="i-mdi:lightbulb-outline text-warning-600 text-sm mt-0.5 mr-2 flex-shrink-0"></i>
+            <i
+              class="i-mdi:lightbulb-outline text-warning-600 text-sm mt-0.5 mr-2 flex-shrink-0"
+            ></i>
             <p class="text-xs text-warning-700">{{ item.shoppingHint }}</p>
           </div>
         </div>
@@ -78,7 +84,7 @@
 </template>
 
 <script setup lang="ts">
-import type { SupplyItem } from '~/types/supply'
+import type { SupplyItem } from "~/types/supply"
 
 interface Props {
   item: SupplyItem

@@ -278,16 +278,10 @@
 
           <!-- Actions -->
           <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
-            <BaseButton
-              variant="secondary"
-              @click="emit('close')"
-            >
+            <BaseButton variant="secondary" @click="emit('close')">
               {{ m.supply_item_modal.cancel() }}
             </BaseButton>
-            <BaseButton
-              variant="primary"
-              type="submit"
-            >
+            <BaseButton variant="primary" type="submit">
               {{
                 isEditing ? m.supply_item_modal.update_item() : m.supply_item_modal.create_item()
               }}

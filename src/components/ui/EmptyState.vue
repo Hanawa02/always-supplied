@@ -6,11 +6,7 @@
     <h3 class="text-lg font-medium text-gray-900 mb-2">{{ title }}</h3>
     <p class="text-gray-600 mb-6">{{ description }}</p>
     <slot name="actions">
-      <BaseButton
-        v-if="actionLabel"
-        variant="primary"
-        @click="$emit('action')"
-      >
+      <BaseButton v-if="actionLabel" variant="primary" @click="$emit('action')">
         {{ actionLabel }}
       </BaseButton>
     </slot>
@@ -18,9 +14,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed } from "vue"
 
-import BaseButton from './BaseButton.vue'
+import BaseButton from "./BaseButton.vue"
 
 interface Props {
   title: string
@@ -30,15 +26,12 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  icon: 'i-mdi:package-variant-closed'
+  icon: "i-mdi:package-variant-closed",
 })
 
 defineEmits<{
   action: []
 }>()
 
-const iconClasses = computed(() => [
-  props.icon,
-  'text-gray-400 text-4xl'
-].join(' '))
+const iconClasses = computed(() => [props.icon, "text-gray-400 text-4xl"].join(" "))
 </script>

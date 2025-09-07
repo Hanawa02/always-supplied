@@ -4,7 +4,7 @@
       <div class="flex justify-between h-16">
         <!-- Left side -->
         <div class="flex items-center">
-          <router-link 
+          <router-link
             :to="{ name: ROUTES.SUPPLIED_BUILDINGS.name }"
             class="flex items-center space-x-3 hover:opacity-80 transition-opacity"
           >
@@ -21,15 +21,20 @@
               {{ m.app.navigation.supplied_buildings() }}
             </router-link>
             <router-link
-              :to="{ 
+              :to="{
                 name: ROUTES.SUPPLY_CONFIGURATION.name,
-                query: selectedBuildingStore.selectedBuildingId ? { buildingId: selectedBuildingStore.selectedBuildingId } : {}
+                query: selectedBuildingStore.selectedBuildingId
+                  ? { buildingId: selectedBuildingStore.selectedBuildingId }
+                  : {},
               }"
               class="text-gray-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors flex flex-col items-start"
               active-class="text-primary-700 bg-primary-50"
             >
               <span>{{ m.app.navigation.supply_configuration() }}</span>
-              <span v-if="selectedBuildingStore.selectedBuilding" class="text-xs text-gray-400 truncate max-w-32">
+              <span
+                v-if="selectedBuildingStore.selectedBuilding"
+                class="text-xs text-gray-400 truncate max-w-32"
+              >
                 {{ selectedBuildingStore.selectedBuilding.name }}
               </span>
             </router-link>
@@ -58,11 +63,31 @@
           >
             <span class="sr-only">Open main menu</span>
             <!-- Hamburger icon -->
-            <svg v-if="!mobileMenuOpen" class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            <svg
+              v-if="!mobileMenuOpen"
+              class="block h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+              />
             </svg>
             <!-- Close icon -->
-            <svg v-else class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+            <svg
+              v-else
+              class="block h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
               <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -73,13 +98,15 @@
     <!-- Mobile menu drawer -->
     <div v-show="mobileMenuOpen" class="md:hidden">
       <!-- Backdrop -->
-      <div 
+      <div
         class="fixed inset-0 bg-black bg-opacity-25 z-40 transition-opacity"
         @click="closeMobileMenu"
       ></div>
-      
+
       <!-- Drawer -->
-      <div class="fixed inset-y-0 right-0 w-64 bg-white shadow-xl z-50 transform transition-transform">
+      <div
+        class="fixed inset-y-0 right-0 w-64 bg-white shadow-xl z-50 transform transition-transform"
+      >
         <div class="flex flex-col h-full">
           <!-- Header -->
           <div class="flex items-center justify-between p-4 border-b border-gray-200">
@@ -88,7 +115,13 @@
               @click="closeMobileMenu"
               class="p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
-              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <svg
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+              >
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
@@ -105,11 +138,13 @@
               <i class="i-mdi:office-building w-5 h-5 mr-3 text-gray-400"></i>
               {{ m.app.navigation.supplied_buildings() }}
             </router-link>
-            
+
             <router-link
-              :to="{ 
+              :to="{
                 name: ROUTES.SUPPLY_CONFIGURATION.name,
-                query: selectedBuildingStore.selectedBuildingId ? { buildingId: selectedBuildingStore.selectedBuildingId } : {}
+                query: selectedBuildingStore.selectedBuildingId
+                  ? { buildingId: selectedBuildingStore.selectedBuildingId }
+                  : {},
               }"
               @click="closeMobileMenu"
               class="flex flex-col px-3 py-3 text-sm font-medium text-gray-600 rounded-lg hover:text-primary-600 hover:bg-primary-50 transition-colors"
@@ -119,11 +154,14 @@
                 <i class="i-mdi:package-variant w-5 h-5 mr-3 text-gray-400"></i>
                 {{ m.app.navigation.supply_configuration() }}
               </div>
-              <span v-if="selectedBuildingStore.selectedBuilding" class="text-xs text-gray-400 ml-8 mt-1">
+              <span
+                v-if="selectedBuildingStore.selectedBuilding"
+                class="text-xs text-gray-400 ml-8 mt-1"
+              >
                 {{ selectedBuildingStore.selectedBuilding.name }}
               </span>
             </router-link>
-            
+
             <router-link
               :to="{ name: ROUTES.THEME_PREVIEW.name }"
               @click="closeMobileMenu"

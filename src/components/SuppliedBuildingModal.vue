@@ -57,20 +57,15 @@
             ></textarea>
           </div>
 
-
           <!-- Actions -->
           <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
-            <BaseButton
-              variant="secondary"
-              @click="emit('close')"
-            >
+            <BaseButton variant="secondary" @click="emit('close')">
               {{ m.building_modal.cancel() }}
             </BaseButton>
-            <BaseButton
-              variant="primary"
-              type="submit"
-            >
-              {{ isEditing ? m.building_modal.update_building() : m.building_modal.create_building() }}
+            <BaseButton variant="primary" type="submit">
+              {{
+                isEditing ? m.building_modal.update_building() : m.building_modal.create_building()
+              }}
             </BaseButton>
           </div>
         </form>
@@ -84,7 +79,11 @@ import { computed, onMounted, reactive } from "vue"
 
 import BaseButton from "~/components/ui/BaseButton.vue"
 import { useI18n } from "~/composables/useI18n"
-import type { CreateSuppliedBuilding, SuppliedBuilding, UpdateSuppliedBuilding } from "~/types/suppliedBuilding"
+import type {
+  CreateSuppliedBuilding,
+  SuppliedBuilding,
+  UpdateSuppliedBuilding,
+} from "~/types/suppliedBuilding"
 
 interface Props {
   building?: SuppliedBuilding | null

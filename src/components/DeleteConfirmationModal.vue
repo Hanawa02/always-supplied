@@ -30,18 +30,10 @@
 
         <!-- Actions -->
         <div class="flex space-x-3">
-          <BaseButton
-            variant="secondary"
-            full-width
-            @click="emit('cancel')"
-          >
+          <BaseButton variant="secondary" full-width @click="emit('cancel')">
             {{ m.delete_confirmation.cancel() }}
           </BaseButton>
-          <BaseButton
-            variant="danger"
-            full-width
-            @click="emit('confirm')"
-          >
+          <BaseButton variant="danger" full-width @click="emit('confirm')">
             {{ m.delete_confirmation.delete() }}
           </BaseButton>
         </div>

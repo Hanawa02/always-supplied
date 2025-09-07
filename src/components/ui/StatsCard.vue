@@ -16,47 +16,44 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed } from "vue"
 
 interface Props {
   title: string
   value: string | number
   subtitle?: string
   icon?: string
-  iconColor?: 'primary' | 'success' | 'warning' | 'danger' | 'info'
+  iconColor?: "primary" | "success" | "warning" | "danger" | "info"
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  iconColor: 'primary'
+  iconColor: "primary",
 })
 
 const iconWrapperClasses = computed(() => {
   const colorClasses = {
-    primary: 'bg-primary-100',
-    success: 'bg-success-100', 
-    warning: 'bg-warning-100',
-    danger: 'bg-danger-100',
-    info: 'bg-info-100'
+    primary: "bg-primary-100",
+    success: "bg-success-100",
+    warning: "bg-warning-100",
+    danger: "bg-danger-100",
+    info: "bg-info-100",
   }
-  
+
   return [
-    'w-8 h-8 rounded-lg flex items-center justify-center',
-    colorClasses[props.iconColor]
-  ].join(' ')
+    "w-8 h-8 rounded-lg flex items-center justify-center",
+    colorClasses[props.iconColor],
+  ].join(" ")
 })
 
 const iconClasses = computed(() => {
   const colorClasses = {
-    primary: 'text-primary-600',
-    success: 'text-success-600',
-    warning: 'text-warning-600', 
-    danger: 'text-danger-600',
-    info: 'text-info-600'
+    primary: "text-primary-600",
+    success: "text-success-600",
+    warning: "text-warning-600",
+    danger: "text-danger-600",
+    info: "text-info-600",
   }
-  
-  return [
-    props.icon,
-    colorClasses[props.iconColor]
-  ].join(' ')
+
+  return [props.icon, colorClasses[props.iconColor]].join(" ")
 })
 </script>

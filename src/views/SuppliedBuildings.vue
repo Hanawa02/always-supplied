@@ -9,11 +9,7 @@
           <h2 class="text-xl sm:text-2xl font-bold text-gray-900">
             {{ m.supplied_buildings.title() }}
           </h2>
-          <BaseButton
-            variant="primary"
-            icon="i-mdi:plus"
-            @click="showCreateModal = true"
-          >
+          <BaseButton variant="primary" icon="i-mdi:plus" @click="showCreateModal = true">
             {{ m.supplied_buildings.add_building() }}
           </BaseButton>
         </div>
@@ -68,8 +64,16 @@
       <EmptyState
         v-if="filteredBuildings.length === 0"
         icon="i-mdi:office-building"
-        :title="searchQuery ? m.supplied_buildings.empty_state.no_buildings_found_title() : m.supplied_buildings.empty_state.no_buildings_title()"
-        :description="searchQuery ? m.supplied_buildings.empty_state.no_buildings_found_description() : m.supplied_buildings.empty_state.no_buildings_description()"
+        :title="
+          searchQuery
+            ? m.supplied_buildings.empty_state.no_buildings_found_title()
+            : m.supplied_buildings.empty_state.no_buildings_title()
+        "
+        :description="
+          searchQuery
+            ? m.supplied_buildings.empty_state.no_buildings_found_description()
+            : m.supplied_buildings.empty_state.no_buildings_description()
+        "
         :action-label="!searchQuery ? m.supplied_buildings.add_first_building() : undefined"
         @action="showCreateModal = true"
       />
@@ -94,20 +98,24 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, ref } from "vue"
+import { useRouter } from "vue-router"
 
-import DeleteConfirmationModal from '~/components/DeleteConfirmationModal.vue'
-import SuppliedBuildingModal from '~/components/SuppliedBuildingModal.vue'
-import BaseButton from '~/components/ui/BaseButton.vue'
-import BuildingCard from '~/components/ui/BuildingCard.vue'
-import EmptyState from '~/components/ui/EmptyState.vue'
-import StatsCard from '~/components/ui/StatsCard.vue'
-import { useI18n } from '~/composables/useI18n'
-import { useSuppliedBuildings } from '~/composables/useSuppliedBuildings'
-import { useSupplyItems } from '~/composables/useSupplyItems'
-import { useSelectedBuildingStore } from '~/stores/selectedBuilding'
-import type { CreateSuppliedBuilding, SuppliedBuilding, UpdateSuppliedBuilding } from '~/types/suppliedBuilding'
+import DeleteConfirmationModal from "~/components/DeleteConfirmationModal.vue"
+import SuppliedBuildingModal from "~/components/SuppliedBuildingModal.vue"
+import BaseButton from "~/components/ui/BaseButton.vue"
+import BuildingCard from "~/components/ui/BuildingCard.vue"
+import EmptyState from "~/components/ui/EmptyState.vue"
+import StatsCard from "~/components/ui/StatsCard.vue"
+import { useI18n } from "~/composables/useI18n"
+import { useSuppliedBuildings } from "~/composables/useSuppliedBuildings"
+import { useSupplyItems } from "~/composables/useSupplyItems"
+import { useSelectedBuildingStore } from "~/stores/selectedBuilding"
+import type {
+  CreateSuppliedBuilding,
+  SuppliedBuilding,
+  UpdateSuppliedBuilding,
+} from "~/types/suppliedBuilding"
 
 const router = useRouter()
 const { m } = useI18n()
@@ -127,7 +135,7 @@ const { supplyItems } = useSupplyItems()
 const showCreateModal = ref(false)
 const editingBuilding = ref<SuppliedBuilding | null>(null)
 const buildingToDelete = ref<SuppliedBuilding | null>(null)
-const searchQuery = ref('')
+const searchQuery = ref("")
 
 // Computed
 const filteredBuildings = computed(() => {
@@ -139,18 +147,18 @@ const filteredBuildings = computed(() => {
 
 // Get supply count for a building
 const getSupplyCount = (buildingId: string): number => {
-  return supplyItems.value.filter(item => item.buildingId === buildingId).length
+  return supplyItems.value.filter((item) => item.buildingId === buildingId).length
 }
 
 // Methods
 const viewSupplies = (building: SuppliedBuilding) => {
   // Store the selected building
   selectedBuildingStore.setSelectedBuilding(building)
-  
+
   // Navigate to supply configuration with building filter
   router.push({
-    name: 'SupplyConfiguration',
-    query: { buildingId: building.id }
+    name: "SupplyConfiguration",
+    query: { buildingId: building.id },
   })
 }
 
@@ -180,7 +188,7 @@ const handleSave = async (buildingData: CreateSuppliedBuilding | UpdateSuppliedB
     }
     closeModal()
   } catch (error) {
-    console.error('Failed to save building:', error)
+    console.error("Failed to save building:", error)
   }
 }
 
@@ -190,15 +198,15 @@ const handleDelete = async () => {
   try {
     const buildingId = buildingToDelete.value.id
     await deleteSuppliedBuilding(buildingId)
-    
+
     // Clear selected building if it was the deleted one
     if (selectedBuildingStore.selectedBuildingId === buildingId) {
       selectedBuildingStore.clearSelectedBuilding()
     }
-    
+
     buildingToDelete.value = null
   } catch (error) {
-    console.error('Failed to delete building:', error)
+    console.error("Failed to delete building:", error)
   }
 }
 </script>

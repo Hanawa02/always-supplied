@@ -1,5 +1,7 @@
 <template>
-  <div class="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+  <div
+    class="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+  >
     <div class="p-6">
       <!-- Building Header -->
       <div class="flex items-start justify-between mb-4">
@@ -43,11 +45,7 @@
         </div>
 
         <!-- View Supplies Button -->
-        <BaseButton
-          variant="ghost"
-          full-width
-          @click="$emit('viewSupplies', building)"
-        >
+        <BaseButton variant="ghost" full-width @click="$emit('viewSupplies', building)">
           {{ manageSuppliesLabel }}
         </BaseButton>
       </div>
@@ -56,9 +54,9 @@
 </template>
 
 <script setup lang="ts">
-import type { SuppliedBuilding } from '~/types/suppliedBuilding'
+import type { SuppliedBuilding } from "~/types/suppliedBuilding"
 
-import BaseButton from './BaseButton.vue'
+import BaseButton from "./BaseButton.vue"
 
 interface Props {
   building: SuppliedBuilding

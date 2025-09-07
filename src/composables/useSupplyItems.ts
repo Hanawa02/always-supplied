@@ -49,10 +49,10 @@ export function useSupplyItems() {
       const index = supplyItems.value.findIndex((item) => item.id === updatedItem.id)
       if (index === -1) return null
 
-      const updated = { 
-        ...supplyItems.value[index], 
+      const updated = {
+        ...supplyItems.value[index],
         ...updatedItem,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       }
       supplyItems.value[index] = updated
       return updated
