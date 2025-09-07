@@ -7,6 +7,9 @@ export interface SupplyItem {
   storageRoom?: string
   shoppingHint?: string
   preferredBrands?: string[]
+  buildingId?: string // Link to supplied building
+  createdAt: Date
+  updatedAt: Date
 }
 
 export interface CreateSupplyItem {
@@ -17,6 +20,7 @@ export interface CreateSupplyItem {
   storageRoom?: string
   shoppingHint?: string
   preferredBrands?: string[]
+  buildingId?: string // Link to supplied building
 }
 
 export interface UpdateSupplyItem extends Partial<CreateSupplyItem> {

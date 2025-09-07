@@ -3,7 +3,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div class="flex items-center space-x-4">
         <router-link 
-          :to="{ name: ROUTES.SUPPLY_CONFIGURATION.name }"
+          :to="{ name: ROUTES.SUPPLIED_BUILDINGS.name }"
           class="flex items-center space-x-3 hover:opacity-80 transition-opacity"
         >
           <AppLogo class="h-8" variant="full" />
@@ -11,6 +11,13 @@
 
         <div class="hidden sm:flex space-x-4">
           <!-- Type-safe navigation using routes -->
+          <router-link
+            :to="{ name: ROUTES.SUPPLIED_BUILDINGS.name }"
+            class="text-gray-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium"
+            active-class="text-primary-700 bg-primary-50"
+          >
+            Buildings
+          </router-link>
           <router-link
             :to="{ name: ROUTES.SUPPLY_CONFIGURATION.name }"
             class="text-gray-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium"
@@ -32,6 +39,13 @@
       <div class="flex items-center justify-between sm:justify-end">
         <!-- Mobile navigation -->
         <div class="flex sm:hidden space-x-2">
+          <router-link
+            :to="{ name: ROUTES.SUPPLIED_BUILDINGS.name }"
+            class="text-gray-600 hover:text-primary-600 px-2 py-1 rounded text-sm font-medium"
+            active-class="text-primary-700 bg-primary-50"
+          >
+            Buildings
+          </router-link>
           <router-link
             :to="{ name: ROUTES.SUPPLY_CONFIGURATION.name }"
             class="text-gray-600 hover:text-primary-600 px-2 py-1 rounded text-sm font-medium"

@@ -14,6 +14,11 @@ export const ROUTES = {
     path: "/theme-preview",
     component: () => import("~/views/ThemePreview.vue"),
   },
+  SUPPLIED_BUILDINGS: {
+    name: "SuppliedBuildings",
+    path: "/app/buildings",
+    component: () => import("~/views/SuppliedBuildings.vue"),
+  },
   SUPPLY_CONFIGURATION: {
     name: "SupplyConfiguration",
     path: "/app/supply-configuration",
@@ -24,10 +29,10 @@ export const ROUTES = {
 // Generate routes array from ROUTES and add redirect
 export const routes = [
   ...Object.values(ROUTES),
-  // Redirect root to supply configuration
+  // Redirect root to buildings page
   {
     path: "/",
-    redirect: ROUTES.SUPPLY_CONFIGURATION.path,
+    redirect: ROUTES.SUPPLIED_BUILDINGS.path,
   },
 ]
 
