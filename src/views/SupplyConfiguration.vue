@@ -7,7 +7,7 @@
           class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-4 sm:h-16 sm:py-0"
         >
           <div class="flex items-center">
-            <i class="i-mdi:package-variant text-primary-600 text-2xl mr-3"></i>
+            <AppLogo :size="28" class="mr-3" />
             <h1 class="text-xl sm:text-2xl font-bold text-gray-900">
               {{ m.supply_configuration.title() }}
             </h1>
@@ -225,6 +225,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue"
 
+import AppLogo from "~/components/AppLogo.vue"
 import DeleteConfirmationModal from "~/components/DeleteConfirmationModal.vue"
 import SupplyItemModal from "~/components/SupplyItemModal.vue"
 import { useI18n } from "~/composables/useI18n"
