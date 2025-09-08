@@ -89,7 +89,10 @@ export function useSupplyItems() {
     isLoading.value = true
     try {
       const deleted = await supplyItemsStorage.delete(id)
-      if (!deleted) return false
+      if (!deleted) {
+        console.error('Failed to delete supply item from database')
+        throw new Error('Failed to delete supply item from database')
+      }
 
       const index = supplyItems.value.findIndex((item) => item.id === id)
       if (index !== -1) {
@@ -98,7 +101,7 @@ export function useSupplyItems() {
       return true
     } catch (error) {
       console.error('Failed to delete supply item:', error)
-      return false
+      throw error
     } finally {
       isLoading.value = false
     }

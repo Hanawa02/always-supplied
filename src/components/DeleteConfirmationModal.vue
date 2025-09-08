@@ -1,5 +1,5 @@
 <template>
-  <AlertDialog :open="true" @update:open="(open) => !open && emit('cancel')">
+  <AlertDialog :open="true">
     <AlertDialogContent class="max-w-md">
       <AlertDialogHeader>
         <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100 mb-4">

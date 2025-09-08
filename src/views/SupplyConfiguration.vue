@@ -126,7 +126,7 @@
       v-if="itemToDelete"
       :item-name="itemToDelete.name"
       @confirm="handleDelete"
-      @cancel="itemToDelete = null"
+      @cancel="() => { itemToDelete = null; pendingDeleteItem = null }"
     />
   </div>
 </template>
@@ -200,6 +200,7 @@ onMounted(() => {
 const showCreateModal = ref(false)
 const editingItem = ref<SupplyItem | null>(null)
 const itemToDelete = ref<SupplyItem | null>(null)
+const pendingDeleteItem = ref<SupplyItem | null>(null) // Store item being deleted
 const searchQuery = ref("")
 const selectedCategory = ref("")
 
@@ -229,6 +230,7 @@ const editItem = (item: SupplyItem) => {
 }
 
 const confirmDelete = (item: SupplyItem) => {
+  pendingDeleteItem.value = item // Store the item separately
   itemToDelete.value = item
 }
 
@@ -257,13 +259,31 @@ const handleSave = async (itemData: CreateSupplyItem | UpdateSupplyItem) => {
 }
 
 const handleDelete = async () => {
-  if (!itemToDelete.value) return
+  // Use pendingDeleteItem as fallback if itemToDelete is null
+  const itemToProcess = itemToDelete.value || pendingDeleteItem.value
+  
+  if (!itemToProcess) {
+    return
+  }
 
+  const itemId = itemToProcess.id
+  
   try {
-    await deleteSupplyItem(itemToDelete.value.id)
-    itemToDelete.value = null
+    const deleted = await deleteSupplyItem(itemId)
+    if (deleted) {
+      itemToDelete.value = null
+      pendingDeleteItem.value = null
+    } else {
+      console.error("Failed to delete item - deletion returned false")
+      alert("Failed to delete item. Please try again.")
+      itemToDelete.value = null
+      pendingDeleteItem.value = null
+    }
   } catch (error) {
     console.error("Failed to delete item:", error)
+    alert(`Failed to delete item: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    itemToDelete.value = null
+    pendingDeleteItem.value = null
   }
 }
 </script>
