@@ -424,4 +424,63 @@ test.describe("Supply Configuration Page", () => {
     // Item should not have been created
     await expect(page.getByText("Unsaved Item")).toBeHidden()
   })
+
+  test("can add supply item to shopping list", async ({ page }) => {
+    // First create a supply item
+    await page
+      .getByRole("button", { name: /Add.*item/i })
+      .first()
+      .click()
+    await page.getByLabel("Name", { exact: false }).fill("Test Shopping Item")
+    await page.getByLabel("Quantity").fill("5")
+    await page.getByRole("button", { name: "Create Item" }).click()
+
+    // Wait for item to appear
+    await expect(page.getByText("Test Shopping Item")).toBeVisible()
+
+    // Click the "Add to Shopping List" button (cart plus icon)
+    await page.getByRole("button", { name: "Add to shopping list" }).click()
+
+    // Shopping list modal should open
+    await expect(page.getByRole("heading", { name: "Add to Shopping List" })).toBeVisible()
+
+    // Pre-filled name should be visible
+    await expect(page.getByLabel("Item Name")).toHaveValue("Test Shopping Item")
+
+    // Set quantity and add to list
+    await page.getByLabel("Quantity").fill("3")
+    await page.getByRole("button", { name: "Add to List" }).click()
+
+    // Modal should close
+    await expect(page.getByRole("heading", { name: "Add to Shopping List" })).toBeHidden()
+
+    // Could optionally check for success message or navigate to shopping list to verify
+    // For now, just ensure we don't get any errors and modal closes properly
+  })
+
+  test("shopping list modal shows supply item details", async ({ page }) => {
+    // Create a supply item with shopping hint
+    await page
+      .getByRole("button", { name: /Add.*item/i })
+      .first()
+      .click()
+    await page.getByLabel("Name", { exact: false }).fill("Detailed Item")
+    await page.getByLabel("Quantity").fill("10")
+    await page.getByLabel("Shopping Hint").fill("Buy the large size")
+    await page.getByRole("button", { name: "Create Item" }).click()
+
+    // Wait for item to appear
+    await expect(page.getByText("Detailed Item")).toBeVisible()
+
+    // Click add to shopping list
+    await page.getByRole("button", { name: "Add to shopping list" }).click()
+
+    // Modal should show with pre-filled data
+    await expect(page.getByLabel("Item Name")).toHaveValue("Detailed Item")
+    await expect(page.getByLabel("Shopping Hint")).toHaveValue("Buy the large size")
+
+    // Close modal
+    await page.getByRole("button", { name: "Cancel" }).click()
+    await expect(page.getByRole("heading", { name: "Add to Shopping List" })).toBeHidden()
+  })
 })

@@ -81,12 +81,14 @@
           :item="item"
           :edit-tooltip="m.supply_configuration.item.edit_tooltip()"
           :delete-tooltip="m.supply_configuration.item.delete_tooltip()"
+          :add-to-shopping-list-tooltip="'Add to shopping list'"
           :quantity-label="m.supply_configuration.item.quantity()"
           :category-label="m.supply_configuration.item.category()"
           :storage-label="m.supply_configuration.item.storage()"
           :preferred-brands-label="m.supply_configuration.item.preferred_brands()"
           @edit="editItem"
           @delete="confirmDelete"
+          @add-to-shopping-list="handleAddToShoppingList"
         />
       </div>
 
@@ -128,6 +130,15 @@
       @confirm="handleDelete"
       @cancel="() => { itemToDelete = null; pendingDeleteItem = null }"
     />
+
+    <!-- Add to Shopping List Modal -->
+    <BuyingItemModal
+      v-if="showAddToBuyingListModal && supplyItemToAddToBuyingList"
+      :item="null"
+      :supply-item="supplyItemToAddToBuyingList"
+      @close="() => { showAddToBuyingListModal = false; supplyItemToAddToBuyingList = null }"
+      @save="handleSaveToBuyingList"
+    />
   </div>
 </template>
 
@@ -135,12 +146,14 @@
 import { computed, onMounted, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
 
+import BuyingItemModal from "~/components/BuyingItemModal.vue"
 import DeleteConfirmationModal from "~/components/DeleteConfirmationModal.vue"
 import SupplyItemModal from "~/components/SupplyItemModal.vue"
 import BaseButton from "~/components/ui/BaseButton.vue"
 import EmptyState from "~/components/ui/EmptyState.vue"
 import StatsCard from "~/components/ui/StatsCard.vue"
 import SupplyItemCard from "~/components/ui/SupplyItemCard.vue"
+import { useBuyingItems } from "~/composables/useBuyingItems"
 import { useI18n } from "~/composables/useI18n"
 import { useSuppliedBuildings } from "~/composables/useSuppliedBuildings"
 import { useSupplyItems } from "~/composables/useSupplyItems"
@@ -157,6 +170,8 @@ const {
   deleteSupplyItem,
   searchSupplyItems,
 } = useSupplyItems()
+
+const { createFromSupplyItem } = useBuyingItems()
 
 const { getBuildingById } = useSuppliedBuildings()
 const selectedBuildingStore = useSelectedBuildingStore()
@@ -203,6 +218,8 @@ const itemToDelete = ref<SupplyItem | null>(null)
 const pendingDeleteItem = ref<SupplyItem | null>(null) // Store item being deleted
 const searchQuery = ref("")
 const selectedCategory = ref("")
+const supplyItemToAddToBuyingList = ref<SupplyItem | null>(null)
+const showAddToBuyingListModal = ref(false)
 
 // Computed
 const filteredItems = computed(() => {
@@ -255,6 +272,24 @@ const handleSave = async (itemData: CreateSupplyItem | UpdateSupplyItem) => {
     closeModal()
   } catch (error) {
     console.error("Failed to save item:", error)
+  }
+}
+
+const handleAddToShoppingList = (item: SupplyItem) => {
+  supplyItemToAddToBuyingList.value = item
+  showAddToBuyingListModal.value = true
+}
+
+const handleSaveToBuyingList = async (buyingItemData: { quantity: number }) => {
+  try {
+    await createFromSupplyItem(supplyItemToAddToBuyingList.value!, buyingItemData.quantity)
+    showAddToBuyingListModal.value = false
+    supplyItemToAddToBuyingList.value = null
+    // Show success message or notification
+    alert("Item added to shopping list!")
+  } catch (error) {
+    console.error("Failed to add item to shopping list:", error)
+    alert("Failed to add item to shopping list. Please try again.")
   }
 }
 

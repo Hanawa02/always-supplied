@@ -13,6 +13,15 @@
           <Button
             variant="ghost"
             size="icon"
+            @click="$emit('addToShoppingList', item)"
+            class="h-8 w-8 text-muted-foreground hover:text-green-600"
+            :title="addToShoppingListTooltip"
+          >
+            <i class="i-mdi:cart-plus text-lg"></i>
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
             @click="$emit('edit', item)"
             class="h-8 w-8 text-muted-foreground hover:text-primary"
             :title="editTooltip"
@@ -93,6 +102,7 @@ interface Props {
   item: SupplyItem
   editTooltip: string
   deleteTooltip: string
+  addToShoppingListTooltip: string
   quantityLabel: string
   categoryLabel: string
   storageLabel: string
@@ -104,5 +114,6 @@ defineProps<Props>()
 defineEmits<{
   edit: [item: SupplyItem]
   delete: [item: SupplyItem]
+  addToShoppingList: [item: SupplyItem]
 }>()
 </script>

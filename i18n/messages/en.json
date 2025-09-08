@@ -5,7 +5,8 @@
     "navigation": {
       "supply_configuration": "Supply Configuration",
       "theme_preview": "Theme Preview",
-      "supplied_buildings": "Supplied Buildings"
+      "supplied_buildings": "Supplied Buildings",
+      "shopping_list": "Shopping List"
     }
   },
   "supply_configuration": {
@@ -125,5 +126,48 @@
     "validation": {
       "name_required": "Building name is required and cannot be empty."
     }
+  },
+  "shopping_list": {
+    "title": "Shopping List",
+    "description": "Manage your shopping items and track what you've bought",
+    "search_placeholder": "Search shopping list...",
+    "all_categories": "All Categories",
+    "show_bought_items": "Show bought items",
+    "clear_bought": "Clear Bought",
+    "add_item": "Add Item",
+    "total_items": "Total Items",
+    "to_buy": "To Buy",
+    "bought": "Bought",
+    "empty_state": {
+      "no_items_title": "Your shopping list is empty",
+      "no_items_description": "Add items to start your shopping list",
+      "no_items_found_title": "No items found",
+      "no_items_found_description": "Try adjusting your filters",
+      "add_first_item": "Add First Item"
+    }
+  },
+  "buying_item_modal": {
+    "title_add": "Add Shopping Item",
+    "title_edit": "Edit Shopping Item",
+    "title_add_from_supply": "Add to Shopping List",
+    "name_label": "Item Name",
+    "name_placeholder": "e.g., Milk, Bread, Detergent",
+    "quantity_label": "Quantity",
+    "quantity_placeholder": "1",
+    "shopping_hint_label": "Shopping Hint",
+    "shopping_hint_placeholder": "Any special instructions for shopping...",
+    "notes_label": "Notes",
+    "notes_placeholder": "Additional notes...",
+    "required_field": "*",
+    "cancel": "Cancel",
+    "create_item": "Add to List",
+    "update_item": "Update Item",
+    "close_tooltip": "Close modal",
+    "validation": {
+      "name_required": "Item name is required and cannot be empty.",
+      "quantity_positive": "Quantity must be greater than 0."
+    },
+    "quantity_help": "How many items do you need?",
+    "shopping_hint_help": "Optional notes to help with shopping, like specific sizes or store locations"
   }
 }

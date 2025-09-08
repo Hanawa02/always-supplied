@@ -5,7 +5,8 @@
     "navigation": {
       "supply_configuration": "Configuración de Suministros",
       "theme_preview": "Vista Previa del Tema",
-      "supplied_buildings": "Edificios Abastecidos"
+      "supplied_buildings": "Edificios Abastecidos",
+      "shopping_list": "Lista de Compras"
     }
   },
   "supply_configuration": {
@@ -125,5 +126,48 @@
     "validation": {
       "name_required": "El nombre del edificio es obligatorio y no puede estar vacío."
     }
-  }
+  },
+  "shopping_list": {
+    "title": "Lista de Compras",
+    "description": "Administra tus artículos de compra y rastrea lo que has comprado",
+    "search_placeholder": "Buscar en lista de compras...",
+    "all_categories": "Todas las Categorías",
+    "show_bought_items": "Mostrar artículos comprados",
+    "clear_bought": "Limpiar Comprados",
+    "add_item": "Agregar Artículo",
+    "total_items": "Total de Artículos",
+    "to_buy": "Por Comprar",
+    "bought": "Comprados",
+    "empty_state": {
+      "no_items_title": "Tu lista de compras está vacía",
+      "no_items_description": "Agrega artículos para comenzar tu lista de compras",
+      "no_items_found_title": "No se encontraron artículos",
+      "no_items_found_description": "Intenta ajustar tus filtros",
+      "add_first_item": "Agregar Primer Artículo"
+    }
+  },
+  "buying_item_modal": {
+    "title_add": "Agregar Artículo de Compra",
+    "title_edit": "Editar Artículo de Compra",
+    "title_add_from_supply": "Agregar a Lista de Compras",
+    "name_label": "Nombre del Artículo",
+    "name_placeholder": "ej., Leche, Pan, Detergente",
+    "quantity_label": "Cantidad",
+    "quantity_placeholder": "1",
+    "shopping_hint_label": "Consejo de Compra",
+    "shopping_hint_placeholder": "Instrucciones especiales para comprar...",
+    "notes_label": "Notas",
+    "notes_placeholder": "Notas adicionales...",
+    "required_field": "*",
+    "cancel": "Cancelar",
+    "create_item": "Agregar a Lista",
+    "update_item": "Actualizar Artículo",
+    "close_tooltip": "Cerrar modal",
+    "validation": {
+      "name_required": "El nombre del artículo es obligatorio y no puede estar vacío.",
+      "quantity_positive": "La cantidad debe ser mayor que 0."
+    },
+    "quantity_help": "¿Cuántos artículos necesitas?",
+    "shopping_hint_help": "Notas opcionales para ayudar con las compras, como tamaños específicos o ubicaciones en la tienda"
+  },
 }

@@ -5,7 +5,8 @@
     "navigation": {
       "supply_configuration": "Configuração de Suprimentos",
       "theme_preview": "Prévia do Tema",
-      "supplied_buildings": "Edifícios Abastecidos"
+      "supplied_buildings": "Edifícios Abastecidos",
+      "shopping_list": "Lista de Compras"
     }
   },
   "supply_configuration": {
@@ -125,5 +126,48 @@
     "validation": {
       "name_required": "O nome do edifício é obrigatório e não pode estar vazio."
     }
-  }
+  },
+  "shopping_list": {
+    "title": "Lista de Compras",
+    "description": "Gerencie seus itens de compra e acompanhe o que você comprou",
+    "search_placeholder": "Pesquisar lista de compras...",
+    "all_categories": "Todas as Categorias",
+    "show_bought_items": "Mostrar itens comprados",
+    "clear_bought": "Limpar Comprados",
+    "add_item": "Adicionar Item",
+    "total_items": "Total de Itens",
+    "to_buy": "Para Comprar",
+    "bought": "Comprados",
+    "empty_state": {
+      "no_items_title": "Sua lista de compras está vazia",
+      "no_items_description": "Adicione itens para começar sua lista de compras",
+      "no_items_found_title": "Nenhum item encontrado",
+      "no_items_found_description": "Tente ajustar seus filtros",
+      "add_first_item": "Adicionar Primeiro Item"
+    }
+  },
+  "buying_item_modal": {
+    "title_add": "Adicionar Item de Compra",
+    "title_edit": "Editar Item de Compra",
+    "title_add_from_supply": "Adicionar à Lista de Compras",
+    "name_label": "Nome do Item",
+    "name_placeholder": "ex., Leite, Pão, Detergente",
+    "quantity_label": "Quantidade",
+    "quantity_placeholder": "1",
+    "shopping_hint_label": "Dica de Compra",
+    "shopping_hint_placeholder": "Instruções especiais para comprar...",
+    "notes_label": "Notas",
+    "notes_placeholder": "Notas adicionais...",
+    "required_field": "*",
+    "cancel": "Cancelar",
+    "create_item": "Adicionar à Lista",
+    "update_item": "Atualizar Item",
+    "close_tooltip": "Fechar modal",
+    "validation": {
+      "name_required": "O nome do item é obrigatório e não pode estar vazio.",
+      "quantity_positive": "A quantidade deve ser maior que 0."
+    },
+    "quantity_help": "Quantos itens você precisa?",
+    "shopping_hint_help": "Notas opcionais para ajudar nas compras, como tamanhos específicos ou localizações na loja"
+  },
 }

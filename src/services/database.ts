@@ -1,5 +1,6 @@
 import Dexie, { type EntityTable, type Table } from 'dexie'
 
+import type { BuyingItem } from '~/types/buyingItem'
 import type { SuppliedBuilding } from '~/types/suppliedBuilding'
 import type { SupplyItem } from '~/types/supply'
 
@@ -7,11 +8,13 @@ import type { SupplyItem } from '~/types/supply'
 interface AlwaysSuppliedDB extends Dexie {
   suppliedBuildings: EntityTable<SuppliedBuilding, 'id'>
   supplyItems: EntityTable<SupplyItem, 'id'>
+  buyingItems: EntityTable<BuyingItem, 'id'>
 }
 
-// Type-safe table references
+// Type-safe table references (used for type references in future extensions)
 type SuppliedBuildingTable = Table<SuppliedBuilding, string>
 type SupplyItemTable = Table<SupplyItem, string>
+type BuyingItemTable = Table<BuyingItem, string>
 
 // Database instance
 const db = new Dexie('AlwaysSuppliedDB') as AlwaysSuppliedDB
@@ -22,27 +25,49 @@ db.version(1).stores({
   supplyItems: 'id, name, buildingId, category, storageRoom, quantity, createdAt, updatedAt'
 })
 
+// Schema definition - version 2: Added buying items table
+db.version(2).stores({
+  suppliedBuildings: 'id, name, description, createdAt, updatedAt',
+  supplyItems: 'id, name, buildingId, category, storageRoom, quantity, createdAt, updatedAt',
+  buyingItems: 'id, supplyItemId, buildingId, name, isBought, category, addedAt, boughtAt'
+})
+
 // TypeScript hooks for data validation and transformation
-db.suppliedBuildings.hook('creating', (primKey: string, obj: SuppliedBuilding, trans) => {
+db.suppliedBuildings.hook('creating', (_primKey: string, obj: SuppliedBuilding, _trans) => {
   // Ensure timestamps are set
   obj.createdAt = obj.createdAt || new Date()
   obj.updatedAt = obj.updatedAt || new Date()
 })
 
-db.suppliedBuildings.hook('updating', (modifications: Partial<SuppliedBuilding>, primKey: string, obj: SuppliedBuilding, trans) => {
+db.suppliedBuildings.hook('updating', (modifications: Partial<SuppliedBuilding>, _primKey: string, _obj: SuppliedBuilding, _trans) => {
   // Update timestamp on modification
   modifications.updatedAt = new Date()
 })
 
-db.supplyItems.hook('creating', (primKey: string, obj: SupplyItem, trans) => {
+db.supplyItems.hook('creating', (_primKey: string, obj: SupplyItem, _trans) => {
   // Ensure timestamps are set
   obj.createdAt = obj.createdAt || new Date()
   obj.updatedAt = obj.updatedAt || new Date()
 })
 
-db.supplyItems.hook('updating', (modifications: Partial<SupplyItem>, primKey: string, obj: SupplyItem, trans) => {
+db.supplyItems.hook('updating', (modifications: Partial<SupplyItem>, _primKey: string, _obj: SupplyItem, _trans) => {
   // Update timestamp on modification
   modifications.updatedAt = new Date()
+})
+
+db.buyingItems.hook('creating', (_primKey: string, obj: BuyingItem, _trans) => {
+  // Ensure timestamps are set
+  obj.addedAt = obj.addedAt || new Date()
+  obj.isBought = obj.isBought || false
+})
+
+db.buyingItems.hook('updating', (modifications: Partial<BuyingItem>, _primKey: string, obj: BuyingItem, _trans) => {
+  // Set boughtAt timestamp when marking as bought
+  if (modifications.isBought === true && !obj.boughtAt) {
+    modifications.boughtAt = new Date()
+  } else if (modifications.isBought === false) {
+    modifications.boughtAt = undefined
+  }
 })
 
 export { db }
