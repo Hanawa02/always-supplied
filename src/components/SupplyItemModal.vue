@@ -368,10 +368,11 @@ const removeBrand = (index: number) => {
   }
 }
 
-const handleCategoryChange = (value: string | null) => {
-  form.category = value || ""
-  categorySelectMode.value = value !== "custom"
-  if (value === "custom") {
+const handleCategoryChange = (value: unknown) => {
+  const stringValue = String(value || "")
+  form.category = stringValue
+  categorySelectMode.value = stringValue !== "custom"
+  if (stringValue === "custom") {
     customCategory.value = ""
   }
 }
@@ -391,10 +392,11 @@ const cancelCustomCategory = () => {
   customCategory.value = ""
 }
 
-const handleStorageChange = (value: string) => {
-  form.storageRoom = value
-  storageSelectMode.value = value !== "custom"
-  if (value === "custom") {
+const handleStorageChange = (value: unknown) => {
+  const stringValue = String(value || "")
+  form.storageRoom = stringValue
+  storageSelectMode.value = stringValue !== "custom"
+  if (stringValue === "custom") {
     customStorageRoom.value = ""
   }
 }
