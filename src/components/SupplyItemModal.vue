@@ -21,7 +21,11 @@
             type="text"
             required
             :placeholder="m.supply_item_modal.name_placeholder()"
+            :class="validationErrors.name ? 'border-destructive' : ''"
           />
+          <p v-if="validationErrors.name" class="text-sm text-destructive">
+            {{ validationErrors.name }}
+          </p>
         </div>
 
         <!-- Description -->
@@ -63,7 +67,11 @@
             min="0"
             required
             :placeholder="m.supply_item_modal.quantity_placeholder()"
+            :class="validationErrors.quantity ? 'border-destructive' : ''"
           />
+          <p v-if="validationErrors.quantity" class="text-sm text-destructive">
+            {{ validationErrors.quantity }}
+          </p>
         </div>
 
         <!-- Category -->
@@ -316,6 +324,11 @@ const form = reactive<CreateSupplyItem>({
   preferredBrands: [],
 })
 
+const validationErrors = reactive({
+  name: "",
+  quantity: "",
+})
+
 const newBrand = ref("")
 const categorySelectMode = ref(true)
 const storageSelectMode = ref(true)
@@ -417,15 +430,19 @@ const cancelCustomStorageRoom = () => {
 }
 
 const handleSubmit = () => {
+  // Clear previous validation errors
+  validationErrors.name = ""
+  validationErrors.quantity = ""
+
   // Validate required fields
   const trimmedName = form.name?.trim()
   if (!trimmedName) {
-    alert(m.supply_item_modal.validation.name_required())
+    validationErrors.name = m.supply_item_modal.validation.name_required()
     return
   }
 
   if (form.quantity < 0) {
-    alert(m.supply_item_modal.validation.quantity_negative())
+    validationErrors.quantity = m.supply_item_modal.validation.quantity_negative()
     return
   }
 

@@ -144,7 +144,8 @@
       "no_items_found_title": "Nenhum item encontrado",
       "no_items_found_description": "Tente ajustar seus filtros",
       "add_first_item": "Adicionar Primeiro Item"
-    }
+    },
+    "all_buildings": "Todos os Edifícios"
   },
   "buying_item_modal": {
     "title_add": "Adicionar Item de Compra",

@@ -483,4 +483,63 @@ test.describe("Supply Configuration Page", () => {
     await page.getByRole("button", { name: "Cancel" }).click()
     await expect(page.getByRole("heading", { name: "Add to Shopping List" })).toBeHidden()
   })
+
+  test("shows toast notification when adding to shopping list", async ({ page }) => {
+    // Create a supply item
+    await page
+      .getByRole("button", { name: /Add.*item/i })
+      .first()
+      .click()
+    await page.getByLabel("Name", { exact: false }).fill("Toast Test Item")
+    await page.getByLabel("Quantity").fill("5")
+    await page.getByRole("button", { name: "Create Item" }).click()
+
+    // Wait for item to appear
+    await expect(page.getByText("Toast Test Item")).toBeVisible()
+
+    // Click add to shopping list
+    await page.getByRole("button", { name: "Add to shopping list" }).click()
+    await page.getByRole("button", { name: "Add to List" }).click()
+
+    // Should show success toast notification instead of alert
+    await expect(page.getByText("Item added to shopping list!")).toBeVisible()
+    
+    // Toast should disappear after some time or can be dismissed
+    // We just verify it appears instead of an alert dialog
+  })
+
+  test("shows toast notification on item creation success", async ({ page }) => {
+    // Create a new supply item
+    await page
+      .getByRole("button", { name: /Add.*item/i })
+      .first()
+      .click()
+    await page.getByLabel("Name", { exact: false }).fill("Success Test Item")
+    await page.getByLabel("Quantity").fill("3")
+    await page.getByRole("button", { name: "Create Item" }).click()
+
+    // Should show success toast notification
+    await expect(page.getByText("Item created successfully")).toBeVisible()
+  })
+
+  test("shows toast notification on item deletion success", async ({ page }) => {
+    // First create an item
+    await page
+      .getByRole("button", { name: /Add.*item/i })
+      .first()
+      .click()
+    await page.getByLabel("Name", { exact: false }).fill("Delete Test Item")
+    await page.getByLabel("Quantity").fill("1")
+    await page.getByRole("button", { name: "Create Item" }).click()
+
+    // Wait for item to appear
+    await expect(page.getByText("Delete Test Item")).toBeVisible()
+
+    // Delete the item
+    await page.getByRole("button", { name: "Delete item" }).click()
+    await page.getByRole("button", { name: "Delete", exact: true }).click()
+
+    // Should show success toast notification
+    await expect(page.getByText("Item deleted successfully")).toBeVisible()
+  })
 })

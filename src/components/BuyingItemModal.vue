@@ -21,7 +21,11 @@
             type="text"
             required
             placeholder="Enter item name"
+            :class="validationErrors.name ? 'border-destructive' : ''"
           />
+          <p v-if="validationErrors.name" class="text-sm text-destructive">
+            {{ validationErrors.name }}
+          </p>
         </div>
 
         <!-- Description -->
@@ -50,7 +54,11 @@
             min="1"
             required
             placeholder="How many do you need?"
+            :class="validationErrors.quantity ? 'border-destructive' : ''"
           />
+          <p v-if="validationErrors.quantity" class="text-sm text-destructive">
+            {{ validationErrors.quantity }}
+          </p>
         </div>
 
         <!-- Shopping Hint -->
@@ -139,20 +147,29 @@ const form = reactive<CreateBuyingItem>({
   category: "",
 })
 
+const validationErrors = reactive({
+  name: "",
+  quantity: "",
+})
+
 // Computed
 const isEditing = computed(() => !!props.item)
 
 // Methods
 const handleSubmit = () => {
+  // Clear previous validation errors
+  validationErrors.name = ""
+  validationErrors.quantity = ""
+
   // Validate required fields
   const trimmedName = form.name?.trim()
   if (!trimmedName) {
-    alert("Name is required")
+    validationErrors.name = "Name is required"
     return
   }
 
   if (form.quantity < 1) {
-    alert("Quantity must be at least 1")
+    validationErrors.quantity = "Quantity must be at least 1"
     return
   }
 

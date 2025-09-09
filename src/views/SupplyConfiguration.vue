@@ -153,6 +153,7 @@ import BaseButton from "~/components/ui/BaseButton.vue"
 import EmptyState from "~/components/ui/EmptyState.vue"
 import StatsCard from "~/components/ui/StatsCard.vue"
 import SupplyItemCard from "~/components/ui/SupplyItemCard.vue"
+import { useToast } from "~/components/ui/toast/use-toast"
 import { useBuyingItems } from "~/composables/useBuyingItems"
 import { useI18n } from "~/composables/useI18n"
 import { useSuppliedBuildings } from "~/composables/useSuppliedBuildings"
@@ -176,6 +177,7 @@ const { createFromSupplyItem } = useBuyingItems()
 const { getBuildingById } = useSuppliedBuildings()
 const selectedBuildingStore = useSelectedBuildingStore()
 const { m } = useI18n()
+const { toast } = useToast()
 const route = useRoute()
 const router = useRouter()
 
@@ -270,8 +272,17 @@ const handleSave = async (itemData: CreateSupplyItem | UpdateSupplyItem) => {
       await createSupplyItem(createData)
     }
     closeModal()
+    toast({
+      title: "Success",
+      description: editingItem.value ? "Item updated successfully" : "Item created successfully",
+    })
   } catch (error) {
     console.error("Failed to save item:", error)
+    toast({
+      title: "Error",
+      description: "Failed to save item. Please try again.",
+      variant: "destructive",
+    })
   }
 }
 
@@ -285,11 +296,17 @@ const handleSaveToBuyingList = async (buyingItemData: { quantity: number }) => {
     await createFromSupplyItem(supplyItemToAddToBuyingList.value!, buyingItemData.quantity)
     showAddToBuyingListModal.value = false
     supplyItemToAddToBuyingList.value = null
-    // Show success message or notification
-    alert("Item added to shopping list!")
+    toast({
+      title: "Success",
+      description: "Item added to shopping list!",
+    })
   } catch (error) {
     console.error("Failed to add item to shopping list:", error)
-    alert("Failed to add item to shopping list. Please try again.")
+    toast({
+      title: "Error",
+      description: "Failed to add item to shopping list. Please try again.",
+      variant: "destructive",
+    })
   }
 }
 
@@ -308,15 +325,27 @@ const handleDelete = async () => {
     if (deleted) {
       itemToDelete.value = null
       pendingDeleteItem.value = null
+      toast({
+        title: "Success",
+        description: "Item deleted successfully",
+      })
     } else {
       console.error("Failed to delete item - deletion returned false")
-      alert("Failed to delete item. Please try again.")
+      toast({
+        title: "Error",
+        description: "Failed to delete item. Please try again.",
+        variant: "destructive",
+      })
       itemToDelete.value = null
       pendingDeleteItem.value = null
     }
   } catch (error) {
     console.error("Failed to delete item:", error)
-    alert(`Failed to delete item: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    toast({
+      title: "Error",
+      description: `Failed to delete item: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      variant: "destructive",
+    })
     itemToDelete.value = null
     pendingDeleteItem.value = null
   }

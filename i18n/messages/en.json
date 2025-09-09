@@ -144,7 +144,8 @@
       "no_items_found_title": "No items found",
       "no_items_found_description": "Try adjusting your filters",
       "add_first_item": "Add First Item"
-    }
+    },
+    "all_buildings": "All Buildings"
   },
   "buying_item_modal": {
     "title_add": "Add Shopping Item",

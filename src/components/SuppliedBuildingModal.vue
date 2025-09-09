@@ -21,7 +21,11 @@
             type="text"
             required
             :placeholder="m.building_modal.name_placeholder()"
+            :class="validationErrors.name ? 'border-destructive' : ''"
           />
+          <p v-if="validationErrors.name" class="text-sm text-destructive">
+            {{ validationErrors.name }}
+          </p>
         </div>
 
         <!-- Description -->
@@ -87,15 +91,22 @@ const form = reactive<CreateSuppliedBuilding>({
   description: "",
 })
 
+const validationErrors = reactive({
+  name: "",
+})
+
 // Computed
 const isEditing = computed(() => !!props.building)
 
 // Methods
 const handleSubmit = () => {
+  // Clear previous validation errors
+  validationErrors.name = ""
+
   // Validate required fields
   const trimmedName = form.name?.trim()
   if (!trimmedName) {
-    alert(m.building_modal.validation.name_required())
+    validationErrors.name = m.building_modal.validation.name_required()
     return
   }
 

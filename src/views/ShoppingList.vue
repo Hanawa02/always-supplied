@@ -64,6 +64,19 @@
             </SelectContent>
           </Select>
 
+          <!-- Building Filter -->
+          <Select v-model="selectedBuilding">
+            <SelectTrigger class="w-[180px]">
+              <SelectValue :placeholder="m.shopping_list.all_buildings()" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="__all__">{{ m.shopping_list.all_buildings() }}</SelectItem>
+              <SelectItem v-for="building in buildings" :key="building.id" :value="building.id">
+                {{ building.name }}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+
           <!-- Show/Hide Bought Toggle -->
           <div class="flex items-center space-x-2">
             <Checkbox 
@@ -133,9 +146,9 @@
     <EmptyState
       v-else
       icon="i-mdi:cart-off"
-      :title="searchQuery || (selectedCategory && selectedCategory !== '__all__') ? m.shopping_list.empty_state.no_items_found_title() : m.shopping_list.empty_state.no_items_title()"
-      :description="searchQuery || (selectedCategory && selectedCategory !== '__all__') ? m.shopping_list.empty_state.no_items_found_description() : m.shopping_list.empty_state.no_items_description()"
-      :action-label="!searchQuery && (!selectedCategory || selectedCategory === '__all__') ? m.shopping_list.empty_state.add_first_item() : undefined"
+      :title="searchQuery || (selectedCategory && selectedCategory !== '__all__') || (selectedBuilding && selectedBuilding !== '__all__') ? m.shopping_list.empty_state.no_items_found_title() : m.shopping_list.empty_state.no_items_title()"
+      :description="searchQuery || (selectedCategory && selectedCategory !== '__all__') || (selectedBuilding && selectedBuilding !== '__all__') ? m.shopping_list.empty_state.no_items_found_description() : m.shopping_list.empty_state.no_items_description()"
+      :action-label="!searchQuery && (!selectedCategory || selectedCategory === '__all__') && (!selectedBuilding || selectedBuilding === '__all__') ? m.shopping_list.empty_state.add_first_item() : undefined"
       @action="showCreateModal = true"
     />
 
@@ -172,13 +185,17 @@ import { Input } from "~/components/ui/input"
 import { Label } from "~/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select"
 import StatsCard from "~/components/ui/StatsCard.vue"
+import { useToast } from "~/components/ui/toast/use-toast"
 import { useBuyingItems } from "~/composables/useBuyingItems"
 import { useI18n } from "~/composables/useI18n"
+import { useSuppliedBuildings } from "~/composables/useSuppliedBuildings"
 import { ROUTES } from "~/router/routes"
 import type { BuyingItem, CreateBuyingItem, UpdateBuyingItem } from "~/types/buyingItem"
 
 const router = useRouter()
 const { m } = useI18n()
+const { toast } = useToast()
+const { suppliedBuildings } = useSuppliedBuildings()
 
 // Composables
 const {
@@ -204,8 +221,13 @@ const itemToDelete = ref<BuyingItem | null>(null)
 const pendingDeleteItem = ref<BuyingItem | null>(null)
 const searchQuery = ref("")
 const selectedCategory = ref("__all__")
+const selectedBuilding = ref("__all__")
 
 // Computed
+const buildings = computed(() => {
+  return suppliedBuildings.value
+})
+
 const filteredItems = computed(() => {
   let items = visibleItems.value
 
@@ -218,6 +240,10 @@ const filteredItems = computed(() => {
 
   if (selectedCategory.value && selectedCategory.value !== "__all__") {
     items = items.filter(item => item.category === selectedCategory.value)
+  }
+
+  if (selectedBuilding.value && selectedBuilding.value !== "__all__") {
+    items = items.filter(item => item.buildingId === selectedBuilding.value)
   }
 
   return items
@@ -248,7 +274,11 @@ const handleSave = async (itemData: CreateBuyingItem | UpdateBuyingItem) => {
     closeModal()
   } catch (error) {
     console.error("Failed to save item:", error)
-    alert("Failed to save item. Please try again.")
+    toast({
+      title: "Error",
+      description: "Failed to save item. Please try again.",
+      variant: "destructive",
+    })
   }
 }
 
@@ -265,7 +295,11 @@ const handleDelete = async () => {
     pendingDeleteItem.value = null
   } catch (error) {
     console.error("Failed to delete item:", error)
-    alert("Failed to delete item. Please try again.")
+    toast({
+      title: "Error",
+      description: "Failed to delete item. Please try again.",
+      variant: "destructive",
+    })
     itemToDelete.value = null
     pendingDeleteItem.value = null
   }
@@ -276,7 +310,11 @@ const handleToggle = async (item: BuyingItem) => {
     await toggleItemBought(item.id)
   } catch (error) {
     console.error("Failed to toggle item:", error)
-    alert("Failed to update item status. Please try again.")
+    toast({
+      title: "Error",
+      description: "Failed to update item status. Please try again.",
+      variant: "destructive",
+    })
   }
 }
 
@@ -285,9 +323,17 @@ const handleClearBought = async () => {
   if (confirm(`Are you sure you want to delete ${count} bought item${count > 1 ? 's' : ''}?`)) {
     try {
       await clearBoughtItems()
+      toast({
+        title: "Success",
+        description: `${count} item${count > 1 ? 's' : ''} cleared successfully`,
+      })
     } catch (error) {
       console.error("Failed to clear bought items:", error)
-      alert("Failed to clear bought items. Please try again.")
+      toast({
+        title: "Error",
+        description: "Failed to clear bought items. Please try again.",
+        variant: "destructive",
+      })
     }
   }
 }
