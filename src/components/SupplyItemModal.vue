@@ -7,8 +7,8 @@
         </DialogTitle>
       </DialogHeader>
 
-        <!-- Form -->
-        <form @submit.prevent="handleSubmit" class="space-y-6">
+      <!-- Form -->
+      <form @submit.prevent="handleSubmit" class="space-y-6">
         <!-- Name (Required) -->
         <div class="grid gap-2">
           <Label for="name">
@@ -81,25 +81,34 @@
           </Label>
           <div class="space-y-2">
             <!-- Category selector and custom input row -->
-            <div class="flex space-x-2">
+            <div class="flex flex-col md:flex-row gap-x-3 gap-y-2">
               <Select :model-value="form.category" @update:model-value="handleCategoryChange">
-                <SelectTrigger :class="categorySelectMode ? 'flex-1' : 'w-36 flex-shrink-0'">
+                <SelectTrigger class="w-full min-w-24">
                   <SelectValue :placeholder="m.supply_item_modal_category_placeholder()" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="custom">{{ m.supply_item_modal_category_custom() }}</SelectItem>
-                  <SelectItem v-for="category in availableCategories" :key="category" :value="category">
+                  <SelectItem value="custom">{{
+                    m.supply_item_modal_category_custom()
+                  }}</SelectItem>
+                  <SelectItem
+                    v-for="category in availableCategories"
+                    :key="category"
+                    :value="category"
+                  >
                     {{ category }}
                   </SelectItem>
                 </SelectContent>
               </Select>
               <!-- Inline custom input when custom is selected -->
-              <template v-if="!categorySelectMode">
+              <div
+                v-if="!categorySelectMode"
+                class="flex space-x-2 w-full md:contents md:space-x-0"
+              >
                 <Input
                   v-model="customCategory"
                   type="text"
                   :placeholder="m.supply_item_modal_category_custom_placeholder()"
-                  class="flex-1"
+                  class="w-full"
                   @keyup.enter="handleCustomCategory"
                 />
                 <Button
@@ -109,6 +118,7 @@
                   size="icon"
                   variant="secondary"
                   title="Save custom category"
+                  class="flex-shrink-0"
                 >
                   <i class="i-mdi:check text-lg"></i>
                 </Button>
@@ -118,10 +128,11 @@
                   size="icon"
                   variant="outline"
                   title="Cancel custom category creation"
+                  class="flex-shrink-0"
                 >
                   <i class="i-mdi:close text-lg"></i>
                 </Button>
-              </template>
+              </div>
             </div>
           </div>
         </div>
@@ -133,25 +144,27 @@
           </Label>
           <div class="space-y-2">
             <!-- Storage room selector and custom input row -->
-            <div class="flex space-x-2">
+            <div class="flex flex-col md:flex-row gap-x-3 gap-y-2">
               <Select :model-value="form.storageRoom" @update:model-value="handleStorageChange">
-                <SelectTrigger :class="storageSelectMode ? 'flex-1' : 'w-36 flex-shrink-0'">
+                <SelectTrigger class="w-full min-w-24">
                   <SelectValue :placeholder="m.supply_item_modal_storage_room_placeholder()" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="custom">{{ m.supply_item_modal_storage_room_custom() }}</SelectItem>
+                  <SelectItem value="custom">{{
+                    m.supply_item_modal_storage_room_custom()
+                  }}</SelectItem>
                   <SelectItem v-for="room in availableStorageRooms" :key="room" :value="room">
                     {{ room }}
                   </SelectItem>
                 </SelectContent>
               </Select>
               <!-- Inline custom input when custom is selected -->
-              <template v-if="!storageSelectMode">
+              <div v-if="!storageSelectMode" class="flex space-x-2 w-full md:contents md:space-x-0">
                 <Input
                   v-model="customStorageRoom"
                   type="text"
                   :placeholder="m.supply_item_modal_storage_room_custom_placeholder()"
-                  class="flex-1"
+                  class="w-full"
                   @keyup.enter="handleCustomStorageRoom"
                 />
                 <Button
@@ -161,6 +174,7 @@
                   size="icon"
                   variant="secondary"
                   title="Save custom storage room"
+                  class="flex-shrink-0"
                 >
                   <i class="i-mdi:check text-lg"></i>
                 </Button>
@@ -170,10 +184,11 @@
                   size="icon"
                   variant="outline"
                   title="Cancel custom storage room creation"
+                  class="flex-shrink-0"
                 >
                   <i class="i-mdi:close text-lg"></i>
                 </Button>
-              </template>
+              </div>
             </div>
           </div>
         </div>
@@ -278,9 +293,7 @@
             {{ m.supply_item_modal_cancel() }}
           </Button>
           <Button type="submit">
-            {{
-              isEditing ? m.supply_item_modal_update_item() : m.supply_item_modal_create_item()
-            }}
+            {{ isEditing ? m.supply_item_modal_update_item() : m.supply_item_modal_create_item() }}
           </Button>
         </DialogFooter>
       </form>
@@ -293,10 +306,22 @@ import { computed, onMounted, reactive, ref } from "vue"
 
 import { Badge } from "~/components/ui/badge"
 import { Button } from "~/components/ui/button"
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "~/components/ui/dialog"
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "~/components/ui/dialog"
 import { Input } from "~/components/ui/input"
 import { Label } from "~/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select"
 import { Textarea } from "~/components/ui/textarea"
 import { useI18n } from "~/composables/useI18n"
 import type { CreateSupplyItem, SupplyItem, UpdateSupplyItem } from "~/types/supply"
