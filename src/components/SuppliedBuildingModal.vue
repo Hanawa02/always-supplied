@@ -3,7 +3,7 @@
     <DialogContent class="max-w-lg">
       <DialogHeader>
         <DialogTitle>
-          {{ isEditing ? m.building_modal.title_edit() : m.building_modal.title_add() }}
+          {{ isEditing ? m.building_modal_title_edit() : m.building_modal_title_add() }}
         </DialogTitle>
       </DialogHeader>
 
@@ -12,15 +12,15 @@
         <!-- Name (Required) -->
         <div class="grid gap-2">
           <Label for="building-name">
-            {{ m.building_modal.name_label() }}
-            <span class="text-destructive">{{ m.building_modal.required_field() }}</span>
+            {{ m.building_modal_name_label() }}
+            <span class="text-destructive">{{ m.building_modal_required_field() }}</span>
           </Label>
           <Input
             id="building-name"
             v-model="form.name"
             type="text"
             required
-            :placeholder="m.building_modal.name_placeholder()"
+            :placeholder="m.building_modal_name_placeholder()"
             :class="validationErrors.name ? 'border-destructive' : ''"
           />
           <p v-if="validationErrors.name" class="text-sm text-destructive">
@@ -31,24 +31,24 @@
         <!-- Description -->
         <div class="grid gap-2">
           <Label for="building-description">
-            {{ m.building_modal.description_label() }}
+            {{ m.building_modal_description_label() }}
           </Label>
           <Textarea
             id="building-description"
             v-model="form.description"
             rows="3"
-            :placeholder="m.building_modal.description_placeholder()"
+            :placeholder="m.building_modal_description_placeholder()"
           />
         </div>
 
         <!-- Actions -->
         <DialogFooter class="flex justify-end space-x-3 pt-6">
           <Button variant="outline" @click="emit('close')">
-            {{ m.building_modal.cancel() }}
+            {{ m.building_modal_cancel() }}
           </Button>
           <Button type="submit">
             {{
-              isEditing ? m.building_modal.update_building() : m.building_modal.create_building()
+              isEditing ? m.building_modal_update_building() : m.building_modal_create_building()
             }}
           </Button>
         </DialogFooter>
@@ -106,7 +106,7 @@ const handleSubmit = () => {
   // Validate required fields
   const trimmedName = form.name?.trim()
   if (!trimmedName) {
-    validationErrors.name = m.building_modal.validation.name_required()
+    validationErrors.name = m.building_modal_validation_name_required()
     return
   }
 

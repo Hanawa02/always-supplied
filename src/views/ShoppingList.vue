@@ -16,16 +16,16 @@
             </button>
             <div>
               <h1 class="text-xl sm:text-2xl font-bold text-gray-900">
-                {{ m.shopping_list.title() }}
+                {{ m.shopping_list_title() }}
               </h1>
               <p class="text-sm text-gray-600 mt-1">
-                {{ m.shopping_list.description() }}
+                {{ m.shopping_list_description() }}
               </p>
             </div>
           </div>
           <Button @click="showCreateModal = true">
             <i class="i-mdi:plus mr-2"></i>
-            <span class="hidden sm:inline">{{ m.shopping_list.add_item() }}</span>
+            <span class="hidden sm:inline">{{ m.shopping_list_add_item() }}</span>
             <span class="sm:hidden">Add</span>
           </Button>
         </div>
@@ -43,7 +43,7 @@
             <i class="i-mdi:magnify absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
             <Input
               v-model="searchQuery"
-              :placeholder="m.shopping_list.search_placeholder()"
+              :placeholder="m.shopping_list_search_placeholder()"
               class="pl-10"
             />
           </div>
@@ -54,10 +54,10 @@
           <!-- Category Filter -->
           <Select v-model="selectedCategory">
             <SelectTrigger class="w-[180px]">
-              <SelectValue :placeholder="m.shopping_list.all_categories()" />
+              <SelectValue :placeholder="m.shopping_list_all_categories()" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="__all__">{{ m.shopping_list.all_categories() }}</SelectItem>
+              <SelectItem value="__all__">{{ m.shopping_list_all_categories() }}</SelectItem>
               <SelectItem v-for="category in categories" :key="category" :value="category">
                 {{ category }}
               </SelectItem>
@@ -67,10 +67,10 @@
           <!-- Building Filter -->
           <Select v-model="selectedBuilding">
             <SelectTrigger class="w-[180px]">
-              <SelectValue :placeholder="m.shopping_list.all_buildings()" />
+              <SelectValue :placeholder="m.shopping_list_all_buildings()" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="__all__">{{ m.shopping_list.all_buildings() }}</SelectItem>
+              <SelectItem value="__all__">{{ m.shopping_list_all_buildings() }}</SelectItem>
               <SelectItem v-for="building in buildings" :key="building.id" :value="building.id">
                 {{ building.name }}
               </SelectItem>
@@ -85,7 +85,7 @@
               @update:checked="toggleShowBoughtItems"
             />
             <Label for="show-bought" class="cursor-pointer">
-              {{ m.shopping_list.show_bought_items() }}
+              {{ m.shopping_list_show_bought_items() }}
             </Label>
           </div>
 
@@ -97,7 +97,7 @@
             class="text-destructive hover:text-destructive"
           >
             <i class="i-mdi:delete-sweep mr-2"></i>
-            {{ m.shopping_list.clear_bought() }} ({{ boughtItems.length }})
+            {{ m.shopping_list_clear_bought() }} ({{ boughtItems.length }})
           </Button>
 
         </div>
@@ -107,19 +107,19 @@
     <!-- Statistics -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
       <StatsCard
-        :title="m.shopping_list.total_items()"
+        :title="m.shopping_list_total_items()"
         :value="totalItems"
         icon="i-mdi:format-list-bulleted"
         icon-color="primary"
       />
       <StatsCard
-        :title="m.shopping_list.to_buy()"
+        :title="m.shopping_list_to_buy()"
         :value="activeItems.length"
         icon="i-mdi:cart-outline"
         icon-color="warning"
       />
       <StatsCard
-        :title="m.shopping_list.bought()"
+        :title="m.shopping_list_bought()"
         :value="boughtItems.length"
         icon="i-mdi:check-circle-outline"
         icon-color="success"
@@ -146,9 +146,9 @@
     <EmptyState
       v-else
       icon="i-mdi:cart-off"
-      :title="searchQuery || (selectedCategory && selectedCategory !== '__all__') || (selectedBuilding && selectedBuilding !== '__all__') ? m.shopping_list.empty_state.no_items_found_title() : m.shopping_list.empty_state.no_items_title()"
-      :description="searchQuery || (selectedCategory && selectedCategory !== '__all__') || (selectedBuilding && selectedBuilding !== '__all__') ? m.shopping_list.empty_state.no_items_found_description() : m.shopping_list.empty_state.no_items_description()"
-      :action-label="!searchQuery && (!selectedCategory || selectedCategory === '__all__') && (!selectedBuilding || selectedBuilding === '__all__') ? m.shopping_list.empty_state.add_first_item() : undefined"
+      :title="searchQuery || (selectedCategory && selectedCategory !== '__all__') || (selectedBuilding && selectedBuilding !== '__all__') ? m.shopping_list_empty_state_no_items_found_title() : m.shopping_list_empty_state_no_items_title()"
+      :description="searchQuery || (selectedCategory && selectedCategory !== '__all__') || (selectedBuilding && selectedBuilding !== '__all__') ? m.shopping_list_empty_state_no_items_found_description() : m.shopping_list_empty_state_no_items_description()"
+      :action-label="!searchQuery && (!selectedCategory || selectedCategory === '__all__') && (!selectedBuilding || selectedBuilding === '__all__') ? m.shopping_list_empty_state_add_first_item() : undefined"
       @action="showCreateModal = true"
     />
 

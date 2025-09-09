@@ -18,7 +18,7 @@
               class="text-gray-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               active-class="text-primary-700 bg-primary-50"
             >
-              {{ m.app.navigation.supplied_buildings() }}
+              {{ m.app_navigation_supplied_buildings() }}
             </router-link>
             <router-link
               :to="{
@@ -30,7 +30,7 @@
               class="text-gray-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors flex flex-col items-start"
               active-class="text-primary-700 bg-primary-50"
             >
-              <span>{{ m.app.navigation.supply_configuration() }}</span>
+              <span>{{ m.app_navigation_supply_configuration() }}</span>
               <span
                 v-if="selectedBuildingStore.selectedBuilding"
                 class="text-xs text-gray-400 truncate max-w-32"
@@ -43,14 +43,14 @@
               class="text-gray-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               active-class="text-primary-700 bg-primary-50"
             >
-              {{ m.app.navigation.shopping_list() }}
+              {{ m.app_navigation_shopping_list() }}
             </router-link>
             <router-link
               :to="{ name: ROUTES.THEME_PREVIEW.name }"
               class="text-gray-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               active-class="text-primary-700 bg-primary-50"
             >
-              {{ m.app.navigation.theme_preview() }}
+              {{ m.app_navigation_theme_preview() }}
             </router-link>
           </div>
         </div>
@@ -143,7 +143,7 @@
               active-class="text-primary-700 bg-primary-50"
             >
               <i class="i-mdi:office-building w-5 h-5 mr-3 text-gray-400"></i>
-              {{ m.app.navigation.supplied_buildings() }}
+              {{ m.app_navigation_supplied_buildings() }}
             </router-link>
 
             <router-link
@@ -159,7 +159,7 @@
             >
               <div class="flex items-center">
                 <i class="i-mdi:package-variant w-5 h-5 mr-3 text-gray-400"></i>
-                {{ m.app.navigation.supply_configuration() }}
+                {{ m.app_navigation_supply_configuration() }}
               </div>
               <span
                 v-if="selectedBuildingStore.selectedBuilding"
@@ -176,7 +176,7 @@
               active-class="text-primary-700 bg-primary-50"
             >
               <i class="i-mdi:cart w-5 h-5 mr-3 text-gray-400"></i>
-              {{ m.app.navigation.shopping_list() }}
+              {{ m.app_navigation_shopping_list() }}
             </router-link>
 
             <router-link
@@ -186,7 +186,7 @@
               active-class="text-primary-700 bg-primary-50"
             >
               <i class="i-mdi:palette w-5 h-5 mr-3 text-gray-400"></i>
-              {{ m.app.navigation.theme_preview() }}
+              {{ m.app_navigation_theme_preview() }}
             </router-link>
           </div>
 

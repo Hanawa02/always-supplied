@@ -16,7 +16,7 @@
             </button>
             <div>
               <h1 class="text-xl sm:text-2xl font-bold text-gray-900">
-                {{ m.supply_configuration.title() }}
+                {{ m.supply_configuration_title() }}
               </h1>
               <p v-if="selectedBuilding" class="text-sm text-gray-600 mt-1">
                 {{ selectedBuilding.name }}
@@ -24,8 +24,8 @@
             </div>
           </div>
           <BaseButton variant="primary" icon="i-mdi:plus" @click="showCreateModal = true">
-            <span class="hidden sm:inline">{{ m.supply_configuration.add_supply_item() }}</span>
-            <span class="sm:hidden">{{ m.supply_configuration.add_item_short() }}</span>
+            <span class="hidden sm:inline">{{ m.supply_configuration_add_supply_item() }}</span>
+            <span class="sm:hidden">{{ m.supply_configuration_add_item_short() }}</span>
           </BaseButton>
         </div>
       </div>
@@ -37,7 +37,7 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <!-- Stats Card -->
           <StatsCard
-            :title="m.supply_configuration.total_items()"
+            :title="m.supply_configuration_total_items()"
             :value="totalItems"
             icon="i-mdi:format-list-numbered"
             icon-color="primary"
@@ -52,7 +52,7 @@
               <input
                 v-model="searchQuery"
                 type="text"
-                :placeholder="m.supply_configuration.search_placeholder()"
+                :placeholder="m.supply_configuration_search_placeholder()"
                 class="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               />
             </div>
@@ -64,7 +64,7 @@
               v-model="selectedCategory"
               class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
             >
-              <option value="">{{ m.supply_configuration.all_categories() }}</option>
+              <option value="">{{ m.supply_configuration_all_categories() }}</option>
               <option v-for="category in categories" :key="category" :value="category">
                 {{ category }}
               </option>
@@ -79,13 +79,13 @@
           v-for="item in filteredItems"
           :key="item.id"
           :item="item"
-          :edit-tooltip="m.supply_configuration.item.edit_tooltip()"
-          :delete-tooltip="m.supply_configuration.item.delete_tooltip()"
+          :edit-tooltip="m.supply_configuration_item_edit_tooltip()"
+          :delete-tooltip="m.supply_configuration_item_delete_tooltip()"
           :add-to-shopping-list-tooltip="'Add to shopping list'"
-          :quantity-label="m.supply_configuration.item.quantity()"
-          :category-label="m.supply_configuration.item.category()"
-          :storage-label="m.supply_configuration.item.storage()"
-          :preferred-brands-label="m.supply_configuration.item.preferred_brands()"
+          :quantity-label="m.supply_configuration_item_quantity()"
+          :category-label="m.supply_configuration_item_category()"
+          :storage-label="m.supply_configuration_item_storage()"
+          :preferred-brands-label="m.supply_configuration_item_preferred_brands()"
           @edit="editItem"
           @delete="confirmDelete"
           @add-to-shopping-list="handleAddToShoppingList"
@@ -98,17 +98,17 @@
         icon="i-mdi:package-variant-closed"
         :title="
           searchQuery || selectedCategory
-            ? m.supply_configuration.empty_state.no_items_found_title()
-            : m.supply_configuration.empty_state.no_items_title()
+            ? m.supply_configuration_empty_state_no_items_found_title()
+            : m.supply_configuration_empty_state_no_items_title()
         "
         :description="
           searchQuery || selectedCategory
-            ? m.supply_configuration.empty_state.no_items_found_description()
-            : m.supply_configuration.empty_state.no_items_description()
+            ? m.supply_configuration_empty_state_no_items_found_description()
+            : m.supply_configuration_empty_state_no_items_description()
         "
         :action-label="
           !searchQuery && !selectedCategory
-            ? m.supply_configuration.empty_state.add_first_item()
+            ? m.supply_configuration_empty_state_add_first_item()
             : undefined
         "
         @action="showCreateModal = true"

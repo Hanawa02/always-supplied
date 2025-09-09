@@ -3,7 +3,7 @@
     <DialogContent class="max-w-lg max-h-[80vh] overflow-y-auto">
       <DialogHeader>
         <DialogTitle>
-          {{ isEditing ? m.supply_item_modal.title_edit() : m.supply_item_modal.title_add() }}
+          {{ isEditing ? m.supply_item_modal_title_edit() : m.supply_item_modal_title_add() }}
         </DialogTitle>
       </DialogHeader>
 
@@ -12,15 +12,15 @@
         <!-- Name (Required) -->
         <div class="grid gap-2">
           <Label for="name">
-            {{ m.supply_item_modal.name_label() }}
-            <span class="text-destructive">{{ m.supply_item_modal.required_field() }}</span>
+            {{ m.supply_item_modal_name_label() }}
+            <span class="text-destructive">{{ m.supply_item_modal_required_field() }}</span>
           </Label>
           <Input
             id="name"
             v-model="form.name"
             type="text"
             required
-            :placeholder="m.supply_item_modal.name_placeholder()"
+            :placeholder="m.supply_item_modal_name_placeholder()"
             :class="validationErrors.name ? 'border-destructive' : ''"
           />
           <p v-if="validationErrors.name" class="text-sm text-destructive">
@@ -31,34 +31,34 @@
         <!-- Description -->
         <div class="grid gap-2">
           <Label for="description">
-            {{ m.supply_item_modal.description_label() }}
+            {{ m.supply_item_modal_description_label() }}
           </Label>
           <Textarea
             id="description"
             v-model="form.description"
             rows="3"
-            :placeholder="m.supply_item_modal.description_placeholder()"
+            :placeholder="m.supply_item_modal_description_placeholder()"
           />
         </div>
 
         <!-- Quantity (Required) -->
         <div class="grid gap-2">
           <Label for="quantity">
-            {{ m.supply_item_modal.quantity_label() }}
-            <span class="text-destructive">{{ m.supply_item_modal.required_field() }}</span>
+            {{ m.supply_item_modal_quantity_label() }}
+            <span class="text-destructive">{{ m.supply_item_modal_required_field() }}</span>
             <Button
               type="button"
               variant="ghost"
               size="icon"
               @click="showQuantityHelp = !showQuantityHelp"
               class="ml-1 h-4 w-4"
-              :title="m.supply_item_modal.quantity_help()"
+              :title="m.supply_item_modal_quantity_help()"
             >
               <i class="i-mdi:help-circle-outline text-xs"></i>
             </Button>
           </Label>
           <div v-if="showQuantityHelp" class="text-xs text-blue-600 bg-blue-50 p-2 rounded mb-2">
-            {{ m.supply_item_modal.quantity_help() }}
+            {{ m.supply_item_modal_quantity_help() }}
           </div>
           <Input
             id="quantity"
@@ -66,7 +66,7 @@
             type="number"
             min="0"
             required
-            :placeholder="m.supply_item_modal.quantity_placeholder()"
+            :placeholder="m.supply_item_modal_quantity_placeholder()"
             :class="validationErrors.quantity ? 'border-destructive' : ''"
           />
           <p v-if="validationErrors.quantity" class="text-sm text-destructive">
@@ -77,17 +77,17 @@
         <!-- Category -->
         <div class="grid gap-2">
           <Label for="category">
-            {{ m.supply_item_modal.category_label() }}
+            {{ m.supply_item_modal_category_label() }}
           </Label>
           <div class="space-y-2">
             <!-- Category selector and custom input row -->
             <div class="flex space-x-2">
               <Select :model-value="form.category" @update:model-value="handleCategoryChange">
                 <SelectTrigger :class="categorySelectMode ? 'flex-1' : 'w-36 flex-shrink-0'">
-                  <SelectValue :placeholder="m.supply_item_modal.category_placeholder()" />
+                  <SelectValue :placeholder="m.supply_item_modal_category_placeholder()" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="custom">{{ m.supply_item_modal.category_custom() }}</SelectItem>
+                  <SelectItem value="custom">{{ m.supply_item_modal_category_custom() }}</SelectItem>
                   <SelectItem v-for="category in availableCategories" :key="category" :value="category">
                     {{ category }}
                   </SelectItem>
@@ -98,7 +98,7 @@
                 <Input
                   v-model="customCategory"
                   type="text"
-                  :placeholder="m.supply_item_modal.category_custom_placeholder()"
+                  :placeholder="m.supply_item_modal_category_custom_placeholder()"
                   class="flex-1"
                   @keyup.enter="handleCustomCategory"
                 />
@@ -129,17 +129,17 @@
         <!-- Storage Room -->
         <div class="grid gap-2">
           <Label for="storage-room">
-            {{ m.supply_item_modal.storage_room_label() }}
+            {{ m.supply_item_modal_storage_room_label() }}
           </Label>
           <div class="space-y-2">
             <!-- Storage room selector and custom input row -->
             <div class="flex space-x-2">
               <Select :model-value="form.storageRoom" @update:model-value="handleStorageChange">
                 <SelectTrigger :class="storageSelectMode ? 'flex-1' : 'w-36 flex-shrink-0'">
-                  <SelectValue :placeholder="m.supply_item_modal.storage_room_placeholder()" />
+                  <SelectValue :placeholder="m.supply_item_modal_storage_room_placeholder()" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="custom">{{ m.supply_item_modal.storage_room_custom() }}</SelectItem>
+                  <SelectItem value="custom">{{ m.supply_item_modal_storage_room_custom() }}</SelectItem>
                   <SelectItem v-for="room in availableStorageRooms" :key="room" :value="room">
                     {{ room }}
                   </SelectItem>
@@ -150,7 +150,7 @@
                 <Input
                   v-model="customStorageRoom"
                   type="text"
-                  :placeholder="m.supply_item_modal.storage_room_custom_placeholder()"
+                  :placeholder="m.supply_item_modal_storage_room_custom_placeholder()"
                   class="flex-1"
                   @keyup.enter="handleCustomStorageRoom"
                 />
@@ -181,14 +181,14 @@
         <!-- Shopping Hint -->
         <div class="grid gap-2">
           <Label for="shopping-hint">
-            {{ m.supply_item_modal.shopping_hint_label() }}
+            {{ m.supply_item_modal_shopping_hint_label() }}
             <Button
               type="button"
               variant="ghost"
               size="icon"
               @click="showShoppingHintHelp = !showShoppingHintHelp"
               class="ml-1 h-4 w-4"
-              :title="m.supply_item_modal.shopping_hint_help()"
+              :title="m.supply_item_modal_shopping_hint_help()"
             >
               <i class="i-mdi:help-circle-outline text-xs"></i>
             </Button>
@@ -197,33 +197,33 @@
             v-if="showShoppingHintHelp"
             class="text-xs text-blue-600 bg-blue-50 p-2 rounded mb-2"
           >
-            {{ m.supply_item_modal.shopping_hint_help() }}
+            {{ m.supply_item_modal_shopping_hint_help() }}
           </div>
           <Textarea
             id="shopping-hint"
             v-model="form.shoppingHint"
             rows="2"
-            :placeholder="m.supply_item_modal.shopping_hint_placeholder()"
+            :placeholder="m.supply_item_modal_shopping_hint_placeholder()"
           />
         </div>
 
         <!-- Preferred Brands -->
         <div class="grid gap-2">
           <Label>
-            {{ m.supply_item_modal.preferred_brands_label() }}
+            {{ m.supply_item_modal_preferred_brands_label() }}
             <Button
               type="button"
               variant="ghost"
               size="icon"
               @click="showBrandsHelp = !showBrandsHelp"
               class="ml-1 h-4 w-4"
-              :title="m.supply_item_modal.preferred_brands_help()"
+              :title="m.supply_item_modal_preferred_brands_help()"
             >
               <i class="i-mdi:help-circle-outline text-xs"></i>
             </Button>
           </Label>
           <div v-if="showBrandsHelp" class="text-xs text-blue-600 bg-blue-50 p-2 rounded mb-2">
-            {{ m.supply_item_modal.preferred_brands_help() }}
+            {{ m.supply_item_modal_preferred_brands_help() }}
           </div>
           <div class="space-y-2">
             <!-- Existing brands -->
@@ -255,7 +255,7 @@
               <Input
                 v-model="newBrand"
                 type="text"
-                :placeholder="m.supply_item_modal.preferred_brands_placeholder()"
+                :placeholder="m.supply_item_modal_preferred_brands_placeholder()"
                 class="flex-1"
                 @keyup.enter="addBrand"
               />
@@ -275,11 +275,11 @@
         <!-- Actions -->
         <DialogFooter class="flex justify-end space-x-3 pt-6">
           <Button variant="outline" @click="emit('close')">
-            {{ m.supply_item_modal.cancel() }}
+            {{ m.supply_item_modal_cancel() }}
           </Button>
           <Button type="submit">
             {{
-              isEditing ? m.supply_item_modal.update_item() : m.supply_item_modal.create_item()
+              isEditing ? m.supply_item_modal_update_item() : m.supply_item_modal_create_item()
             }}
           </Button>
         </DialogFooter>
@@ -437,12 +437,12 @@ const handleSubmit = () => {
   // Validate required fields
   const trimmedName = form.name?.trim()
   if (!trimmedName) {
-    validationErrors.name = m.supply_item_modal.validation.name_required()
+    validationErrors.name = m.supply_item_modal_validation_name_required()
     return
   }
 
   if (form.quantity < 0) {
-    validationErrors.quantity = m.supply_item_modal.validation.quantity_negative()
+    validationErrors.quantity = m.supply_item_modal_validation_quantity_negative()
     return
   }
 

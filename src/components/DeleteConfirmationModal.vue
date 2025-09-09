@@ -6,19 +6,19 @@
           <i class="i-mdi:alert-outline text-red-600 text-xl"></i>
         </div>
         <AlertDialogTitle class="text-center">
-          {{ m.delete_confirmation.title() }}
+          {{ m.delete_confirmation_title() }}
         </AlertDialogTitle>
         <AlertDialogDescription class="text-center">
-          {{ m.delete_confirmation.message({ itemName }) }}
+          {{ m.delete_confirmation_message({ itemName }) }}
         </AlertDialogDescription>
       </AlertDialogHeader>
 
       <AlertDialogFooter>
         <AlertDialogCancel @click="emit('cancel')">
-          {{ m.delete_confirmation.cancel() }}
+          {{ m.delete_confirmation_cancel() }}
         </AlertDialogCancel>
         <AlertDialogAction @click="emit('confirm')" class="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-          {{ m.delete_confirmation.delete() }}
+          {{ m.delete_confirmation_delete() }}
         </AlertDialogAction>
       </AlertDialogFooter>
     </AlertDialogContent>
