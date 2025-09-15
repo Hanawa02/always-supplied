@@ -89,17 +89,6 @@
                 {{ m.shopping_list_show_bought_items() }}
               </Label>
             </div>
-
-            <!-- Clear Bought Items -->
-            <Button
-              v-if="boughtItems.length > 0"
-              variant="outline"
-              @click="handleClearBought"
-              class="text-destructive hover:text-destructive"
-            >
-              <i class="i-mdi:delete-sweep mr-2"></i>
-              {{ m.shopping_list_clear_bought() }} ({{ boughtItems.length }})
-            </Button>
           </div>
         </div>
       </div>
