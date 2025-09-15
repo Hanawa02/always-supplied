@@ -47,29 +47,53 @@
             </DropdownMenuTrigger>
 
             <DropdownMenuContent align="end">
-              <DropdownMenuItem @click="$emit('edit', building)">
-                <i class="i-mdi:pencil w-4 h-4 mr-2"></i>
-                Edit Building
-              </DropdownMenuItem>
+              <PermissionGuard
+                :building-id="building.id"
+                permission="edit_building"
+                :show-fallback="false"
+              >
+                <DropdownMenuItem @click="$emit('edit', building)">
+                  <i class="i-mdi:pencil w-4 h-4 mr-2"></i>
+                  Edit Building
+                </DropdownMenuItem>
+              </PermissionGuard>
 
               <DropdownMenuSeparator v-if="isAuthenticated" />
 
-              <DropdownMenuItem v-if="isAuthenticated" @click="$emit('share', building)">
-                <i class="i-mdi:share-variant w-4 h-4 mr-2"></i>
-                Share Building
-              </DropdownMenuItem>
+              <PermissionGuard
+                :building-id="building.id"
+                permission="share_building"
+                :show-fallback="false"
+              >
+                <DropdownMenuItem @click="$emit('share', building)">
+                  <i class="i-mdi:share-variant w-4 h-4 mr-2"></i>
+                  Share Building
+                </DropdownMenuItem>
+              </PermissionGuard>
 
-              <DropdownMenuItem v-if="isAuthenticated" @click="$emit('members', building)">
-                <i class="i-mdi:account-group w-4 h-4 mr-2"></i>
-                Manage Members
-              </DropdownMenuItem>
+              <PermissionGuard
+                :building-id="building.id"
+                permission="manage_members"
+                :show-fallback="false"
+              >
+                <DropdownMenuItem @click="$emit('members', building)">
+                  <i class="i-mdi:account-group w-4 h-4 mr-2"></i>
+                  Manage Members
+                </DropdownMenuItem>
+              </PermissionGuard>
 
               <DropdownMenuSeparator />
 
-              <DropdownMenuItem @click="$emit('delete', building)" class="text-red-600">
-                <i class="i-mdi:delete w-4 h-4 mr-2"></i>
-                Delete Building
-              </DropdownMenuItem>
+              <PermissionGuard
+                :building-id="building.id"
+                permission="delete_building"
+                :show-fallback="false"
+              >
+                <DropdownMenuItem @click="$emit('delete', building)" class="text-red-600">
+                  <i class="i-mdi:delete w-4 h-4 mr-2"></i>
+                  Delete Building
+                </DropdownMenuItem>
+              </PermissionGuard>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -102,6 +126,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "~/components/ui/dropdown-menu"
+import PermissionGuard from "~/components/permissions/PermissionGuard.vue"
 import { useAuth } from "~/composables/useAuth"
 import { useCloudSync } from "~/composables/useCloudSync"
 import type { SuppliedBuilding } from "~/types/suppliedBuilding"
