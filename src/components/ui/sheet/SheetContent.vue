@@ -11,7 +11,7 @@ import {
 } from "reka-ui"
 import type { HTMLAttributes } from "vue"
 
-import { cn } from '~/lib/utils'
+import { cn } from "~/lib/utils"
 
 import type { SheetVariants } from "."
 import { sheetVariants } from "."

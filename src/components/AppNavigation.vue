@@ -12,13 +12,13 @@
           </router-link>
 
           <!-- Desktop navigation -->
-          <div class="hidden md:flex items-center ml-8 space-x-1">
+          <div class="hidden md:flex items-center ml-8 gap-x-2">
             <router-link
-              :to="{ name: ROUTES.SUPPLIED_BUILDINGS.name }"
+              :to="{ name: ROUTES.SHOPPING_LIST.name }"
               class="text-gray-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               active-class="text-primary-700 bg-primary-50"
             >
-              {{ m.app.navigation.supplied_buildings() }}
+              {{ m.app_navigation_shopping_list() }}
             </router-link>
             <router-link
               :to="{
@@ -30,20 +30,15 @@
               class="text-gray-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors flex flex-col items-start"
               active-class="text-primary-700 bg-primary-50"
             >
-              <span>{{ m.app.navigation.supply_configuration() }}</span>
-              <span
-                v-if="selectedBuildingStore.selectedBuilding"
-                class="text-xs text-gray-400 truncate max-w-32"
-              >
-                {{ selectedBuildingStore.selectedBuilding.name }}
-              </span>
+              <span>{{ m.app_navigation_supply_configuration() }}</span>
             </router-link>
+
             <router-link
-              :to="{ name: ROUTES.THEME_PREVIEW.name }"
+              :to="{ name: ROUTES.SUPPLIED_BUILDINGS.name }"
               class="text-gray-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               active-class="text-primary-700 bg-primary-50"
             >
-              {{ m.app.navigation.theme_preview() }}
+              {{ m.app_navigation_supplied_buildings() }}
             </router-link>
           </div>
         </div>
@@ -130,13 +125,13 @@
           <!-- Navigation -->
           <div class="flex-1 px-4 py-4 space-y-2">
             <router-link
-              :to="{ name: ROUTES.SUPPLIED_BUILDINGS.name }"
+              :to="{ name: ROUTES.SHOPPING_LIST.name }"
               @click="closeMobileMenu"
               class="flex items-center px-3 py-3 text-sm font-medium text-gray-600 rounded-lg hover:text-primary-600 hover:bg-primary-50 transition-colors"
               active-class="text-primary-700 bg-primary-50"
             >
-              <i class="i-mdi:office-building w-5 h-5 mr-3 text-gray-400"></i>
-              {{ m.app.navigation.supplied_buildings() }}
+              <i class="i-mdi:cart w-5 h-5 mr-3 text-gray-400"></i>
+              {{ m.app_navigation_shopping_list() }}
             </router-link>
 
             <router-link
@@ -152,7 +147,7 @@
             >
               <div class="flex items-center">
                 <i class="i-mdi:package-variant w-5 h-5 mr-3 text-gray-400"></i>
-                {{ m.app.navigation.supply_configuration() }}
+                {{ m.app_navigation_supply_configuration() }}
               </div>
               <span
                 v-if="selectedBuildingStore.selectedBuilding"
@@ -163,13 +158,13 @@
             </router-link>
 
             <router-link
-              :to="{ name: ROUTES.THEME_PREVIEW.name }"
+              :to="{ name: ROUTES.SUPPLIED_BUILDINGS.name }"
               @click="closeMobileMenu"
               class="flex items-center px-3 py-3 text-sm font-medium text-gray-600 rounded-lg hover:text-primary-600 hover:bg-primary-50 transition-colors"
               active-class="text-primary-700 bg-primary-50"
             >
-              <i class="i-mdi:palette w-5 h-5 mr-3 text-gray-400"></i>
-              {{ m.app.navigation.theme_preview() }}
+              <i class="i-mdi:office-building w-5 h-5 mr-3 text-gray-400"></i>
+              {{ m.app_navigation_supplied_buildings() }}
             </router-link>
           </div>
 

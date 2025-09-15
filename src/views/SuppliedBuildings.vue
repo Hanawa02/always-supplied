@@ -7,10 +7,10 @@
           class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-4 sm:h-16 sm:py-0"
         >
           <h2 class="text-xl sm:text-2xl font-bold text-gray-900">
-            {{ m.supplied_buildings.title() }}
+            {{ m.supplied_buildings_title() }}
           </h2>
           <BaseButton variant="primary" icon="i-mdi:plus" @click="showCreateModal = true">
-            {{ m.supplied_buildings.add_building() }}
+            {{ m.supplied_buildings_add_building() }}
           </BaseButton>
         </div>
       </div>
@@ -22,7 +22,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <!-- Stats Card -->
           <StatsCard
-            :title="m.supplied_buildings.total_buildings()"
+            :title="m.supplied_buildings_total_buildings()"
             :value="totalBuildings"
             icon="i-mdi:office-building"
             icon-color="primary"
@@ -37,7 +37,7 @@
               <input
                 v-model="searchQuery"
                 type="text"
-                :placeholder="m.supplied_buildings.search_placeholder()"
+                :placeholder="m.supplied_buildings_search_placeholder()"
                 class="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               />
             </div>
@@ -52,8 +52,8 @@
           :key="building.id"
           :building="building"
           :supply-count="getSupplyCount(building.id)"
-          :supplies-count-label="m.supplied_buildings.supplies_count()"
-          :manage-supplies-label="m.supplied_buildings.manage_supplies()"
+          :supplies-count-label="m.supplied_buildings_supplies_count()"
+          :manage-supplies-label="m.supplied_buildings_manage_supplies()"
           @view-supplies="viewSupplies"
           @edit="editBuilding"
           @delete="confirmDelete"
@@ -66,15 +66,15 @@
         icon="i-mdi:office-building"
         :title="
           searchQuery
-            ? m.supplied_buildings.empty_state.no_buildings_found_title()
-            : m.supplied_buildings.empty_state.no_buildings_title()
+            ? m.supplied_buildings_empty_state_no_buildings_found_title()
+            : m.supplied_buildings_empty_state_no_buildings_title()
         "
         :description="
           searchQuery
-            ? m.supplied_buildings.empty_state.no_buildings_found_description()
-            : m.supplied_buildings.empty_state.no_buildings_description()
+            ? m.supplied_buildings_empty_state_no_buildings_found_description()
+            : m.supplied_buildings_empty_state_no_buildings_description()
         "
-        :action-label="!searchQuery ? m.supplied_buildings.add_first_building() : undefined"
+        :action-label="!searchQuery ? m.supplied_buildings_add_first_building() : undefined"
         @action="showCreateModal = true"
       />
     </div>

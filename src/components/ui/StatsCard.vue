@@ -1,16 +1,14 @@
 <template>
-  <Card class="p-4">
+  <Card class="p-2 md:p-4 flex flex-col space-y-1 items-center justify-center">
     <div class="flex items-center">
-      <div class="flex-1">
-        <p class="text-sm font-medium text-muted-foreground">{{ title }}</p>
-        <p class="text-2xl font-bold text-foreground">{{ value }}</p>
-        <p v-if="subtitle" class="text-xs text-muted-foreground mt-1">{{ subtitle }}</p>
+      <p class="text-sm font-medium text-muted-foreground">{{ title }}</p>
+      <p v-if="subtitle" class="text-xs text-muted-foreground mt-1">{{ subtitle }}</p>
+    </div>
+    <div class="flex space-x-2 w-full">
+      <div v-if="icon" :class="[iconWrapperClasses, 'flex-shrink-0']">
+        <i :class="iconClasses"></i>
       </div>
-      <div v-if="icon" class="ml-4">
-        <div :class="iconWrapperClasses">
-          <i :class="iconClasses"></i>
-        </div>
-      </div>
+      <p class="text-2xl font-bold text-foreground">{{ value }}</p>
     </div>
   </Card>
 </template>

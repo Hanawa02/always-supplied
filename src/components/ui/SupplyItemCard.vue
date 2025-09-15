@@ -13,6 +13,15 @@
           <Button
             variant="ghost"
             size="icon"
+            @click="$emit('addToShoppingList', item)"
+            class="h-8 w-8 text-muted-foreground hover:text-green-600"
+            :title="addToShoppingListTooltip"
+          >
+            <i class="i-mdi:cart-plus text-lg"></i>
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
             @click="$emit('edit', item)"
             class="h-8 w-8 text-muted-foreground hover:text-primary"
             :title="editTooltip"
@@ -58,9 +67,7 @@
       <!-- Shopping Hint -->
       <div v-if="item.shoppingHint" class="bg-yellow-50 p-3 rounded-lg border border-yellow-200">
         <div class="flex items-start">
-          <i
-            class="i-mdi:lightbulb-outline text-yellow-600 text-sm mt-0.5 mr-2 flex-shrink-0"
-          ></i>
+          <i class="i-mdi:lightbulb-outline text-yellow-600 text-sm mt-0.5 mr-2 flex-shrink-0"></i>
           <p class="text-xs text-yellow-700">{{ item.shoppingHint }}</p>
         </div>
       </div>
@@ -93,6 +100,7 @@ interface Props {
   item: SupplyItem
   editTooltip: string
   deleteTooltip: string
+  addToShoppingListTooltip: string
   quantityLabel: string
   categoryLabel: string
   storageLabel: string
@@ -104,5 +112,6 @@ defineProps<Props>()
 defineEmits<{
   edit: [item: SupplyItem]
   delete: [item: SupplyItem]
+  addToShoppingList: [item: SupplyItem]
 }>()
 </script>

@@ -4,7 +4,7 @@ import type { LabelProps } from "reka-ui"
 import { Label } from "reka-ui"
 import type { HTMLAttributes } from "vue"
 
-import { cn } from '~/lib/utils'
+import { cn } from "~/lib/utils"
 
 const props = defineProps<LabelProps & { class?: HTMLAttributes["class"] }>()
 

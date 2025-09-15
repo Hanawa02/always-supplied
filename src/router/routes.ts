@@ -24,6 +24,11 @@ export const ROUTES = {
     path: "/app/supply-configuration",
     component: () => import("~/views/SupplyConfiguration.vue"),
   },
+  SHOPPING_LIST: {
+    name: "ShoppingList",
+    path: "/app/shopping-list",
+    component: () => import("~/views/ShoppingList.vue"),
+  },
 } as const satisfies Record<string, RouteInfo>
 
 // Generate routes array from ROUTES and add redirect

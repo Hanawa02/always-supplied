@@ -1,6 +1,10 @@
-import type { CreateSuppliedBuilding, SuppliedBuilding, UpdateSuppliedBuilding } from '~/types/suppliedBuilding'
+import type {
+  CreateSuppliedBuilding,
+  SuppliedBuilding,
+  UpdateSuppliedBuilding,
+} from "~/types/suppliedBuilding"
 
-import { db, generateId, type StorageService } from './database'
+import { db, generateId, type StorageService } from "./database"
 
 export class SuppliedBuildingsStorage implements StorageService<SuppliedBuilding> {
   async create(buildingData: CreateSuppliedBuilding): Promise<SuppliedBuilding> {
@@ -39,7 +43,7 @@ export class SuppliedBuildingsStorage implements StorageService<SuppliedBuilding
   }
 
   async delete(id: string): Promise<boolean> {
-    const deleteCount = await db.suppliedBuildings.where('id').equals(id).delete()
+    const deleteCount = await db.suppliedBuildings.where("id").equals(id).delete()
     return deleteCount > 0
   }
 
@@ -48,17 +52,20 @@ export class SuppliedBuildingsStorage implements StorageService<SuppliedBuilding
   }
 
   async getAll(): Promise<SuppliedBuilding[]> {
-    return await db.suppliedBuildings.orderBy('name').toArray()
+    return await db.suppliedBuildings.orderBy("name").toArray()
   }
 
-  async search(query: string, fields: (keyof SuppliedBuilding)[] = ['name', 'description']): Promise<SuppliedBuilding[]> {
+  async search(
+    query: string,
+    fields: (keyof SuppliedBuilding)[] = ["name", "description"],
+  ): Promise<SuppliedBuilding[]> {
     const lowercaseQuery = query.toLowerCase()
-    
+
     return await db.suppliedBuildings
       .filter((building: SuppliedBuilding) => {
         return fields.some((field) => {
           const value = building[field]
-          return value && typeof value === 'string' && value.toLowerCase().includes(lowercaseQuery)
+          return value && typeof value === "string" && value.toLowerCase().includes(lowercaseQuery)
         })
       })
       .toArray()
@@ -71,7 +78,7 @@ export class SuppliedBuildingsStorage implements StorageService<SuppliedBuilding
 
   // Method to check if a building has associated supply items (for deletion validation)
   async hasSupplyItems(buildingId: string): Promise<boolean> {
-    const count = await db.supplyItems.where('buildingId').equals(buildingId).count()
+    const count = await db.supplyItems.where("buildingId").equals(buildingId).count()
     return count > 0
   }
 }

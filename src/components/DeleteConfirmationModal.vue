@@ -2,23 +2,28 @@
   <AlertDialog :open="true">
     <AlertDialogContent class="max-w-md">
       <AlertDialogHeader>
-        <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100 mb-4">
+        <div
+          class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100 mb-4"
+        >
           <i class="i-mdi:alert-outline text-red-600 text-xl"></i>
         </div>
         <AlertDialogTitle class="text-center">
-          {{ m.delete_confirmation.title() }}
+          {{ m.delete_confirmation_title() }}
         </AlertDialogTitle>
         <AlertDialogDescription class="text-center">
-          {{ m.delete_confirmation.message({ itemName }) }}
+          {{ m.delete_confirmation_message({ itemName }) }}
         </AlertDialogDescription>
       </AlertDialogHeader>
 
       <AlertDialogFooter>
         <AlertDialogCancel @click="emit('cancel')">
-          {{ m.delete_confirmation.cancel() }}
+          {{ m.delete_confirmation_cancel() }}
         </AlertDialogCancel>
-        <AlertDialogAction @click="emit('confirm')" class="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-          {{ m.delete_confirmation.delete() }}
+        <AlertDialogAction
+          @click="emit('confirm')"
+          class="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+        >
+          {{ m.delete_confirmation_delete() }}
         </AlertDialogAction>
       </AlertDialogFooter>
     </AlertDialogContent>
@@ -26,7 +31,16 @@
 </template>
 
 <script setup lang="ts">
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "~/components/ui/alert-dialog"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "~/components/ui/alert-dialog"
 import { useI18n } from "~/composables/useI18n"
 
 interface Props {

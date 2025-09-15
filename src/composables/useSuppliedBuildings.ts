@@ -19,14 +19,14 @@ export function useSuppliedBuildings() {
   // Initialize data from storage
   const initializeData = async () => {
     if (isInitialized.value) return
-    
+
     isLoading.value = true
     try {
       const buildings = await suppliedBuildingsStorage.getAll()
       suppliedBuildings.value = buildings
       isInitialized.value = true
     } catch (error) {
-      console.error('Failed to load buildings from storage:', error)
+      console.error("Failed to load buildings from storage:", error)
     } finally {
       isLoading.value = false
     }
@@ -42,7 +42,7 @@ export function useSuppliedBuildings() {
     buildingData: CreateSuppliedBuilding,
   ): Promise<SuppliedBuilding> => {
     await initializeData() // Ensure data is loaded
-    
+
     isLoading.value = true
     try {
       const newBuilding = await suppliedBuildingsStorage.create(buildingData)
@@ -51,7 +51,7 @@ export function useSuppliedBuildings() {
       suppliedBuildings.value.sort((a, b) => a.name.localeCompare(b.name))
       return newBuilding
     } catch (error) {
-      console.error('Failed to create building:', error)
+      console.error("Failed to create building:", error)
       throw error
     } finally {
       isLoading.value = false
@@ -63,7 +63,7 @@ export function useSuppliedBuildings() {
     buildingData: UpdateSuppliedBuilding,
   ): Promise<SuppliedBuilding> => {
     await initializeData() // Ensure data is loaded
-    
+
     isLoading.value = true
     try {
       const updatedBuilding = await suppliedBuildingsStorage.updateFromData(buildingData)
@@ -79,7 +79,7 @@ export function useSuppliedBuildings() {
       }
       return updatedBuilding
     } catch (error) {
-      console.error('Failed to update building:', error)
+      console.error("Failed to update building:", error)
       throw error
     } finally {
       isLoading.value = false
@@ -89,7 +89,7 @@ export function useSuppliedBuildings() {
   // Delete a supplied building
   const deleteSuppliedBuilding = async (buildingId: string): Promise<void> => {
     await initializeData() // Ensure data is loaded
-    
+
     isLoading.value = true
     try {
       const deleted = await suppliedBuildingsStorage.delete(buildingId)
@@ -102,7 +102,7 @@ export function useSuppliedBuildings() {
         suppliedBuildings.value.splice(index, 1)
       }
     } catch (error) {
-      console.error('Failed to delete building:', error)
+      console.error("Failed to delete building:", error)
       throw error
     } finally {
       isLoading.value = false
@@ -115,7 +115,9 @@ export function useSuppliedBuildings() {
   }
 
   // Get building by ID with async fallback to storage
-  const getBuildingByIdAsync = async (buildingId: string): Promise<SuppliedBuilding | undefined> => {
+  const getBuildingByIdAsync = async (
+    buildingId: string,
+  ): Promise<SuppliedBuilding | undefined> => {
     await initializeData() // Ensure data is loaded
     return getBuildingById(buildingId)
   }
@@ -153,7 +155,7 @@ export function useSuppliedBuildings() {
     getBuildingByIdAsync,
     searchSuppliedBuildings,
     searchSuppliedBuildingsAsync,
-    
+
     // Manual data refresh
     refreshData: initializeData,
   }

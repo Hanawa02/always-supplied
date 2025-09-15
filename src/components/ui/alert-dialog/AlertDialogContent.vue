@@ -9,7 +9,7 @@ import {
 } from "reka-ui"
 import type { HTMLAttributes } from "vue"
 
-import { cn } from '~/lib/utils'
+import { cn } from "~/lib/utils"
 
 const props = defineProps<AlertDialogContentProps & { class?: HTMLAttributes["class"] }>()
 const emits = defineEmits<AlertDialogContentEmits>()

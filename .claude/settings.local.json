@@ -5,8 +5,9 @@
       "Bash(npx paraglide-js init:*)",
       "Bash(npx vue-tsc:*)",
       "Bash(npx tsc:*)",
-      "Bash(git add:*)"
-      "Bash(npm run type-check:*)"
+      "Bash(git add:*)",
+      "Bash(npm run type-check:*)",
+      "Bash(npm run validate-code:*)"
     ],
     "deny": [],
     "ask": []

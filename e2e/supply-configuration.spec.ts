@@ -424,4 +424,122 @@ test.describe("Supply Configuration Page", () => {
     // Item should not have been created
     await expect(page.getByText("Unsaved Item")).toBeHidden()
   })
+
+  test("can add supply item to shopping list", async ({ page }) => {
+    // First create a supply item
+    await page
+      .getByRole("button", { name: /Add.*item/i })
+      .first()
+      .click()
+    await page.getByLabel("Name", { exact: false }).fill("Test Shopping Item")
+    await page.getByLabel("Quantity").fill("5")
+    await page.getByRole("button", { name: "Create Item" }).click()
+
+    // Wait for item to appear
+    await expect(page.getByText("Test Shopping Item")).toBeVisible()
+
+    // Click the "Add to Shopping List" button (cart plus icon)
+    await page.getByRole("button", { name: "Add to shopping list" }).click()
+
+    // Shopping list modal should open
+    await expect(page.getByRole("heading", { name: "Add to Shopping List" })).toBeVisible()
+
+    // Pre-filled name should be visible
+    await expect(page.getByLabel("Item Name")).toHaveValue("Test Shopping Item")
+
+    // Set quantity and add to list
+    await page.getByLabel("Quantity").fill("3")
+    await page.getByRole("button", { name: "Add to List" }).click()
+
+    // Modal should close
+    await expect(page.getByRole("heading", { name: "Add to Shopping List" })).toBeHidden()
+
+    // Could optionally check for success message or navigate to shopping list to verify
+    // For now, just ensure we don't get any errors and modal closes properly
+  })
+
+  test("shopping list modal shows supply item details", async ({ page }) => {
+    // Create a supply item with shopping hint
+    await page
+      .getByRole("button", { name: /Add.*item/i })
+      .first()
+      .click()
+    await page.getByLabel("Name", { exact: false }).fill("Detailed Item")
+    await page.getByLabel("Quantity").fill("10")
+    await page.getByLabel("Shopping Hint").fill("Buy the large size")
+    await page.getByRole("button", { name: "Create Item" }).click()
+
+    // Wait for item to appear
+    await expect(page.getByText("Detailed Item")).toBeVisible()
+
+    // Click add to shopping list
+    await page.getByRole("button", { name: "Add to shopping list" }).click()
+
+    // Modal should show with pre-filled data
+    await expect(page.getByLabel("Item Name")).toHaveValue("Detailed Item")
+    await expect(page.getByLabel("Shopping Hint")).toHaveValue("Buy the large size")
+
+    // Close modal
+    await page.getByRole("button", { name: "Cancel" }).click()
+    await expect(page.getByRole("heading", { name: "Add to Shopping List" })).toBeHidden()
+  })
+
+  test("shows toast notification when adding to shopping list", async ({ page }) => {
+    // Create a supply item
+    await page
+      .getByRole("button", { name: /Add.*item/i })
+      .first()
+      .click()
+    await page.getByLabel("Name", { exact: false }).fill("Toast Test Item")
+    await page.getByLabel("Quantity").fill("5")
+    await page.getByRole("button", { name: "Create Item" }).click()
+
+    // Wait for item to appear
+    await expect(page.getByText("Toast Test Item")).toBeVisible()
+
+    // Click add to shopping list
+    await page.getByRole("button", { name: "Add to shopping list" }).click()
+    await page.getByRole("button", { name: "Add to List" }).click()
+
+    // Should show success toast notification instead of alert
+    await expect(page.getByText("Item added to shopping list!")).toBeVisible()
+    
+    // Toast should disappear after some time or can be dismissed
+    // We just verify it appears instead of an alert dialog
+  })
+
+  test("shows toast notification on item creation success", async ({ page }) => {
+    // Create a new supply item
+    await page
+      .getByRole("button", { name: /Add.*item/i })
+      .first()
+      .click()
+    await page.getByLabel("Name", { exact: false }).fill("Success Test Item")
+    await page.getByLabel("Quantity").fill("3")
+    await page.getByRole("button", { name: "Create Item" }).click()
+
+    // Should show success toast notification
+    await expect(page.getByText("Item created successfully")).toBeVisible()
+  })
+
+  test("shows toast notification on item deletion success", async ({ page }) => {
+    // First create an item
+    await page
+      .getByRole("button", { name: /Add.*item/i })
+      .first()
+      .click()
+    await page.getByLabel("Name", { exact: false }).fill("Delete Test Item")
+    await page.getByLabel("Quantity").fill("1")
+    await page.getByRole("button", { name: "Create Item" }).click()
+
+    // Wait for item to appear
+    await expect(page.getByText("Delete Test Item")).toBeVisible()
+
+    // Delete the item
+    await page.getByRole("button", { name: "Delete item" }).click()
+    await page.getByRole("button", { name: "Delete", exact: true }).click()
+
+    // Should show success toast notification
+    await expect(page.getByText("Item deleted successfully")).toBeVisible()
+  })
 })

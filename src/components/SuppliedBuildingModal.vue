@@ -1,50 +1,54 @@
 <template>
-  <Dialog :open="true" @update:open="(open) => !open && emit('close')">
+  <Dialog :open="true" @update:open="handleDialogClose">
     <DialogContent class="max-w-lg">
       <DialogHeader>
         <DialogTitle>
-          {{ isEditing ? m.building_modal.title_edit() : m.building_modal.title_add() }}
+          {{ isEditing ? m.building_modal_title_edit() : m.building_modal_title_add() }}
         </DialogTitle>
       </DialogHeader>
 
-        <!-- Form -->
-        <form @submit.prevent="handleSubmit" class="space-y-6">
+      <!-- Form -->
+      <form @submit.prevent="handleSubmit" @keydown.enter="handleFormEnter" class="space-y-6">
         <!-- Name (Required) -->
         <div class="grid gap-2">
           <Label for="building-name">
-            {{ m.building_modal.name_label() }}
-            <span class="text-destructive">{{ m.building_modal.required_field() }}</span>
+            {{ m.building_modal_name_label() }}
+            <span class="text-destructive">{{ m.building_modal_required_field() }}</span>
           </Label>
           <Input
             id="building-name"
             v-model="form.name"
             type="text"
             required
-            :placeholder="m.building_modal.name_placeholder()"
+            :placeholder="m.building_modal_name_placeholder()"
+            :class="validationErrors.name ? 'border-destructive' : ''"
           />
+          <p v-if="validationErrors.name" class="text-sm text-destructive">
+            {{ validationErrors.name }}
+          </p>
         </div>
 
         <!-- Description -->
         <div class="grid gap-2">
           <Label for="building-description">
-            {{ m.building_modal.description_label() }}
+            {{ m.building_modal_description_label() }}
           </Label>
           <Textarea
             id="building-description"
             v-model="form.description"
             rows="3"
-            :placeholder="m.building_modal.description_placeholder()"
+            :placeholder="m.building_modal_description_placeholder()"
           />
         </div>
 
         <!-- Actions -->
         <DialogFooter class="flex justify-end space-x-3 pt-6">
           <Button variant="outline" @click="emit('close')">
-            {{ m.building_modal.cancel() }}
+            {{ m.building_modal_cancel() }}
           </Button>
           <Button type="submit">
             {{
-              isEditing ? m.building_modal.update_building() : m.building_modal.create_building()
+              isEditing ? m.building_modal_update_building() : m.building_modal_create_building()
             }}
           </Button>
         </DialogFooter>
@@ -57,7 +61,13 @@
 import { computed, onMounted, reactive } from "vue"
 
 import { Button } from "~/components/ui/button"
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "~/components/ui/dialog"
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "~/components/ui/dialog"
 import { Input } from "~/components/ui/input"
 import { Label } from "~/components/ui/label"
 import { Textarea } from "~/components/ui/textarea"
@@ -87,15 +97,40 @@ const form = reactive<CreateSuppliedBuilding>({
   description: "",
 })
 
+const validationErrors = reactive({
+  name: "",
+})
+
 // Computed
 const isEditing = computed(() => !!props.building)
 
 // Methods
+const handleDialogClose = (open: boolean) => {
+  // Only close if the dialog is being closed, not opened
+  if (!open) {
+    emit("close")
+  }
+}
+
+const handleFormEnter = (event: KeyboardEvent) => {
+  // Prevent Enter from bubbling up to the Dialog
+  if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
+    // Only submit if not in a textarea (to allow line breaks)
+    if (!(event.target instanceof HTMLTextAreaElement)) {
+      event.preventDefault()
+      handleSubmit()
+    }
+  }
+}
+
 const handleSubmit = () => {
+  // Clear previous validation errors
+  validationErrors.name = ""
+
   // Validate required fields
   const trimmedName = form.name?.trim()
   if (!trimmedName) {
-    alert(m.building_modal.validation.name_required())
+    validationErrors.name = m.building_modal_validation_name_required()
     return
   }
 

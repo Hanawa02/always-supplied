@@ -1,6 +1,3 @@
-- [ ] fix custom category/storage room ui on mobile/desktop
-- [ ] fix select dropdown position
 - [ ] transform components to use slots instead of props for content
 - [ ] tell claude to use more slots based components, and maybe something like vue-shadcn
-- [ ] fix type issues with i18n (any being used)
 - [ ] add storybook

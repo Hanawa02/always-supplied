@@ -32,6 +32,13 @@ export default defineConfigWithVueTs(
       'simple-import-sort/exports': 'error',
     },
   },
+
+  {
+    name: 'app/vue-rules',
+    rules: {
+      'vue/multi-word-component-names': 'off',
+    },
+  },
   
   {
     ...pluginVitest.configs.recommended,

@@ -1,6 +1,6 @@
-import type { CreateSupplyItem, SupplyItem, UpdateSupplyItem } from '~/types/supply'
+import type { CreateSupplyItem, SupplyItem, UpdateSupplyItem } from "~/types/supply"
 
-import { db, generateId, type StorageService } from './database'
+import { db, generateId, type StorageService } from "./database"
 
 export class SupplyItemsStorage implements StorageService<SupplyItem> {
   async create(itemData: CreateSupplyItem): Promise<SupplyItem> {
@@ -35,7 +35,7 @@ export class SupplyItemsStorage implements StorageService<SupplyItem> {
 
     await db.supplyItems.update(id, {
       ...updatedItem,
-      updatedAt: new Date()
+      updatedAt: new Date(),
     })
     return updatedItem
   }
@@ -53,7 +53,7 @@ export class SupplyItemsStorage implements StorageService<SupplyItem> {
   }
 
   async delete(id: string): Promise<boolean> {
-    const deleteCount = await db.supplyItems.where('id').equals(id).delete()
+    const deleteCount = await db.supplyItems.where("id").equals(id).delete()
     return deleteCount > 0
   }
 
@@ -62,21 +62,24 @@ export class SupplyItemsStorage implements StorageService<SupplyItem> {
   }
 
   async getAll(): Promise<SupplyItem[]> {
-    return await db.supplyItems.orderBy('name').toArray()
+    return await db.supplyItems.orderBy("name").toArray()
   }
 
   async getByBuildingId(buildingId: string): Promise<SupplyItem[]> {
-    return await db.supplyItems.where('buildingId').equals(buildingId).sortBy('name')
+    return await db.supplyItems.where("buildingId").equals(buildingId).sortBy("name")
   }
 
-  async search(query: string, fields: (keyof SupplyItem)[] = ['name', 'description', 'category']): Promise<SupplyItem[]> {
+  async search(
+    query: string,
+    fields: (keyof SupplyItem)[] = ["name", "description", "category"],
+  ): Promise<SupplyItem[]> {
     const lowercaseQuery = query.toLowerCase()
-    
+
     return await db.supplyItems
       .filter((item: SupplyItem) => {
         return fields.some((field) => {
           const value = item[field]
-          return value && typeof value === 'string' && value.toLowerCase().includes(lowercaseQuery)
+          return value && typeof value === "string" && value.toLowerCase().includes(lowercaseQuery)
         })
       })
       .toArray()
@@ -84,18 +87,18 @@ export class SupplyItemsStorage implements StorageService<SupplyItem> {
 
   // Filter methods
   async filterByCategory(category: string): Promise<SupplyItem[]> {
-    return await db.supplyItems.where('category').equals(category).sortBy('name')
+    return await db.supplyItems.where("category").equals(category).sortBy("name")
   }
 
   async filterByStorageRoom(storageRoom: string): Promise<SupplyItem[]> {
-    return await db.supplyItems.where('storageRoom').equals(storageRoom).sortBy('name')
+    return await db.supplyItems.where("storageRoom").equals(storageRoom).sortBy("name")
   }
 
   async filterByBuildingAndCategory(buildingId: string, category: string): Promise<SupplyItem[]> {
     return await db.supplyItems
-      .where('[buildingId+category]')
+      .where("[buildingId+category]")
       .equals([buildingId, category])
-      .sortBy('name')
+      .sortBy("name")
   }
 
   // Aggregate methods
@@ -104,28 +107,28 @@ export class SupplyItemsStorage implements StorageService<SupplyItem> {
   }
 
   async getCountByBuilding(buildingId: string): Promise<number> {
-    return await db.supplyItems.where('buildingId').equals(buildingId).count()
+    return await db.supplyItems.where("buildingId").equals(buildingId).count()
   }
 
   async getUniqueCategories(): Promise<string[]> {
     const items = await db.supplyItems.toArray()
-    const categories = new Set(items.map(item => item.category).filter(Boolean) as string[])
+    const categories = new Set(items.map((item) => item.category).filter(Boolean) as string[])
     return Array.from(categories).sort()
   }
 
   async getUniqueStorageRooms(): Promise<string[]> {
     const items = await db.supplyItems.toArray()
-    const storageRooms = new Set(items.map(item => item.storageRoom).filter(Boolean) as string[])
+    const storageRooms = new Set(items.map((item) => item.storageRoom).filter(Boolean) as string[])
     return Array.from(storageRooms).sort()
   }
 
   // Bulk operations for performance
   async bulkDelete(ids: string[]): Promise<number> {
-    return await db.supplyItems.where('id').anyOf(ids).delete()
+    return await db.supplyItems.where("id").anyOf(ids).delete()
   }
 
   async deleteByBuildingId(buildingId: string): Promise<number> {
-    return await db.supplyItems.where('buildingId').equals(buildingId).delete()
+    return await db.supplyItems.where("buildingId").equals(buildingId).delete()
   }
 }
 
