@@ -33,141 +33,167 @@
     </div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-
-    <!-- Controls Bar -->
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
-      <div class="flex flex-wrap gap-4 items-center justify-between">
-        <!-- Search -->
-        <div class="flex-1 min-w-[200px] max-w-md">
-          <div class="relative">
-            <i class="i-mdi:magnify absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-            <Input
-              v-model="searchQuery"
-              :placeholder="m.shopping_list_search_placeholder()"
-              class="pl-10"
-            />
-          </div>
-        </div>
-
-        <!-- Filters -->
-        <div class="flex gap-2">
-          <!-- Category Filter -->
-          <Select v-model="selectedCategory">
-            <SelectTrigger class="w-[180px]">
-              <SelectValue :placeholder="m.shopping_list_all_categories()" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="__all__">{{ m.shopping_list_all_categories() }}</SelectItem>
-              <SelectItem v-for="category in categories" :key="category" :value="category">
-                {{ category }}
-              </SelectItem>
-            </SelectContent>
-          </Select>
-
-          <!-- Building Filter -->
-          <Select v-model="selectedBuilding">
-            <SelectTrigger class="w-[180px]">
-              <SelectValue :placeholder="m.shopping_list_all_buildings()" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="__all__">{{ m.shopping_list_all_buildings() }}</SelectItem>
-              <SelectItem v-for="building in buildings" :key="building.id" :value="building.id">
-                {{ building.name }}
-              </SelectItem>
-            </SelectContent>
-          </Select>
-
-          <!-- Show/Hide Bought Toggle -->
-          <div class="flex items-center space-x-2">
-            <Checkbox 
-              id="show-bought"
-              :checked="showBoughtItems"
-              @update:checked="toggleShowBoughtItems"
-            />
-            <Label for="show-bought" class="cursor-pointer">
-              {{ m.shopping_list_show_bought_items() }}
-            </Label>
+      <!-- Controls Bar -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+        <div class="flex flex-wrap gap-4 items-center justify-between">
+          <!-- Search -->
+          <div class="flex-1 min-w-[200px] max-w-md">
+            <div class="relative">
+              <i
+                class="i-mdi:magnify absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              ></i>
+              <Input
+                v-model="searchQuery"
+                :placeholder="m.shopping_list_search_placeholder()"
+                class="pl-10"
+              />
+            </div>
           </div>
 
-          <!-- Clear Bought Items -->
-          <Button 
-            v-if="boughtItems.length > 0"
-            variant="outline" 
-            @click="handleClearBought"
-            class="text-destructive hover:text-destructive"
-          >
-            <i class="i-mdi:delete-sweep mr-2"></i>
-            {{ m.shopping_list_clear_bought() }} ({{ boughtItems.length }})
-          </Button>
+          <!-- Filters -->
+          <div class="flex gap-2">
+            <!-- Category Filter -->
+            <Select v-model="selectedCategory">
+              <SelectTrigger class="w-[180px]">
+                <SelectValue :placeholder="m.shopping_list_all_categories()" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__all__">{{ m.shopping_list_all_categories() }}</SelectItem>
+                <SelectItem v-for="category in categories" :key="category" :value="category || ''">
+                  {{ category }}
+                </SelectItem>
+              </SelectContent>
+            </Select>
 
+            <!-- Building Filter -->
+            <Select v-model="selectedBuilding">
+              <SelectTrigger class="w-[180px]">
+                <SelectValue :placeholder="m.shopping_list_all_buildings()" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__all__">{{ m.shopping_list_all_buildings() }}</SelectItem>
+                <SelectItem v-for="building in buildings" :key="building.id" :value="building.id">
+                  {{ building.name }}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+
+            <!-- Show/Hide Bought Toggle -->
+            <div class="flex items-center space-x-2">
+              <Checkbox
+                id="show-bought"
+                :checked="showBoughtItems"
+                @update:checked="toggleShowBoughtItems"
+              />
+              <Label for="show-bought" class="cursor-pointer">
+                {{ m.shopping_list_show_bought_items() }}
+              </Label>
+            </div>
+
+            <!-- Clear Bought Items -->
+            <Button
+              v-if="boughtItems.length > 0"
+              variant="outline"
+              @click="handleClearBought"
+              class="text-destructive hover:text-destructive"
+            >
+              <i class="i-mdi:delete-sweep mr-2"></i>
+              {{ m.shopping_list_clear_bought() }} ({{ boughtItems.length }})
+            </Button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Statistics -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-      <StatsCard
-        :title="m.shopping_list_total_items()"
-        :value="totalItems"
-        icon="i-mdi:format-list-bulleted"
-        icon-color="primary"
+      <!-- Statistics -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <StatsCard
+          :title="m.shopping_list_total_items()"
+          :value="totalItems"
+          icon="i-mdi:format-list-bulleted"
+          icon-color="primary"
+        />
+        <StatsCard
+          :title="m.shopping_list_to_buy()"
+          :value="activeItems.length"
+          icon="i-mdi:cart-outline"
+          icon-color="warning"
+        />
+        <StatsCard
+          :title="m.shopping_list_bought()"
+          :value="boughtItems.length"
+          icon="i-mdi:check-circle-outline"
+          icon-color="success"
+        />
+      </div>
+
+      <!-- Items Grid -->
+      <div
+        v-if="filteredItems.length > 0"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+      >
+        <BuyingItemCard
+          v-for="item in filteredItems"
+          :key="item.id"
+          :item="item"
+          edit-tooltip="Edit item"
+          delete-tooltip="Delete item"
+          quantity-label="Qty"
+          preferred-brands-label="Preferred Brands"
+          :building-name="getBuildingName(item.buildingId)"
+          @toggle="handleToggle"
+          @edit="editItem"
+          @delete="confirmDelete"
+        />
+      </div>
+
+      <!-- Empty State -->
+      <EmptyState
+        v-else
+        icon="i-mdi:cart-off"
+        :title="
+          searchQuery ||
+          (selectedCategory && selectedCategory !== '__all__') ||
+          (selectedBuilding && selectedBuilding !== '__all__')
+            ? m.shopping_list_empty_state_no_items_found_title()
+            : m.shopping_list_empty_state_no_items_title()
+        "
+        :description="
+          searchQuery ||
+          (selectedCategory && selectedCategory !== '__all__') ||
+          (selectedBuilding && selectedBuilding !== '__all__')
+            ? m.shopping_list_empty_state_no_items_found_description()
+            : m.shopping_list_empty_state_no_items_description()
+        "
+        :action-label="
+          !searchQuery &&
+          (!selectedCategory || selectedCategory === '__all__') &&
+          (!selectedBuilding || selectedBuilding === '__all__')
+            ? m.shopping_list_empty_state_add_first_item()
+            : undefined
+        "
+        @action="showCreateModal = true"
       />
-      <StatsCard
-        :title="m.shopping_list_to_buy()"
-        :value="activeItems.length"
-        icon="i-mdi:cart-outline"
-        icon-color="warning"
+
+      <!-- Create/Edit Modal -->
+      <BuyingItemModal
+        v-if="showCreateModal || editingItem"
+        :item="editingItem"
+        @close="closeModal"
+        @save="handleSave"
       />
-      <StatsCard
-        :title="m.shopping_list_bought()"
-        :value="boughtItems.length"
-        icon="i-mdi:check-circle-outline"
-        icon-color="success"
+
+      <!-- Delete Confirmation Modal -->
+      <DeleteConfirmationModal
+        v-if="itemToDelete"
+        :item-name="itemToDelete.name"
+        @confirm="handleDelete"
+        @cancel="
+          () => {
+            itemToDelete = null
+            pendingDeleteItem = null
+          }
+        "
       />
-    </div>
-
-    <!-- Items Grid -->
-    <div v-if="filteredItems.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <BuyingItemCard
-        v-for="item in filteredItems"
-        :key="item.id"
-        :item="item"
-        edit-tooltip="Edit item"
-        delete-tooltip="Delete item"
-        quantity-label="Qty"
-        preferred-brands-label="Preferred Brands"
-        :building-name="getBuildingName(item.buildingId)"
-        @toggle="handleToggle"
-        @edit="editItem"
-        @delete="confirmDelete"
-      />
-    </div>
-
-    <!-- Empty State -->
-    <EmptyState
-      v-else
-      icon="i-mdi:cart-off"
-      :title="searchQuery || (selectedCategory && selectedCategory !== '__all__') || (selectedBuilding && selectedBuilding !== '__all__') ? m.shopping_list_empty_state_no_items_found_title() : m.shopping_list_empty_state_no_items_title()"
-      :description="searchQuery || (selectedCategory && selectedCategory !== '__all__') || (selectedBuilding && selectedBuilding !== '__all__') ? m.shopping_list_empty_state_no_items_found_description() : m.shopping_list_empty_state_no_items_description()"
-      :action-label="!searchQuery && (!selectedCategory || selectedCategory === '__all__') && (!selectedBuilding || selectedBuilding === '__all__') ? m.shopping_list_empty_state_add_first_item() : undefined"
-      @action="showCreateModal = true"
-    />
-
-    <!-- Create/Edit Modal -->
-    <BuyingItemModal
-      v-if="showCreateModal || editingItem"
-      :item="editingItem"
-      @close="closeModal"
-      @save="handleSave"
-    />
-
-    <!-- Delete Confirmation Modal -->
-    <DeleteConfirmationModal
-      v-if="itemToDelete"
-      :item-name="itemToDelete.name"
-      @confirm="handleDelete"
-      @cancel="() => { itemToDelete = null; pendingDeleteItem = null }"
-    />
     </div>
   </div>
 </template>
@@ -184,7 +210,13 @@ import { Checkbox } from "~/components/ui/checkbox"
 import EmptyState from "~/components/ui/EmptyState.vue"
 import { Input } from "~/components/ui/input"
 import { Label } from "~/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select"
 import StatsCard from "~/components/ui/StatsCard.vue"
 import { useToast } from "~/components/ui/toast/use-toast"
 import { useBuyingItems } from "~/composables/useBuyingItems"
@@ -235,16 +267,16 @@ const filteredItems = computed(() => {
   if (searchQuery.value) {
     items = searchBuyingItems(searchQuery.value)
     if (!showBoughtItems.value) {
-      items = items.filter(item => !item.isBought)
+      items = items.filter((item) => !item.isBought)
     }
   }
 
   if (selectedCategory.value && selectedCategory.value !== "__all__") {
-    items = items.filter(item => item.category === selectedCategory.value)
+    items = items.filter((item) => item.category === selectedCategory.value)
   }
 
   if (selectedBuilding.value && selectedBuilding.value !== "__all__") {
-    items = items.filter(item => item.buildingId === selectedBuilding.value)
+    items = items.filter((item) => item.buildingId === selectedBuilding.value)
   }
 
   return items
@@ -253,7 +285,7 @@ const filteredItems = computed(() => {
 // Methods
 const getBuildingName = (buildingId?: string) => {
   if (!buildingId) return undefined
-  const building = buildings.value.find(b => b.id === buildingId)
+  const building = buildings.value.find((b) => b.id === buildingId)
   return building?.name
 }
 
@@ -291,7 +323,7 @@ const handleSave = async (itemData: CreateBuyingItem | UpdateBuyingItem) => {
 
 const handleDelete = async () => {
   const itemToProcess = itemToDelete.value || pendingDeleteItem.value
-  
+
   if (!itemToProcess) {
     return
   }
@@ -327,12 +359,12 @@ const handleToggle = async (item: BuyingItem) => {
 
 const handleClearBought = async () => {
   const count = boughtItems.value.length
-  if (confirm(`Are you sure you want to delete ${count} bought item${count > 1 ? 's' : ''}?`)) {
+  if (confirm(`Are you sure you want to delete ${count} bought item${count > 1 ? "s" : ""}?`)) {
     try {
       await clearBoughtItems()
       toast({
         title: "Success",
-        description: `${count} item${count > 1 ? 's' : ''} cleared successfully`,
+        description: `${count} item${count > 1 ? "s" : ""} cleared successfully`,
       })
     } catch (error) {
       console.error("Failed to clear bought items:", error)

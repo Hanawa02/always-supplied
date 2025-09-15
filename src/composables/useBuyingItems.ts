@@ -1,8 +1,8 @@
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from "vue"
 
-import { buyingItemsStorage } from '~/services/buyingItemsStorage'
-import type { BuyingItem, CreateBuyingItem, UpdateBuyingItem } from '~/types/buyingItem'
-import type { SupplyItem } from '~/types/supply'
+import { buyingItemsStorage } from "~/services/buyingItemsStorage"
+import type { BuyingItem, CreateBuyingItem, UpdateBuyingItem } from "~/types/buyingItem"
+import type { SupplyItem } from "~/types/supply"
 
 export function useBuyingItems() {
   const buyingItems = ref<BuyingItem[]>([])
@@ -12,16 +12,10 @@ export function useBuyingItems() {
 
   // Computed values
   const totalItems = computed(() => buyingItems.value.length)
-  const activeItems = computed(() => 
-    buyingItems.value.filter(item => !item.isBought)
-  )
-  const boughtItems = computed(() => 
-    buyingItems.value.filter(item => item.isBought)
-  )
-  const visibleItems = computed(() => 
-    showBoughtItems.value 
-      ? buyingItems.value 
-      : activeItems.value
+  const activeItems = computed(() => buyingItems.value.filter((item) => !item.isBought))
+  const boughtItems = computed(() => buyingItems.value.filter((item) => item.isBought))
+  const visibleItems = computed(() =>
+    showBoughtItems.value ? buyingItems.value : activeItems.value,
   )
 
   const categories = computed(() => {
@@ -32,14 +26,14 @@ export function useBuyingItems() {
   // Initialize data from storage
   const initializeData = async () => {
     if (isInitialized.value) return
-    
+
     isLoading.value = true
     try {
       const items = await buyingItemsStorage.getAll()
       buyingItems.value = items
       isInitialized.value = true
     } catch (error) {
-      console.error('Failed to load buying items from storage:', error)
+      console.error("Failed to load buying items from storage:", error)
     } finally {
       isLoading.value = false
     }
@@ -51,12 +45,15 @@ export function useBuyingItems() {
   })
 
   // Create buying item from supply item
-  const createFromSupplyItem = async (supplyItem: SupplyItem, customQuantity?: number): Promise<BuyingItem> => {
+  const createFromSupplyItem = async (
+    supplyItem: SupplyItem,
+    customQuantity?: number,
+  ): Promise<BuyingItem> => {
     await initializeData() // Ensure data is loaded
 
     // Check if there's already an unbought buying item for this supply item
     const existingItem = buyingItems.value.find(
-      item => item.supplyItemId === supplyItem.id && !item.isBought
+      (item) => item.supplyItemId === supplyItem.id && !item.isBought,
     )
 
     if (existingItem) {
@@ -66,7 +63,8 @@ export function useBuyingItems() {
         id: existingItem.id,
         quantity: newQuantity,
       }
-      return await updateBuyingItem(updateData)
+      const result = await updateBuyingItem(updateData)
+      return result || existingItem
     }
 
     // No existing unbought item found, create a new one
@@ -82,21 +80,21 @@ export function useBuyingItems() {
       // Create a clean copy of the array to avoid Vue reactivity issues
       preferredBrands: supplyItem.preferredBrands ? [...supplyItem.preferredBrands] : undefined,
     }
-    
+
     return await createBuyingItem(createData)
   }
 
   // CRUD operations
   const createBuyingItem = async (item: CreateBuyingItem): Promise<BuyingItem> => {
     await initializeData() // Ensure data is loaded
-    
+
     isLoading.value = true
     try {
       const newItem = await buyingItemsStorage.create(item)
       buyingItems.value.unshift(newItem) // Add to beginning
       return newItem
     } catch (error) {
-      console.error('Failed to create buying item:', error)
+      console.error("Failed to create buying item:", error)
       throw error
     } finally {
       isLoading.value = false
@@ -105,7 +103,7 @@ export function useBuyingItems() {
 
   const updateBuyingItem = async (updatedItem: UpdateBuyingItem): Promise<BuyingItem | null> => {
     await initializeData() // Ensure data is loaded
-    
+
     isLoading.value = true
     try {
       const updated = await buyingItemsStorage.updateFromData(updatedItem)
@@ -117,7 +115,7 @@ export function useBuyingItems() {
       }
       return updated
     } catch (error) {
-      console.error('Failed to update buying item:', error)
+      console.error("Failed to update buying item:", error)
       throw error
     } finally {
       isLoading.value = false
@@ -126,12 +124,12 @@ export function useBuyingItems() {
 
   const deleteBuyingItem = async (id: string): Promise<boolean> => {
     await initializeData() // Ensure data is loaded
-    
+
     isLoading.value = true
     try {
       const deleted = await buyingItemsStorage.delete(id)
       if (!deleted) {
-        throw new Error('Failed to delete buying item from database')
+        throw new Error("Failed to delete buying item from database")
       }
 
       const index = buyingItems.value.findIndex((item) => item.id === id)
@@ -140,7 +138,7 @@ export function useBuyingItems() {
       }
       return true
     } catch (error) {
-      console.error('Failed to delete buying item:', error)
+      console.error("Failed to delete buying item:", error)
       throw error
     } finally {
       isLoading.value = false
@@ -149,7 +147,7 @@ export function useBuyingItems() {
 
   const toggleItemBought = async (id: string): Promise<BuyingItem | null> => {
     await initializeData() // Ensure data is loaded
-    
+
     isLoading.value = true
     try {
       const updated = await buyingItemsStorage.toggleBought(id)
@@ -161,7 +159,7 @@ export function useBuyingItems() {
       }
       return updated
     } catch (error) {
-      console.error('Failed to toggle bought status:', error)
+      console.error("Failed to toggle bought status:", error)
       throw error
     } finally {
       isLoading.value = false
@@ -170,15 +168,15 @@ export function useBuyingItems() {
 
   const clearBoughtItems = async (): Promise<number> => {
     await initializeData() // Ensure data is loaded
-    
+
     isLoading.value = true
     try {
       const deletedCount = await buyingItemsStorage.clearBoughtItems()
       // Remove bought items from local state
-      buyingItems.value = buyingItems.value.filter(item => !item.isBought)
+      buyingItems.value = buyingItems.value.filter((item) => !item.isBought)
       return deletedCount
     } catch (error) {
-      console.error('Failed to clear bought items:', error)
+      console.error("Failed to clear bought items:", error)
       throw error
     } finally {
       isLoading.value = false
@@ -241,7 +239,7 @@ export function useBuyingItems() {
     filterByBuildingId,
     searchBuyingItems,
     toggleShowBoughtItems,
-    
+
     // Manual data refresh
     refreshData: initializeData,
   }

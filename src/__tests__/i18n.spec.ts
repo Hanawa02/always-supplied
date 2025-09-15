@@ -3,7 +3,7 @@ import path from "path"
 import { describe, expect, it } from "vitest"
 
 // Helper function to extract all keys from a nested object
-function extractKeys(obj: any, prefix = ""): string[] {
+function extractKeys(obj: Record<string, string>, prefix = ""): string[] {
   const keys: string[] = []
 
   for (const key in obj) {
@@ -21,7 +21,7 @@ function extractKeys(obj: any, prefix = ""): string[] {
 }
 
 // Helper function to load and parse translation file
-function loadTranslations(locale: string): any {
+function loadTranslations(locale: string): Record<string, string> {
   const filePath = path.resolve(process.cwd(), `i18n/messages/${locale}.json`)
 
   if (!fs.existsSync(filePath)) {
@@ -88,7 +88,7 @@ describe("Translation Key Consistency", () => {
       const translations = loadTranslations(locale)
 
       // Helper to find empty values recursively
-      function findEmptyValues(obj: any, path = ""): string[] {
+      function findEmptyValues(obj: Record<string, unknown>, path = ""): string[] {
         const emptyKeys: string[] = []
 
         for (const key in obj) {
@@ -105,11 +105,9 @@ describe("Translation Key Consistency", () => {
         return emptyKeys
       }
 
-      const emptyKeys = findEmptyValues(translations)
+      const emptyKeys = findEmptyValues(translations as Record<string, unknown>)
 
-      if (emptyKeys.length > 0) {
-        throw new Error(`Empty string values found in ${locale}.json: ${emptyKeys.join(", ")}`)
-      }
+      expect(emptyKeys).toHaveLength(0)
     })
   })
 
@@ -142,7 +140,12 @@ describe("Translation Key Consistency", () => {
     }
 
     // Helper to check parameters recursively
-    function checkParametersRecursively(enObj: any, esObj: any, ptObj: any, path = "") {
+    function checkParametersRecursively(
+      enObj: Record<string, unknown>,
+      esObj: Record<string, unknown>,
+      ptObj: Record<string, unknown>,
+      path = "",
+    ) {
       for (const key in enObj) {
         const fullPath = path ? `${path}.${key}` : key
         const enValue = enObj[key]
@@ -150,13 +153,18 @@ describe("Translation Key Consistency", () => {
         const ptValue = ptObj[key]
 
         if (typeof enValue === "object" && enValue !== null) {
-          checkParametersRecursively(enValue, esValue, ptValue, fullPath)
+          checkParametersRecursively(
+            enValue as Record<string, unknown>,
+            esValue as Record<string, unknown>,
+            ptValue as Record<string, unknown>,
+            fullPath,
+          )
         } else if (typeof enValue === "string") {
           const enParams = extractParameters(enValue)
 
           if (enParams.length > 0) {
-            const esParams = extractParameters(esValue)
-            const ptParams = extractParameters(ptValue)
+            const esParams = extractParameters(esValue as string)
+            const ptParams = extractParameters(ptValue as string)
 
             expect(esParams).toEqual(enParams)
             expect(ptParams).toEqual(enParams)

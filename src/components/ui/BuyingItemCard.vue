@@ -10,7 +10,7 @@
           class="mt-0.5"
         >
           <i :class="item.isBought ? 'i-mdi:check-circle' : 'i-mdi:cart'" class="text-sm mr-1"></i>
-          {{ item.isBought ? 'Bought' : 'Buy' }}
+          {{ item.isBought ? "Bought" : "Buy" }}
         </Button>
         <div class="flex-1">
           <h3

@@ -23,14 +23,14 @@ export function useSupplyItems() {
   // Initialize data from storage
   const initializeData = async () => {
     if (isInitialized.value) return
-    
+
     isLoading.value = true
     try {
       const items = await supplyItemsStorage.getAll()
       supplyItems.value = items
       isInitialized.value = true
     } catch (error) {
-      console.error('Failed to load supply items from storage:', error)
+      console.error("Failed to load supply items from storage:", error)
     } finally {
       isLoading.value = false
     }
@@ -44,7 +44,7 @@ export function useSupplyItems() {
   // CRUD operations
   const createSupplyItem = async (item: CreateSupplyItem): Promise<SupplyItem> => {
     await initializeData() // Ensure data is loaded
-    
+
     isLoading.value = true
     try {
       const newItem = await supplyItemsStorage.create(item)
@@ -53,7 +53,7 @@ export function useSupplyItems() {
       supplyItems.value.sort((a, b) => a.name.localeCompare(b.name))
       return newItem
     } catch (error) {
-      console.error('Failed to create supply item:', error)
+      console.error("Failed to create supply item:", error)
       throw error
     } finally {
       isLoading.value = false
@@ -62,7 +62,7 @@ export function useSupplyItems() {
 
   const updateSupplyItem = async (updatedItem: UpdateSupplyItem): Promise<SupplyItem | null> => {
     await initializeData() // Ensure data is loaded
-    
+
     isLoading.value = true
     try {
       const updated = await supplyItemsStorage.updateFromData(updatedItem)
@@ -76,7 +76,7 @@ export function useSupplyItems() {
       }
       return updated
     } catch (error) {
-      console.error('Failed to update supply item:', error)
+      console.error("Failed to update supply item:", error)
       throw error
     } finally {
       isLoading.value = false
@@ -85,13 +85,13 @@ export function useSupplyItems() {
 
   const deleteSupplyItem = async (id: string): Promise<boolean> => {
     await initializeData() // Ensure data is loaded
-    
+
     isLoading.value = true
     try {
       const deleted = await supplyItemsStorage.delete(id)
       if (!deleted) {
-        console.error('Failed to delete supply item from database')
-        throw new Error('Failed to delete supply item from database')
+        console.error("Failed to delete supply item from database")
+        throw new Error("Failed to delete supply item from database")
       }
 
       const index = supplyItems.value.findIndex((item) => item.id === id)
@@ -100,7 +100,7 @@ export function useSupplyItems() {
       }
       return true
     } catch (error) {
-      console.error('Failed to delete supply item:', error)
+      console.error("Failed to delete supply item:", error)
       throw error
     } finally {
       isLoading.value = false
@@ -168,7 +168,7 @@ export function useSupplyItems() {
     filterByBuildingId,
     searchSupplyItems,
     searchSupplyItemsAsync,
-    
+
     // Manual data refresh
     refreshData: initializeData,
   }

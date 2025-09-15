@@ -128,7 +128,12 @@
       v-if="itemToDelete"
       :item-name="itemToDelete.name"
       @confirm="handleDelete"
-      @cancel="() => { itemToDelete = null; pendingDeleteItem = null }"
+      @cancel="
+        () => {
+          itemToDelete = null
+          pendingDeleteItem = null
+        }
+      "
     />
 
     <!-- Add to Shopping List Modal -->
@@ -136,7 +141,12 @@
       v-if="showAddToBuyingListModal && supplyItemToAddToBuyingList"
       :item="null"
       :supply-item="supplyItemToAddToBuyingList"
-      @close="() => { showAddToBuyingListModal = false; supplyItemToAddToBuyingList = null }"
+      @close="
+        () => {
+          showAddToBuyingListModal = false
+          supplyItemToAddToBuyingList = null
+        }
+      "
       @save="handleSaveToBuyingList"
     />
   </div>
@@ -160,6 +170,7 @@ import { useSuppliedBuildings } from "~/composables/useSuppliedBuildings"
 import { useSupplyItems } from "~/composables/useSupplyItems"
 import { ROUTES } from "~/router/routes"
 import { useSelectedBuildingStore } from "~/stores/selectedBuilding"
+import type { CreateBuyingItem, UpdateBuyingItem } from "~/types/buyingItem"
 import type { CreateSupplyItem, SupplyItem, UpdateSupplyItem } from "~/types/supply"
 
 const {
@@ -291,9 +302,11 @@ const handleAddToShoppingList = (item: SupplyItem) => {
   showAddToBuyingListModal.value = true
 }
 
-const handleSaveToBuyingList = async (buyingItemData: { quantity: number }) => {
+const handleSaveToBuyingList = async (buyingItemData: CreateBuyingItem | UpdateBuyingItem) => {
   try {
-    await createFromSupplyItem(supplyItemToAddToBuyingList.value!, buyingItemData.quantity)
+    const quantity =
+      "quantity" in buyingItemData && buyingItemData.quantity ? buyingItemData.quantity : undefined
+    await createFromSupplyItem(supplyItemToAddToBuyingList.value!, quantity)
     showAddToBuyingListModal.value = false
     supplyItemToAddToBuyingList.value = null
     toast({
@@ -313,13 +326,13 @@ const handleSaveToBuyingList = async (buyingItemData: { quantity: number }) => {
 const handleDelete = async () => {
   // Use pendingDeleteItem as fallback if itemToDelete is null
   const itemToProcess = itemToDelete.value || pendingDeleteItem.value
-  
+
   if (!itemToProcess) {
     return
   }
 
   const itemId = itemToProcess.id
-  
+
   try {
     const deleted = await deleteSupplyItem(itemId)
     if (deleted) {
@@ -343,7 +356,7 @@ const handleDelete = async () => {
     console.error("Failed to delete item:", error)
     toast({
       title: "Error",
-      description: `Failed to delete item: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      description: `Failed to delete item: ${error instanceof Error ? error.message : "Unknown error"}`,
       variant: "destructive",
     })
     itemToDelete.value = null

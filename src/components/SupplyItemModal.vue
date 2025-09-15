@@ -394,7 +394,7 @@ const availableStorageRooms = computed(() => {
 const handleDialogClose = (open: boolean) => {
   // Only close if the dialog is being closed, not opened
   if (!open) {
-    emit('close')
+    emit("close")
   }
 }
 

@@ -6,7 +6,8 @@
       "Bash(npx vue-tsc:*)",
       "Bash(npx tsc:*)",
       "Bash(git add:*)",
-      "Bash(npm run type-check:*)"
+      "Bash(npm run type-check:*)",
+      "Bash(npm run validate-code:*)"
     ],
     "deny": [],
     "ask": []

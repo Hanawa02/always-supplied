@@ -3,7 +3,7 @@
     <DialogContent class="max-w-lg max-h-[80vh] overflow-y-auto">
       <DialogHeader>
         <DialogTitle>
-          {{ isEditing ? 'Edit Shopping Item' : 'Add Shopping Item' }}
+          {{ isEditing ? "Edit Shopping Item" : "Add Shopping Item" }}
         </DialogTitle>
       </DialogHeader>
 
@@ -30,9 +30,7 @@
 
         <!-- Description -->
         <div class="grid gap-2">
-          <Label for="description">
-            Description
-          </Label>
+          <Label for="description"> Description </Label>
           <Textarea
             id="description"
             v-model="form.description"
@@ -63,9 +61,7 @@
 
         <!-- Shopping Hint -->
         <div class="grid gap-2">
-          <Label for="shopping-hint">
-            Shopping Hint
-          </Label>
+          <Label for="shopping-hint"> Shopping Hint </Label>
           <Textarea
             id="shopping-hint"
             v-model="form.shoppingHint"
@@ -76,9 +72,7 @@
 
         <!-- Notes -->
         <div class="grid gap-2">
-          <Label for="notes">
-            Notes
-          </Label>
+          <Label for="notes"> Notes </Label>
           <Textarea
             id="notes"
             v-model="form.notes"
@@ -89,9 +83,7 @@
 
         <!-- Preferred Brands -->
         <div class="grid gap-2">
-          <Label for="preferred-brands">
-            Preferred Brands
-          </Label>
+          <Label for="preferred-brands"> Preferred Brands </Label>
           <div class="space-y-3">
             <!-- Add brand input -->
             <div class="flex space-x-2">
@@ -113,7 +105,7 @@
                 <i class="i-mdi:plus text-lg"></i>
               </Button>
             </div>
-            
+
             <!-- Current brands -->
             <div
               v-if="form.preferredBrands && form.preferredBrands.length > 0"
@@ -143,9 +135,7 @@
 
         <!-- Category (if not from supply item) -->
         <div v-if="!supplyItem" class="grid gap-2">
-          <Label for="category">
-            Category
-          </Label>
+          <Label for="category"> Category </Label>
           <Input
             id="category"
             v-model="form.category"
@@ -156,11 +146,9 @@
 
         <!-- Actions -->
         <DialogFooter class="flex justify-end space-x-3 pt-6">
-          <Button variant="outline" @click="emit('close')">
-            Cancel
-          </Button>
+          <Button variant="outline" @click="emit('close')"> Cancel </Button>
           <Button type="submit">
-            {{ isEditing ? 'Update Item' : 'Add to List' }}
+            {{ isEditing ? "Update Item" : "Add to List" }}
           </Button>
         </DialogFooter>
       </form>
@@ -173,7 +161,13 @@ import { computed, onMounted, reactive, ref } from "vue"
 
 import { Badge } from "~/components/ui/badge"
 import { Button } from "~/components/ui/button"
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "~/components/ui/dialog"
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "~/components/ui/dialog"
 import { Input } from "~/components/ui/input"
 import { Label } from "~/components/ui/label"
 import { Textarea } from "~/components/ui/textarea"
@@ -213,11 +207,11 @@ const validationErrors = reactive({
 // Computed
 const isEditing = computed(() => !!props.item)
 
-// Methods  
+// Methods
 const handleDialogClose = (open: boolean) => {
   // Only close if the dialog is being closed, not opened
   if (!open) {
-    emit('close')
+    emit("close")
   }
 }
 
@@ -235,7 +229,7 @@ const handleFormEnter = (event: KeyboardEvent) => {
 const addBrand = () => {
   const brand = newBrand.value.trim()
   if (!brand) return
-  
+
   if (!form.preferredBrands) form.preferredBrands = []
   if (!form.preferredBrands.includes(brand)) {
     form.preferredBrands.push(brand)
@@ -315,7 +309,9 @@ onMounted(() => {
       shoppingHint: props.supplyItem.shoppingHint || "",
       category: props.supplyItem.category || "",
       notes: "",
-      preferredBrands: props.supplyItem.preferredBrands ? [...props.supplyItem.preferredBrands] : [],
+      preferredBrands: props.supplyItem.preferredBrands
+        ? [...props.supplyItem.preferredBrands]
+        : [],
     })
   }
 })
