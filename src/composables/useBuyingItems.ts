@@ -166,23 +166,6 @@ export function useBuyingItems() {
     }
   }
 
-  const clearBoughtItems = async (): Promise<number> => {
-    await initializeData() // Ensure data is loaded
-
-    isLoading.value = true
-    try {
-      const deletedCount = await buyingItemsStorage.clearBoughtItems()
-      // Remove bought items from local state
-      buyingItems.value = buyingItems.value.filter((item) => !item.isBought)
-      return deletedCount
-    } catch (error) {
-      console.error("Failed to clear bought items:", error)
-      throw error
-    } finally {
-      isLoading.value = false
-    }
-  }
-
   const getBuyingItem = (id: string): BuyingItem | undefined => {
     return buyingItems.value.find((item) => item.id === id)
   }
@@ -231,7 +214,6 @@ export function useBuyingItems() {
     updateBuyingItem,
     deleteBuyingItem,
     toggleItemBought,
-    clearBoughtItems,
     getBuyingItem,
 
     // Filters

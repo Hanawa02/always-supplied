@@ -145,7 +145,7 @@
         </div>
 
         <!-- Actions -->
-        <DialogFooter class="flex justify-end space-x-3 pt-6">
+        <DialogFooter class="flex justify-end space-3 pt-6 gap-3">
           <Button variant="outline" @click="emit('close')"> Cancel </Button>
           <Button type="submit">
             {{ isEditing ? "Update Item" : "Add to List" }}

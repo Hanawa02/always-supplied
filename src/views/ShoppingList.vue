@@ -34,10 +34,10 @@
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <!-- Controls Bar -->
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-4">
         <div class="flex flex-wrap gap-4 items-center justify-between">
           <!-- Search -->
-          <div class="flex-1 min-w-[200px] max-w-md">
+          <div class="flex-1 min-w-48 max-w-md">
             <div class="relative">
               <i
                 class="i-mdi:magnify absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
@@ -51,10 +51,10 @@
           </div>
 
           <!-- Filters -->
-          <div class="flex gap-2">
+          <div class="flex gap-2 flex-wrap md:flex-nowrap">
             <!-- Category Filter -->
             <Select v-model="selectedCategory">
-              <SelectTrigger class="w-[180px]">
+              <SelectTrigger class="w-full min-w-48">
                 <SelectValue :placeholder="m.shopping_list_all_categories()" />
               </SelectTrigger>
               <SelectContent>
@@ -67,7 +67,7 @@
 
             <!-- Building Filter -->
             <Select v-model="selectedBuilding">
-              <SelectTrigger class="w-[180px]">
+              <SelectTrigger class="w-full min-w-48">
                 <SelectValue :placeholder="m.shopping_list_all_buildings()" />
               </SelectTrigger>
               <SelectContent>
@@ -77,14 +77,9 @@
                 </SelectItem>
               </SelectContent>
             </Select>
-
             <!-- Show/Hide Bought Toggle -->
-            <div class="flex items-center space-x-2">
-              <Checkbox
-                id="show-bought"
-                :checked="showBoughtItems"
-                @update:checked="toggleShowBoughtItems"
-              />
+            <div class="flex items-center space-x-2 py-1 flex-shrink-0">
+              <Checkbox id="show-bought" v-model="showBoughtItems" @click="toggleShowBoughtItems" />
               <Label for="show-bought" class="cursor-pointer">
                 {{ m.shopping_list_show_bought_items() }}
               </Label>
@@ -94,7 +89,7 @@
       </div>
 
       <!-- Statistics -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div class="grid grid-cols-3 gap-4 mb-4">
         <StatsCard
           :title="m.shopping_list_total_items()"
           :value="totalItems"
@@ -231,7 +226,6 @@ const {
   updateBuyingItem,
   deleteBuyingItem,
   toggleItemBought,
-  clearBoughtItems,
   toggleShowBoughtItems,
   searchBuyingItems,
 } = useBuyingItems()
@@ -255,9 +249,6 @@ const filteredItems = computed(() => {
 
   if (searchQuery.value) {
     items = searchBuyingItems(searchQuery.value)
-    if (!showBoughtItems.value) {
-      items = items.filter((item) => !item.isBought)
-    }
   }
 
   if (selectedCategory.value && selectedCategory.value !== "__all__") {
@@ -343,26 +334,6 @@ const handleToggle = async (item: BuyingItem) => {
       description: "Failed to update item status. Please try again.",
       variant: "destructive",
     })
-  }
-}
-
-const handleClearBought = async () => {
-  const count = boughtItems.value.length
-  if (confirm(`Are you sure you want to delete ${count} bought item${count > 1 ? "s" : ""}?`)) {
-    try {
-      await clearBoughtItems()
-      toast({
-        title: "Success",
-        description: `${count} item${count > 1 ? "s" : ""} cleared successfully`,
-      })
-    } catch (error) {
-      console.error("Failed to clear bought items:", error)
-      toast({
-        title: "Error",
-        description: "Failed to clear bought items. Please try again.",
-        variant: "destructive",
-      })
-    }
   }
 }
 </script>

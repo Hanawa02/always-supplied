@@ -45,13 +45,6 @@
             >
               {{ m.app_navigation_shopping_list() }}
             </router-link>
-            <router-link
-              :to="{ name: ROUTES.THEME_PREVIEW.name }"
-              class="text-gray-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              active-class="text-primary-700 bg-primary-50"
-            >
-              {{ m.app_navigation_theme_preview() }}
-            </router-link>
           </div>
         </div>
 
