@@ -1,7 +1,8 @@
-import { ref, computed } from 'vue'
-import { buildingSharing, type Member, type ShareInfo } from '~/services/sharingService'
-import { useAuth } from '~/composables/useAuth'
+import { computed,ref } from 'vue'
+
 import { toast } from '~/components/ui/toast'
+import { useAuth } from '~/composables/useAuth'
+import { buildingSharing, type Member, type ShareInfo } from '~/services/sharingService'
 import type { Building } from '~/types'
 
 export function useSharing() {

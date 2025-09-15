@@ -1,8 +1,9 @@
-import { ref, computed, watch } from 'vue'
-import type { Building } from '~/types'
+import { computed, ref, watch } from 'vue'
+
 import { useAuth } from '~/composables/useAuth'
-import { useCloudSync } from '~/composables/useCloudSync'
 import { useBuildings } from '~/composables/useBuildings'
+import { useCloudSync } from '~/composables/useCloudSync'
+import type { Building } from '~/types'
 
 export function useCloudBuildings() {
   const { isAuthenticated } = useAuth()

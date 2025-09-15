@@ -252,7 +252,7 @@ const handleSubmit = async () => {
       emit('success')
       handleCancel()
     }
-  } catch (error) {
+  } catch {
     generalError.value = 'An unexpected error occurred'
   } finally {
     isLoading.value = false

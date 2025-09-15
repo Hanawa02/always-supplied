@@ -1,6 +1,7 @@
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
-import { offlineQueue, type QueueStatus } from '~/services/offlineQueue'
+import { computed, onMounted, onUnmounted,ref, watch } from 'vue'
+
 import { useAuth } from '~/composables/useAuth'
+import { offlineQueue, type QueueStatus } from '~/services/offlineQueue'
 
 export interface OfflineStatus {
   isOnline: boolean

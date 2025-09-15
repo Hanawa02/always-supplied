@@ -1,7 +1,8 @@
-import { ref, computed, onUnmounted, watch } from 'vue'
-import { realtimeSync, type ChangeEvent } from '~/services/realtimeSync'
-import { useAuth } from '~/composables/useAuth'
+import { computed, onUnmounted, ref, watch } from 'vue'
+
 import { toast } from '~/components/ui/toast'
+import { useAuth } from '~/composables/useAuth'
+import { type ChangeEvent,realtimeSync } from '~/services/realtimeSync'
 
 export function useRealtime() {
   const { isAuthenticated } = useAuth()

@@ -88,13 +88,14 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+
 import { Button } from '~/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '~/components/ui/dialog'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
 import { toast } from '~/components/ui/toast'
-import { useI18n } from '~/composables/useI18n'
 import { useCloudBuildings } from '~/composables/useCloudBuildings'
+import { useI18n } from '~/composables/useI18n'
 import { buildingSharing } from '~/services/sharingService'
 import type { Building } from '~/types'
 

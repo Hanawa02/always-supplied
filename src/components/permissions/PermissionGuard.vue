@@ -22,8 +22,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, onMounted } from 'vue'
-import { usePermissions, type Permission } from '~/composables/usePermissions'
+import { computed, onMounted,ref, watch } from 'vue'
+
+import { type Permission,usePermissions } from '~/composables/usePermissions'
 
 interface Props {
   buildingId: string

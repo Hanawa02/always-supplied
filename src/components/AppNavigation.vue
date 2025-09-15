@@ -275,10 +275,10 @@ import { onMounted, ref } from "vue"
 import AppLogo from "~/components/AppLogo.vue"
 import LanguageSwitcher from "~/components/LanguageSwitcher.vue"
 import JoinBuildingDialog from "~/components/sharing/JoinBuildingDialog.vue"
-import SyncStatusIndicator from "~/components/ui/SyncStatusIndicator.vue"
-import UserMenu from "~/components/UserMenu.vue"
 import { Button } from "~/components/ui/button"
+import SyncStatusIndicator from "~/components/ui/SyncStatusIndicator.vue"
 import { toast } from "~/components/ui/toast"
+import UserMenu from "~/components/UserMenu.vue"
 import { useAuth } from "~/composables/useAuth"
 import { useI18n } from "~/composables/useI18n"
 import { useTypedRouter } from "~/composables/useRouter"
@@ -311,7 +311,7 @@ const handleSignOut = async () => {
       description: 'You have been signed out successfully.',
     })
     closeMobileMenu()
-  } catch (error) {
+  } catch {
     toast({
       title: 'Sign Out Failed',
       description: 'An error occurred while signing out.',

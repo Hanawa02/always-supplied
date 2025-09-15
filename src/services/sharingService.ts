@@ -1,6 +1,6 @@
 import { supabase } from '~/lib/supabase'
-import type { Database } from '~/types/supabase'
 import type { Building } from '~/types'
+import type { Database } from '~/types/supabase'
 
 type BuildingShare = Database['public']['Tables']['building_shares']['Row']
 type BuildingMember = Database['public']['Tables']['building_members']['Row']

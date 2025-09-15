@@ -117,6 +117,8 @@
 
 <script setup lang="ts">
 import { computed } from "vue"
+
+import PermissionGuard from "~/components/permissions/PermissionGuard.vue"
 import { Button } from "~/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card"
 import {
@@ -126,7 +128,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "~/components/ui/dropdown-menu"
-import PermissionGuard from "~/components/permissions/PermissionGuard.vue"
 import { useAuth } from "~/composables/useAuth"
 import { useCloudSync } from "~/composables/useCloudSync"
 import type { SuppliedBuilding } from "~/types/suppliedBuilding"

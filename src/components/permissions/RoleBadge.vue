@@ -10,8 +10,9 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+
 import { Badge } from '~/components/ui/badge'
-import { usePermissions, type Role } from '~/composables/usePermissions'
+import { type Role,usePermissions } from '~/composables/usePermissions'
 
 interface Props {
   role: Role

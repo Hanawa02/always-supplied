@@ -279,7 +279,7 @@ const updateProfile = async () => {
         description: 'Your profile has been updated successfully.',
       })
     }
-  } catch (error) {
+  } catch {
     toast({
       title: 'Update Failed',
       description: 'An unexpected error occurred.',
@@ -330,7 +330,7 @@ const handleSignOut = async () => {
       description: 'You have been signed out successfully.',
     })
     router.push('/auth/login')
-  } catch (error) {
+  } catch {
     toast({
       title: 'Sign Out Failed',
       description: 'An error occurred while signing out.',
@@ -349,7 +349,7 @@ const handleDeleteAccount = async () => {
       title: 'Account Deletion',
       description: 'Account deletion feature will be available soon.',
     })
-  } catch (error) {
+  } catch {
     toast({
       title: 'Deletion Failed',
       description: 'An error occurred while deleting your account.',

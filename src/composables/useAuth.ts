@@ -1,5 +1,5 @@
+import type { AuthError,Session, User } from '@supabase/supabase-js'
 import { computed, ref, watch } from 'vue'
-import type { User, Session, AuthError } from '@supabase/supabase-js'
 
 import { supabase } from '~/lib/supabase'
 import type { UserProfile } from '~/types/supabase'

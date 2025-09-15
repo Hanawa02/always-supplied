@@ -82,7 +82,7 @@ const handleSignOut = async () => {
       title: 'Signed Out',
       description: 'You have been signed out successfully.',
     })
-  } catch (error) {
+  } catch {
     toast({
       title: 'Sign Out Failed',
       description: 'An error occurred while signing out.',

@@ -1,7 +1,7 @@
 import type { User } from '@supabase/supabase-js'
 
 import { supabase } from '~/lib/supabase'
-import type { UserProfile, CreateUserProfile, UpdateUserProfile } from '~/types/supabase'
+import type { CreateUserProfile, UpdateUserProfile,UserProfile } from '~/types/supabase'
 
 /**
  * Service for managing user authentication and profiles

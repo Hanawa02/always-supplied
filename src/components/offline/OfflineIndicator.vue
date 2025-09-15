@@ -113,7 +113,7 @@
 
       <div class="space-y-3 max-h-64 overflow-y-auto">
         <div
-          v-for="(operation, index) in queuedOperations"
+          v-for="operation in queuedOperations"
           :key="operation.id"
           class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border"
         >
@@ -165,12 +165,13 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+
 import { Button } from '~/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '~/components/ui/dialog'
 import { toast } from '~/components/ui/toast'
 import { useI18n } from '~/composables/useI18n'
 import { useOffline } from '~/composables/useOffline'
-import type { QueuedOperation } from '~/services/offlineQueue'
+// import type { QueuedOperation } from '~/services/offlineQueue'
 
 interface Props {
   autoHide?: boolean
@@ -248,7 +249,7 @@ const retryConnection = async () => {
       title: 'Sync Retry',
       description: 'Attempting to sync pending changes...',
     })
-  } catch (error) {
+  } catch {
     toast({
       title: 'Sync Failed',
       description: 'Unable to sync changes. Will retry automatically.',
@@ -270,7 +271,7 @@ const syncNow = async () => {
       title: 'Sync Complete',
       description: 'All changes have been synchronized.',
     })
-  } catch (error) {
+  } catch {
     toast({
       title: 'Sync Failed',
       description: 'Unable to sync changes at this time.',
@@ -293,7 +294,7 @@ const retryFailed = async () => {
       title: 'Retrying Failed Operations',
       description: 'Attempting to sync failed changes...',
     })
-  } catch (error) {
+  } catch {
     toast({
       title: 'Retry Failed',
       description: 'Unable to retry failed operations.',

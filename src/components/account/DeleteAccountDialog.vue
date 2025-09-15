@@ -129,7 +129,7 @@ const handleConfirm = async () => {
   try {
     emit('confirm')
     handleCancel()
-  } catch (err) {
+  } catch {
     error.value = 'An error occurred while deleting your account'
   } finally {
     isLoading.value = false

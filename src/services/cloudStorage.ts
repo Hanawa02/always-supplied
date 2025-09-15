@@ -1,6 +1,6 @@
-import type { Database } from '~/types/supabase'
-import type { Building, SupplyItem, BuyingItem } from '~/types'
 import { supabase } from '~/lib/supabase'
+import type { Building, BuyingItem,SupplyItem } from '~/types'
+import type { Database } from '~/types/supabase'
 
 export type CloudBuilding = Database['public']['Tables']['cloud_buildings']['Row']
 export type CloudSupplyItem = Database['public']['Tables']['cloud_supply_items']['Row']

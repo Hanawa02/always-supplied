@@ -1,10 +1,11 @@
-import { ref, computed, watch } from 'vue'
-import type { Building, SupplyItem, BuyingItem } from '~/types'
-import { cloudStorage, type MigrationProgress, type SyncResult } from '~/services/cloudStorage'
-import { offlineQueue, type QueueStatus } from '~/services/offlineQueue'
+import { computed, ref, watch } from 'vue'
+
+import { toast } from '~/components/ui/toast'
 import { useAuth } from '~/composables/useAuth'
 import { useBuildings } from '~/composables/useBuildings'
-import { toast } from '~/components/ui/toast'
+import { cloudStorage, type MigrationProgress, type SyncResult } from '~/services/cloudStorage'
+import { offlineQueue, type QueueStatus } from '~/services/offlineQueue'
+import type { Building, BuyingItem,SupplyItem } from '~/types'
 
 export interface SyncStatus {
   isOnline: boolean

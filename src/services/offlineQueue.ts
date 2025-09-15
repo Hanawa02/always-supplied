@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { computed,ref } from 'vue'
 
 export interface QueuedOperation {
   id: string
@@ -22,7 +22,7 @@ export interface QueueStatus {
 
 const STORAGE_KEY = 'always_supplied_offline_queue'
 const MAX_RETRIES = 3
-const RETRY_DELAY_BASE = 1000 // 1 second base delay
+// const RETRY_DELAY_BASE = 1000 // 1 second base delay
 
 class OfflineQueueService {
   private queue = ref<QueuedOperation[]>([])

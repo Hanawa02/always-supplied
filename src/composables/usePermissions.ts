@@ -1,4 +1,5 @@
 import { computed, ref } from 'vue'
+
 import { useAuth } from '~/composables/useAuth'
 import { buildingSharing } from '~/services/sharingService'
 

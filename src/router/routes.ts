@@ -71,7 +71,7 @@ export const routes = [
   },
   {
     path: "/app/supply-configuration",
-    redirect: (to: any) => {
+    redirect: (to: { query: { buildingId?: string } }) => {
       // Try to extract building ID from query params or use a default
       const buildingId = to.query.buildingId || 'default'
       return `/buildings/${buildingId}/supplies`

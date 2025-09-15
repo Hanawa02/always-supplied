@@ -243,7 +243,7 @@ const handleDelete = async () => {
   }
 }
 
-const handleMemberRemoved = (memberId: string) => {
+const handleMemberRemoved = () => {
   toast({
     title: 'Member Removed',
     description: 'The user has been removed from the building.',
