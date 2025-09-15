@@ -57,6 +57,8 @@
           @view-supplies="viewSupplies"
           @edit="editBuilding"
           @delete="confirmDelete"
+          @share="shareBuilding"
+          @members="manageMembers"
         />
       </div>
 
@@ -94,6 +96,24 @@
       @confirm="handleDelete"
       @cancel="buildingToDelete = null"
     />
+
+    <!-- Share Building Dialog -->
+    <ShareBuildingDialog
+      v-if="buildingToShare"
+      :open="!!buildingToShare"
+      :building-id="buildingToShare.id"
+      @update:open="buildingToShare = null"
+    />
+
+    <!-- Building Members Dialog -->
+    <BuildingMembersDialog
+      v-if="buildingToManage"
+      :open="!!buildingToManage"
+      :building-id="buildingToManage.id"
+      @update:open="buildingToManage = null"
+      @member-removed="handleMemberRemoved"
+      @building-left="handleBuildingLeft"
+    />
   </div>
 </template>
 
@@ -102,11 +122,14 @@ import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
 
 import DeleteConfirmationModal from "~/components/DeleteConfirmationModal.vue"
+import BuildingMembersDialog from "~/components/sharing/BuildingMembersDialog.vue"
+import ShareBuildingDialog from "~/components/sharing/ShareBuildingDialog.vue"
 import SuppliedBuildingModal from "~/components/SuppliedBuildingModal.vue"
 import BaseButton from "~/components/ui/BaseButton.vue"
 import BuildingCard from "~/components/ui/BuildingCard.vue"
 import EmptyState from "~/components/ui/EmptyState.vue"
 import StatsCard from "~/components/ui/StatsCard.vue"
+import { toast } from "~/components/ui/toast"
 import { useI18n } from "~/composables/useI18n"
 import { useSuppliedBuildings } from "~/composables/useSuppliedBuildings"
 import { useSupplyItems } from "~/composables/useSupplyItems"
@@ -135,6 +158,8 @@ const { supplyItems } = useSupplyItems()
 const showCreateModal = ref(false)
 const editingBuilding = ref<SuppliedBuilding | null>(null)
 const buildingToDelete = ref<SuppliedBuilding | null>(null)
+const buildingToShare = ref<SuppliedBuilding | null>(null)
+const buildingToManage = ref<SuppliedBuilding | null>(null)
 const searchQuery = ref("")
 
 // Computed
@@ -168,6 +193,14 @@ const editBuilding = (building: SuppliedBuilding) => {
 
 const confirmDelete = (building: SuppliedBuilding) => {
   buildingToDelete.value = building
+}
+
+const shareBuilding = (building: SuppliedBuilding) => {
+  buildingToShare.value = building
+}
+
+const manageMembers = (building: SuppliedBuilding) => {
+  buildingToManage.value = building
 }
 
 const closeModal = () => {
@@ -208,5 +241,22 @@ const handleDelete = async () => {
   } catch (error) {
     console.error("Failed to delete building:", error)
   }
+}
+
+const handleMemberRemoved = (memberId: string) => {
+  toast({
+    title: 'Member Removed',
+    description: 'The user has been removed from the building.',
+  })
+}
+
+const handleBuildingLeft = () => {
+  toast({
+    title: 'Building Left',
+    description: 'You have left the building and it has been removed from your list.',
+  })
+  // The building should be automatically removed from the local list
+  // when the user leaves via the sharing service
+  buildingToManage.value = null
 }
 </script>

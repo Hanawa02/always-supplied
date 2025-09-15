@@ -26,6 +26,13 @@ export const ROUTES = {
     component: () => import("~/views/auth/AuthCallback.vue"),
   },
 
+  // Account management
+  ACCOUNT: {
+    name: "Account",
+    path: "/account",
+    component: () => import("~/views/AccountPage.vue"),
+  },
+
   // Main application routes
   THEME_PREVIEW: {
     name: "ThemePreview",
