@@ -9,6 +9,24 @@ export interface RouteInfo {
 
 // Centralized route information
 export const ROUTES = {
+  // Authentication routes
+  LOGIN: {
+    name: "Login",
+    path: "/auth/login",
+    component: () => import("~/views/auth/LoginPage.vue"),
+  },
+  REGISTER: {
+    name: "Register",
+    path: "/auth/register",
+    component: () => import("~/views/auth/RegisterPage.vue"),
+  },
+  AUTH_CALLBACK: {
+    name: "AuthCallback",
+    path: "/auth/callback",
+    component: () => import("~/views/auth/AuthCallback.vue"),
+  },
+
+  // Main application routes
   THEME_PREVIEW: {
     name: "ThemePreview",
     path: "/theme-preview",
@@ -16,17 +34,17 @@ export const ROUTES = {
   },
   SUPPLIED_BUILDINGS: {
     name: "SuppliedBuildings",
-    path: "/app/buildings",
+    path: "/buildings",
     component: () => import("~/views/SuppliedBuildings.vue"),
   },
   SUPPLY_CONFIGURATION: {
     name: "SupplyConfiguration",
-    path: "/app/supply-configuration",
+    path: "/buildings/:buildingId/supplies",
     component: () => import("~/views/SupplyConfiguration.vue"),
   },
   SHOPPING_LIST: {
     name: "ShoppingList",
-    path: "/app/shopping-list",
+    path: "/shopping-list",
     component: () => import("~/views/ShoppingList.vue"),
   },
 } as const satisfies Record<string, RouteInfo>
@@ -38,6 +56,23 @@ export const routes = [
   {
     path: "/",
     redirect: ROUTES.SUPPLIED_BUILDINGS.path,
+  },
+  // Legacy route redirects for backward compatibility
+  {
+    path: "/app/buildings",
+    redirect: ROUTES.SUPPLIED_BUILDINGS.path,
+  },
+  {
+    path: "/app/supply-configuration",
+    redirect: (to: any) => {
+      // Try to extract building ID from query params or use a default
+      const buildingId = to.query.buildingId || 'default'
+      return `/buildings/${buildingId}/supplies`
+    },
+  },
+  {
+    path: "/app/shopping-list",
+    redirect: ROUTES.SHOPPING_LIST.path,
   },
 ]
 
