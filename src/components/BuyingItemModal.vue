@@ -1,5 +1,5 @@
 <template>
-  <Dialog :open="true" @update:open="(open) => !open && emit('close')">
+  <Dialog :open="true" @update:open="handleDialogClose">
     <DialogContent class="max-w-lg max-h-[80vh] overflow-y-auto">
       <DialogHeader>
         <DialogTitle>
@@ -8,7 +8,7 @@
       </DialogHeader>
 
       <!-- Form -->
-      <form @submit.prevent="handleSubmit" class="space-y-6">
+      <form @submit.prevent="handleSubmit" @keydown.enter="handleFormEnter" class="space-y-6">
         <!-- Name (Required) -->
         <div class="grid gap-2">
           <Label for="name">
@@ -87,6 +87,60 @@
           />
         </div>
 
+        <!-- Preferred Brands -->
+        <div class="grid gap-2">
+          <Label for="preferred-brands">
+            Preferred Brands
+          </Label>
+          <div class="space-y-3">
+            <!-- Add brand input -->
+            <div class="flex space-x-2">
+              <Input
+                v-model="newBrand"
+                type="text"
+                placeholder="Add a brand..."
+                class="flex-1"
+                @keyup.enter="addBrand"
+              />
+              <Button
+                type="button"
+                @click="addBrand"
+                :disabled="!newBrand.trim()"
+                size="icon"
+                variant="secondary"
+                title="Add brand"
+              >
+                <i class="i-mdi:plus text-lg"></i>
+              </Button>
+            </div>
+            
+            <!-- Current brands -->
+            <div
+              v-if="form.preferredBrands && form.preferredBrands.length > 0"
+              class="flex flex-wrap gap-2"
+            >
+              <Badge
+                v-for="(brand, index) in form.preferredBrands"
+                :key="brand"
+                variant="secondary"
+                class="flex items-center gap-1 px-2 py-1"
+              >
+                {{ brand }}
+                <Button
+                  type="button"
+                  @click="removeBrand(index)"
+                  size="icon"
+                  variant="ghost"
+                  class="h-4 w-4 p-0 hover:bg-destructive hover:text-destructive-foreground"
+                  title="Remove brand"
+                >
+                  <i class="i-mdi:close text-xs"></i>
+                </Button>
+              </Badge>
+            </div>
+          </div>
+        </div>
+
         <!-- Category (if not from supply item) -->
         <div v-if="!supplyItem" class="grid gap-2">
           <Label for="category">
@@ -115,8 +169,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive } from "vue"
+import { computed, onMounted, reactive, ref } from "vue"
 
+import { Badge } from "~/components/ui/badge"
 import { Button } from "~/components/ui/button"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "~/components/ui/dialog"
 import { Input } from "~/components/ui/input"
@@ -145,7 +200,10 @@ const form = reactive<CreateBuyingItem>({
   shoppingHint: "",
   notes: "",
   category: "",
+  preferredBrands: [],
 })
+
+const newBrand = ref("")
 
 const validationErrors = reactive({
   name: "",
@@ -155,7 +213,42 @@ const validationErrors = reactive({
 // Computed
 const isEditing = computed(() => !!props.item)
 
-// Methods
+// Methods  
+const handleDialogClose = (open: boolean) => {
+  // Only close if the dialog is being closed, not opened
+  if (!open) {
+    emit('close')
+  }
+}
+
+const handleFormEnter = (event: KeyboardEvent) => {
+  // Prevent Enter from bubbling up to the Dialog
+  if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
+    // Only submit if not in a textarea (to allow line breaks)
+    if (!(event.target instanceof HTMLTextAreaElement)) {
+      event.preventDefault()
+      handleSubmit()
+    }
+  }
+}
+
+const addBrand = () => {
+  const brand = newBrand.value.trim()
+  if (!brand) return
+  
+  if (!form.preferredBrands) form.preferredBrands = []
+  if (!form.preferredBrands.includes(brand)) {
+    form.preferredBrands.push(brand)
+  }
+  newBrand.value = ""
+}
+
+const removeBrand = (index: number) => {
+  if (form.preferredBrands) {
+    form.preferredBrands.splice(index, 1)
+  }
+}
+
 const handleSubmit = () => {
   // Clear previous validation errors
   validationErrors.name = ""
@@ -180,6 +273,7 @@ const handleSubmit = () => {
     shoppingHint: form.shoppingHint?.trim() || undefined,
     notes: form.notes?.trim() || undefined,
     category: form.category?.trim() || undefined,
+    preferredBrands: form.preferredBrands?.filter((brand) => brand.trim()) || undefined,
   }
 
   if (isEditing.value && props.item) {
@@ -210,6 +304,7 @@ onMounted(() => {
       shoppingHint: props.item.shoppingHint || "",
       notes: props.item.notes || "",
       category: props.item.category || "",
+      preferredBrands: props.item.preferredBrands ? [...props.item.preferredBrands] : [],
     })
   } else if (props.supplyItem) {
     // Creating from supply item
@@ -220,6 +315,7 @@ onMounted(() => {
       shoppingHint: props.supplyItem.shoppingHint || "",
       category: props.supplyItem.category || "",
       notes: "",
+      preferredBrands: props.supplyItem.preferredBrands ? [...props.supplyItem.preferredBrands] : [],
     })
   }
 })

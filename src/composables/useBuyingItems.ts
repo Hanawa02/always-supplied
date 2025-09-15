@@ -52,6 +52,24 @@ export function useBuyingItems() {
 
   // Create buying item from supply item
   const createFromSupplyItem = async (supplyItem: SupplyItem, customQuantity?: number): Promise<BuyingItem> => {
+    await initializeData() // Ensure data is loaded
+
+    // Check if there's already an unbought buying item for this supply item
+    const existingItem = buyingItems.value.find(
+      item => item.supplyItemId === supplyItem.id && !item.isBought
+    )
+
+    if (existingItem) {
+      // Update the existing item's quantity instead of creating a duplicate
+      const newQuantity = existingItem.quantity + (customQuantity || supplyItem.quantity)
+      const updateData: UpdateBuyingItem = {
+        id: existingItem.id,
+        quantity: newQuantity,
+      }
+      return await updateBuyingItem(updateData)
+    }
+
+    // No existing unbought item found, create a new one
     const createData: CreateBuyingItem = {
       supplyItemId: supplyItem.id,
       buildingId: supplyItem.buildingId,

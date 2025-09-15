@@ -1,22 +1,24 @@
 <template>
   <Card :class="{ 'opacity-60': item.isBought }" class="hover:shadow-md transition-shadow">
     <CardContent class="p-4">
-      <!-- Header with checkbox and name -->
+      <!-- Header with buy/unbuy button and name -->
       <div class="flex items-start gap-3">
-        <Checkbox
-          :id="`buying-item-${item.id}`"
-          :checked="item.isBought"
-          @update:checked="$emit('toggle', item)"
-          class="mt-1"
-        />
+        <Button
+          @click="$emit('toggle', item)"
+          :variant="item.isBought ? 'default' : 'outline'"
+          size="sm"
+          class="mt-0.5"
+        >
+          <i :class="item.isBought ? 'i-mdi:check-circle' : 'i-mdi:cart'" class="text-sm mr-1"></i>
+          {{ item.isBought ? 'Bought' : 'Buy' }}
+        </Button>
         <div class="flex-1">
-          <label
-            :for="`buying-item-${item.id}`"
+          <h3
             :class="{ 'line-through text-muted-foreground': item.isBought }"
-            class="text-base font-medium cursor-pointer"
+            class="text-base font-medium"
           >
             {{ item.name }}
-          </label>
+          </h3>
           <p v-if="item.description" class="text-sm text-muted-foreground mt-1">
             {{ item.description }}
           </p>
@@ -44,12 +46,16 @@
       </div>
 
       <!-- Item Details -->
-      <div class="ml-7 mt-3 space-y-2">
-        <!-- Quantity -->
-        <div class="flex items-center gap-2">
+      <div class="ml-20 mt-3 space-y-2">
+        <!-- Quantity and Building -->
+        <div class="flex items-center gap-2 flex-wrap">
           <Badge variant="secondary" class="text-xs">
             <i class="i-mdi:cart text-sm mr-1"></i>
             {{ quantityLabel }}: {{ item.quantity }}
+          </Badge>
+          <Badge v-if="buildingName" variant="default" class="text-xs">
+            <i class="i-mdi:domain text-sm mr-1"></i>
+            {{ buildingName }}
           </Badge>
           <Badge v-if="item.category" variant="outline" class="text-xs">
             {{ item.category }}
@@ -95,7 +101,6 @@
 import { Badge } from "~/components/ui/badge"
 import { Button } from "~/components/ui/button"
 import { Card, CardContent } from "~/components/ui/card"
-import { Checkbox } from "~/components/ui/checkbox"
 import type { BuyingItem } from "~/types/buyingItem"
 
 interface Props {
@@ -104,6 +109,7 @@ interface Props {
   deleteTooltip: string
   quantityLabel: string
   preferredBrandsLabel: string
+  buildingName?: string
 }
 
 defineProps<Props>()

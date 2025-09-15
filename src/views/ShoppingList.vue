@@ -136,6 +136,7 @@
         delete-tooltip="Delete item"
         quantity-label="Qty"
         preferred-brands-label="Preferred Brands"
+        :building-name="getBuildingName(item.buildingId)"
         @toggle="handleToggle"
         @edit="editItem"
         @delete="confirmDelete"
@@ -250,6 +251,12 @@ const filteredItems = computed(() => {
 })
 
 // Methods
+const getBuildingName = (buildingId?: string) => {
+  if (!buildingId) return undefined
+  const building = buildings.value.find(b => b.id === buildingId)
+  return building?.name
+}
+
 const editItem = (item: BuyingItem) => {
   editingItem.value = item
 }

@@ -1,5 +1,5 @@
 <template>
-  <Dialog :open="true" @update:open="(open) => !open && emit('close')">
+  <Dialog :open="true" @update:open="handleDialogClose">
     <DialogContent class="max-w-lg">
       <DialogHeader>
         <DialogTitle>
@@ -7,8 +7,8 @@
         </DialogTitle>
       </DialogHeader>
 
-        <!-- Form -->
-        <form @submit.prevent="handleSubmit" class="space-y-6">
+      <!-- Form -->
+      <form @submit.prevent="handleSubmit" @keydown.enter="handleFormEnter" class="space-y-6">
         <!-- Name (Required) -->
         <div class="grid gap-2">
           <Label for="building-name">
@@ -61,7 +61,13 @@
 import { computed, onMounted, reactive } from "vue"
 
 import { Button } from "~/components/ui/button"
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "~/components/ui/dialog"
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "~/components/ui/dialog"
 import { Input } from "~/components/ui/input"
 import { Label } from "~/components/ui/label"
 import { Textarea } from "~/components/ui/textarea"
@@ -99,6 +105,24 @@ const validationErrors = reactive({
 const isEditing = computed(() => !!props.building)
 
 // Methods
+const handleDialogClose = (open: boolean) => {
+  // Only close if the dialog is being closed, not opened
+  if (!open) {
+    emit("close")
+  }
+}
+
+const handleFormEnter = (event: KeyboardEvent) => {
+  // Prevent Enter from bubbling up to the Dialog
+  if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
+    // Only submit if not in a textarea (to allow line breaks)
+    if (!(event.target instanceof HTMLTextAreaElement)) {
+      event.preventDefault()
+      handleSubmit()
+    }
+  }
+}
+
 const handleSubmit = () => {
   // Clear previous validation errors
   validationErrors.name = ""

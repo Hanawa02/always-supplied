@@ -1,5 +1,5 @@
 <template>
-  <Dialog :open="true" @update:open="(open) => !open && emit('close')">
+  <Dialog :open="true" @update:open="handleDialogClose">
     <DialogContent class="max-w-lg max-h-[80vh] overflow-y-auto">
       <DialogHeader>
         <DialogTitle>
@@ -8,7 +8,7 @@
       </DialogHeader>
 
       <!-- Form -->
-      <form @submit.prevent="handleSubmit" class="space-y-6">
+      <form @submit.prevent="handleSubmit" @keydown.enter="handleFormEnter" class="space-y-6">
         <!-- Name (Required) -->
         <div class="grid gap-2">
           <Label for="name">
@@ -391,6 +391,24 @@ const availableStorageRooms = computed(() => {
 })
 
 // Methods
+const handleDialogClose = (open: boolean) => {
+  // Only close if the dialog is being closed, not opened
+  if (!open) {
+    emit('close')
+  }
+}
+
+const handleFormEnter = (event: KeyboardEvent) => {
+  // Prevent Enter from bubbling up to the Dialog
+  if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
+    // Only submit if not in a textarea (to allow line breaks)
+    if (!(event.target instanceof HTMLTextAreaElement)) {
+      event.preventDefault()
+      handleSubmit()
+    }
+  }
+}
+
 const addBrand = () => {
   const brand = newBrand.value.trim()
   if (brand && !form.preferredBrands?.includes(brand)) {
