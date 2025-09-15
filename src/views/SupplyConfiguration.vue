@@ -18,7 +18,7 @@
               <h1 class="text-xl sm:text-2xl font-bold text-gray-900">
                 {{ m.supply_configuration_title() }}
               </h1>
-              <p v-if="selectedBuilding" class="text-sm text-gray-600 mt-1">
+              <p v-if="selectedBuilding" class="text-sm text-green-600">
                 {{ selectedBuilding.name }}
               </p>
             </div>
@@ -34,9 +34,10 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <!-- Stats & Filters -->
       <div class="mb-6">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="flex gap-2 mb-6">
           <!-- Stats Card -->
           <StatsCard
+            class="max-w-32 flex-shrink-0"
             :title="m.supply_configuration_total_items()"
             :value="totalItems"
             icon="i-mdi:format-list-numbered"
@@ -44,8 +45,8 @@
           />
 
           <!-- Search -->
-          <div class="md:col-span-2">
-            <div class="relative">
+          <div class="flex flex-col gap-2 md:gap-4 w-full max-w-md">
+            <div class="relative w-full bg-white">
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <i class="i-mdi:magnify text-gray-400"></i>
               </div>
@@ -56,19 +57,24 @@
                 class="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               />
             </div>
-          </div>
 
-          <!-- Category Filter -->
-          <div>
-            <select
-              v-model="selectedCategory"
-              class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-            >
-              <option value="">{{ m.supply_configuration_all_categories() }}</option>
-              <option v-for="category in categories" :key="category" :value="category">
-                {{ category }}
-              </option>
-            </select>
+            <!-- Category Filter -->
+
+            <div class="relative w-full group">
+              <select
+                v-model="selectedCategory"
+                class="w-full appearance-none bg-white border group-hover:border-green-600 border-gray-200 rounded-lg px-3 py-2 pr-8 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 cursor-pointer"
+              >
+                <option value="">{{ m.supply_configuration_all_categories() }}</option>
+                <option v-for="category in categories" :key="category" :value="category">
+                  {{ category }}
+                </option>
+              </select>
+              <!-- Dropdown arrow -->
+              <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                <i class="i-mdi:chevron-down text-gray-400 group-hover:text-green-600 text-lg"></i>
+              </div>
+            </div>
           </div>
         </div>
       </div>

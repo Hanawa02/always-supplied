@@ -1,5 +1,5 @@
 <template>
-  <Card class="p-4 flex flex-col space-y-1 items-center">
+  <Card class="p-2 md:p-4 flex flex-col space-y-1 items-center justify-center">
     <div class="flex items-center">
       <p class="text-sm font-medium text-muted-foreground">{{ title }}</p>
       <p v-if="subtitle" class="text-xs text-muted-foreground mt-1">{{ subtitle }}</p>
