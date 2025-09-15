@@ -1,0 +1,5 @@
+- There is no button to mark an item as bought
+- If we add the same supply item to the shopping list, just the quantity needs to be adjusted, we don't want multiple buying items from the same supply item (already bought items do not count)
+- When I'm in a modal with a form (e.g. Adding new building), pressing enters closes the modal without saving the item.
+- In the shopping list, there is no indication of which item is from which supplied building
+- when editing the buying item there is no option to edit the brands selected
