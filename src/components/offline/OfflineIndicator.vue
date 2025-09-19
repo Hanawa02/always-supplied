@@ -264,7 +264,8 @@ const syncNow = async () => {
   isSyncing.value = true
   try {
     // Import sync function
-    const { syncWithCloud } = await import('~/composables/useCloudSync')
+    const { useCloudSync } = await import('~/composables/useCloudSync')
+    const { syncWithCloud } = useCloudSync()
     await syncWithCloud()
 
     toast({

@@ -14,12 +14,14 @@ export interface Building {
   buyingItems: BuyingItem[]
 }
 
-// Adapter functions to convert between types
+// Simple adapter functions for backward compatibility
+// For production use, prefer the comprehensive adapters in ~/services/typeAdapters
 export function suppliedBuildingToBuilding(suppliedBuilding: SuppliedBuilding): Building {
   return {
     id: suppliedBuilding.id,
     name: suppliedBuilding.name,
     description: suppliedBuilding.description,
+    location: undefined,
     createdAt: suppliedBuilding.createdAt.toISOString(),
     updatedAt: suppliedBuilding.updatedAt.toISOString(),
     supplyItems: [], // These would need to be fetched separately
@@ -38,6 +40,6 @@ export function buildingToSuppliedBuilding(building: Building): SuppliedBuilding
 }
 
 // Re-export types for convenience
-export type { SuppliedBuilding, CreateSuppliedBuilding, UpdateSuppliedBuilding } from './suppliedBuilding'
-export type { SupplyItem } from './supply'
 export type { BuyingItem } from './buyingItem'
+export type { CreateSuppliedBuilding, SuppliedBuilding, UpdateSuppliedBuilding } from './suppliedBuilding'
+export type { SupplyItem } from './supply'

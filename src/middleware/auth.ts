@@ -1,3 +1,4 @@
+import { watch } from 'vue'
 import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
 
 import { useAuth } from '~/composables/useAuth'
@@ -15,7 +16,7 @@ export async function requireAuth(
   // Wait for auth to initialize
   if (isInitializing.value) {
     // Wait for auth state to be determined
-    const unwatch = isInitializing.watch((initializing) => {
+    const unwatch = watch(isInitializing, (initializing) => {
       if (!initializing) {
         unwatch()
         if (isAuthenticated.value) {
@@ -53,7 +54,7 @@ export async function requireGuest(
 
   // Wait for auth to initialize
   if (isInitializing.value) {
-    const unwatch = isInitializing.watch((initializing) => {
+    const unwatch = watch(isInitializing, (initializing) => {
       if (!initializing) {
         unwatch()
         if (isAuthenticated.value) {

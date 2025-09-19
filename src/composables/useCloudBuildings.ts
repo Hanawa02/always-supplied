@@ -1,8 +1,8 @@
 import { computed, ref, watch } from 'vue'
 
 import { useAuth } from '~/composables/useAuth'
-import { useSuppliedBuildings } from '~/composables/useSuppliedBuildings'
 import { useCloudSync } from '~/composables/useCloudSync'
+import { useSuppliedBuildings } from '~/composables/useSuppliedBuildings'
 import type { Building } from '~/types'
 
 export function useCloudBuildings() {
@@ -31,7 +31,7 @@ export function useCloudBuildings() {
   // Building operations with cloud sync
   async function createBuilding(building: any) {
     // TODO: Implement cloud-aware building creation
-    const { createSuppliedBuilding } = await import('~/composables/useSuppliedBuildings')
+    const { createSuppliedBuilding } = useSuppliedBuildings()
     const newBuilding = await createSuppliedBuilding({
       name: building.name,
       description: building.description
@@ -45,7 +45,7 @@ export function useCloudBuildings() {
 
   async function updateBuilding(id: string, updates: any) {
     // TODO: Implement cloud-aware building updates
-    const { updateSuppliedBuilding } = await import('~/composables/useSuppliedBuildings')
+    const { updateSuppliedBuilding } = useSuppliedBuildings()
 
     const updated = await updateSuppliedBuilding({
       id,
@@ -61,7 +61,7 @@ export function useCloudBuildings() {
 
   async function deleteBuilding(id: string) {
     // TODO: Implement cloud-aware building deletion
-    const { deleteSuppliedBuilding } = await import('~/composables/useSuppliedBuildings')
+    const { deleteSuppliedBuilding } = useSuppliedBuildings()
 
     await deleteSuppliedBuilding(id)
 
