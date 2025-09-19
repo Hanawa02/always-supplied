@@ -21,12 +21,12 @@
               {{ m.app_navigation_shopping_list() }}
             </router-link>
             <router-link
-              :to="{
-                name: ROUTES.SUPPLY_CONFIGURATION.name,
-                query: selectedBuildingStore.selectedBuildingId
-                  ? { buildingId: selectedBuildingStore.selectedBuildingId }
-                  : {},
-              }"
+              :to="selectedBuildingStore.selectedBuildingId
+                ? {
+                    name: ROUTES.SUPPLY_CONFIGURATION.name,
+                    params: { buildingId: selectedBuildingStore.selectedBuildingId }
+                  }
+                : { name: ROUTES.SUPPLIED_BUILDINGS.name }"
               class="text-gray-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors flex flex-col items-start"
               active-class="text-primary-700 bg-primary-50"
             >
@@ -168,12 +168,12 @@
             </router-link>
 
             <router-link
-              :to="{
-                name: ROUTES.SUPPLY_CONFIGURATION.name,
-                query: selectedBuildingStore.selectedBuildingId
-                  ? { buildingId: selectedBuildingStore.selectedBuildingId }
-                  : {},
-              }"
+              :to="selectedBuildingStore.selectedBuildingId
+                ? {
+                    name: ROUTES.SUPPLY_CONFIGURATION.name,
+                    params: { buildingId: selectedBuildingStore.selectedBuildingId }
+                  }
+                : { name: ROUTES.SUPPLIED_BUILDINGS.name }"
               @click="closeMobileMenu"
               class="flex flex-col px-3 py-3 text-sm font-medium text-gray-600 rounded-lg hover:text-primary-600 hover:bg-primary-50 transition-colors"
               active-class="text-primary-700 bg-primary-50"

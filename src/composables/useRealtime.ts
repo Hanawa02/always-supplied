@@ -1,11 +1,9 @@
-import { computed, onUnmounted, ref, watch } from 'vue'
+import { computed, onUnmounted, ref } from 'vue'
 
 import { toast } from '~/components/ui/toast'
-import { useAuth } from '~/composables/useAuth'
 import { type ChangeEvent,realtimeSync } from '~/services/realtimeSync'
 
 export function useRealtime() {
-  const { isAuthenticated } = useAuth()
   const recentChanges = ref<ChangeEvent[]>([])
   const maxRecentChanges = 50
 

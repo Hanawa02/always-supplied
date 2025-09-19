@@ -112,12 +112,10 @@ import { realtimeSync } from '~/services/realtimeSync'
 
 interface Props {
   showSyncStatus?: boolean
-  compact?: boolean
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  showSyncStatus: true,
-  compact: false
+withDefaults(defineProps<Props>(), {
+  showSyncStatus: true
 })
 
 const { isAuthenticated } = useAuth()

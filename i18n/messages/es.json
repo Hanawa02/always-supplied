@@ -166,5 +166,20 @@
   "account_name": "Nombre",
   "account_language": "Idioma",
   "account_sync_status": "Estado de Sincronización",
-  "account_sign_out": "Cerrar Sesión"
+  "account_sign_out": "Cerrar Sesión",
+  "auth_callback_processing": "Procesando autenticación...",
+  "auth_register_title": "Crear Cuenta",
+  "auth_register_subtitle": "Únete a Always Supplied para comenzar",
+  "auth_full_name_label": "Nombre Completo",
+  "auth_full_name_placeholder": "Ingresa tu nombre completo",
+  "auth_password_requirements": "La contraseña debe tener al menos 6 caracteres",
+  "auth_confirm_password_label": "Confirmar Contraseña",
+  "auth_confirm_password_placeholder": "Confirma tu contraseña",
+  "auth_accept_terms_start": "Acepto los",
+  "auth_terms_of_service": "Términos de Servicio",
+  "auth_accept_terms_and": "y la",
+  "auth_privacy_policy": "Política de Privacidad",
+  "auth_registration_success": "¡Cuenta creada exitosamente! Por favor verifica tu correo electrónico.",
+  "auth_create_account": "Crear Cuenta",
+  "auth_have_account": "¿Ya tienes una cuenta?"
 }

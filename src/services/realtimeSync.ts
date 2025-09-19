@@ -32,14 +32,6 @@ class RealtimeSyncService {
   private changeListeners: ((event: ChangeEvent) => void)[] = []
 
   constructor() {
-    // Monitor connection status
-    supabase.realtime.onMessage((message) => {
-      if (message.event === 'heartbeat') {
-        this.lastHeartbeat.value = new Date()
-        this.isConnected.value = true
-      }
-    })
-
     // Handle auth state changes
     supabase.auth.onAuthStateChange((event, session) => {
       if (session?.user) {
@@ -48,6 +40,35 @@ class RealtimeSyncService {
         this.unsubscribeAll()
       }
     })
+
+    // Monitor realtime connection status
+    this.initializeConnectionMonitoring()
+  }
+
+  private initializeConnectionMonitoring() {
+    // Create a heartbeat channel to monitor connection status
+    const heartbeatChannel = supabase.channel('heartbeat-monitor')
+
+    heartbeatChannel.subscribe((status, err) => {
+      switch (status) {
+        case 'SUBSCRIBED':
+          this.isConnected.value = true
+          this.lastHeartbeat.value = new Date()
+          break
+        case 'CHANNEL_ERROR':
+          this.isConnected.value = false
+          if (err) {
+            this.errors.value.push(`Connection error: ${err.message || 'Unknown error'}`)
+          }
+          break
+        case 'CLOSED':
+          this.isConnected.value = false
+          break
+      }
+    })
+
+    // Store reference for cleanup
+    this.channels.set('heartbeat-monitor', heartbeatChannel)
   }
 
   get status(): RealtimeStatus {

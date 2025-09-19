@@ -11,7 +11,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import { Badge } from '~/components/ui/badge'
+import { Badge, type BadgeVariants } from '~/components/ui/badge'
 import { type Role,usePermissions } from '~/composables/usePermissions'
 
 interface Props {
@@ -45,16 +45,16 @@ const roleIcon = computed(() => {
   return iconMap[props.role] || null
 })
 
-const badgeVariant = computed(() => {
+const badgeVariant = computed<BadgeVariants['variant']>(() => {
   if (!roleInfo.value) return 'secondary'
 
-  const variantMap = {
+  const variantMap: Record<string, BadgeVariants['variant']> = {
     blue: 'default',
-    green: 'success',
+    green: 'default',
     gray: 'secondary'
   }
 
-  return variantMap[roleInfo.value.color as keyof typeof variantMap] || 'secondary'
+  return variantMap[roleInfo.value.color] || 'secondary'
 })
 
 const badgeClass = computed(() => {

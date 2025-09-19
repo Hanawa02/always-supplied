@@ -1,17 +1,14 @@
-import { computed, ref, watch } from 'vue'
+import { computed, watch } from 'vue'
 
 import { useAuth } from '~/composables/useAuth'
 import { useCloudSync } from '~/composables/useCloudSync'
 import { useSuppliedBuildings } from '~/composables/useSuppliedBuildings'
-import type { Building } from '~/types'
 
 export function useCloudBuildings() {
   const { isAuthenticated } = useAuth()
   const { suppliedBuildings: localBuildings } = useSuppliedBuildings()
   const {
     syncStatus,
-    syncBuildingToCloud,
-    deleteBuildingFromCloud,
     syncWithCloud,
     performInitialSync
   } = useCloudSync()
@@ -29,7 +26,7 @@ export function useCloudBuildings() {
   })
 
   // Building operations with cloud sync
-  async function createBuilding(building: any) {
+  async function createBuilding(building: { name: string; description?: string }) {
     // TODO: Implement cloud-aware building creation
     const { createSuppliedBuilding } = useSuppliedBuildings()
     const newBuilding = await createSuppliedBuilding({
@@ -43,7 +40,7 @@ export function useCloudBuildings() {
     return newBuilding
   }
 
-  async function updateBuilding(id: string, updates: any) {
+  async function updateBuilding(id: string, updates: { name?: string; description?: string }) {
     // TODO: Implement cloud-aware building updates
     const { updateSuppliedBuilding } = useSuppliedBuildings()
 
@@ -72,12 +69,12 @@ export function useCloudBuildings() {
   }
 
   // Supply item operations with cloud sync (TODO: Implement when supply/buying item cloud sync is ready)
-  async function createSupplyItem(buildingId: string, item: any) {
+  async function createSupplyItem(buildingId: string, item: Record<string, unknown>) {
     console.log('Supply item cloud sync not yet implemented:', buildingId, item)
     return null
   }
 
-  async function updateSupplyItem(buildingId: string, itemId: string, updates: any) {
+  async function updateSupplyItem(buildingId: string, itemId: string, updates: Record<string, unknown>) {
     console.log('Supply item cloud sync not yet implemented:', buildingId, itemId, updates)
     return null
   }
@@ -88,12 +85,12 @@ export function useCloudBuildings() {
   }
 
   // Buying item operations with cloud sync (TODO: Implement when supply/buying item cloud sync is ready)
-  async function createBuyingItem(buildingId: string, item: any) {
+  async function createBuyingItem(buildingId: string, item: Record<string, unknown>) {
     console.log('Buying item cloud sync not yet implemented:', buildingId, item)
     return null
   }
 
-  async function updateBuyingItem(buildingId: string, itemId: string, updates: any) {
+  async function updateBuyingItem(buildingId: string, itemId: string, updates: Record<string, unknown>) {
     console.log('Buying item cloud sync not yet implemented:', buildingId, itemId, updates)
     return null
   }

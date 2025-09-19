@@ -183,7 +183,7 @@ const viewSupplies = (building: SuppliedBuilding) => {
   // Navigate to supply configuration with building filter
   router.push({
     name: "SupplyConfiguration",
-    query: { buildingId: building.id },
+    params: { buildingId: building.id },
   })
 }
 

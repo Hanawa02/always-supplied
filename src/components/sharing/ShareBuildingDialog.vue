@@ -30,7 +30,11 @@
             <Label for="maxUses">{{ m.sharing_max_uses_label() }}</Label>
             <Input
               id="maxUses"
-              v-model.number="shareOptions.maxUses"
+              :value="shareOptions.maxUses?.toString() || ''"
+              @input="(e: Event) => {
+                const target = e.target as HTMLInputElement
+                shareOptions.maxUses = target.value ? Number(target.value) : null
+              }"
               type="number"
               min="1"
               max="100"
@@ -125,7 +129,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue'
+import { reactive, ref, watch } from 'vue'
 
 import { Button } from '~/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '~/components/ui/dialog'
