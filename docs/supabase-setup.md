@@ -63,27 +63,78 @@ VITE_SUPABASE_ANON_KEY=sb_publishable_[YOUR-KEY]
 
 ## 4. Setup Google OAuth (Optional but Recommended)
 
+### Step 1: Create Google Cloud Project
+
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select existing one
-3. Enable the Google+ API
-4. Go to "Credentials" > "Create Credentials" > "OAuth 2.0 Client IDs"
-5. Configure OAuth consent screen if prompted
-6. Choose "Web application"
-7. Add authorized redirect URIs:
-   - For development: `https://your-project.supabase.co/auth/v1/callback`
-   - For production: Add your production domain
-8. Copy the **Client ID** and add to your `.env.local`:
+2. Create a new project or select an existing one
+3. Make sure billing is enabled (OAuth is free, but billing account is required)
+
+### Step 2: Configure OAuth Consent Screen
+
+1. In the left sidebar, go to **APIs & Services** > **OAuth consent screen**
+2. Choose **External** user type (unless you have Google Workspace)
+3. Fill in the required fields:
+   - **App name**: Always Supplied
+   - **User support email**: Your email
+   - **Developer contact information**: Your email
+4. Add scopes (click "Add or Remove Scopes"):
+   - `openid`
+   - `email`
+   - `profile`
+5. Save and continue through test users (you can add test emails if needed)
+6. Submit for review (not needed for testing with up to 100 users)
+
+### Step 3: Create OAuth 2.0 Credentials
+
+1. Go to **APIs & Services** > **Credentials**
+2. Click **+ Create Credentials** > **OAuth client ID**
+3. Choose **Web application** as the application type
+4. Name it (e.g., "Always Supplied Web")
+5. Add **Authorized redirect URIs**:
+   ```
+   https://[YOUR-PROJECT-REF].supabase.co/auth/v1/callback
+   ```
+   For local development, also add:
+   ```
+   http://localhost:3000/auth/callback
+   ```
+6. Click **Create**
+7. Copy the **Client ID** and **Client Secret**
+
+### Step 4: Add to Environment Variables
+
+Add the Client ID to your `.env.local`:
 
 ```env
 VITE_GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
 ```
 
+Note: The Client Secret will be added in Supabase dashboard, not in your code.
+
 ## 5. Configure Supabase Auth
 
-1. In your Supabase dashboard, go to "Authentication" > "Providers"
-2. Enable "Google" provider
-3. Paste your Google Client ID and Client Secret
-4. Save configuration
+### Enable Google Provider in Supabase
+
+1. In your Supabase dashboard, go to **Authentication** > **Providers**
+2. Find **Google** in the list and click to expand
+3. Toggle **Enable Google provider** to ON
+4. Fill in the fields:
+   - **Client ID**: Paste from Google Cloud Console
+   - **Client Secret**: Paste from Google Cloud Console
+   - **Authorized Client IDs** (optional): Leave empty for now
+5. The **Redirect URL** shown here should match what you added in Google Console:
+   ```
+   https://[YOUR-PROJECT-REF].supabase.co/auth/v1/callback
+   ```
+6. Click **Save**
+
+### Configure Email Provider (Already Enabled)
+
+1. Email authentication should be enabled by default
+2. Optionally configure:
+   - **Enable email confirmations**: Recommended for production
+   - **Enable double opt-in**: For extra security
+   - Go to **Authentication** > **Email Templates** to customize emails
 
 ## 6. Run Database Migrations
 
