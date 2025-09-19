@@ -138,38 +138,80 @@ Note: The Client Secret will be added in Supabase dashboard, not in your code.
 
 ## 6. Run Database Migrations
 
-The project includes pre-written migrations in the `supabase/migrations` folder:
+The project includes pre-written migrations in the `supabase/migrations` folder. Choose one of these methods:
 
-### Using Supabase CLI (Recommended):
+### Option 1: Using npx (No Installation Required)
 
-1. Install the Supabase CLI:
+This is the simplest method if you're having issues with global installation:
+
 ```bash
-npm install -g supabase
+# Login to Supabase (creates access token)
+npx supabase login
+
+# Link your project (get project ref from dashboard URL)
+npx supabase link --project-ref [YOUR-PROJECT-REF]
+
+# Push migrations to your database
+npx supabase db push
 ```
 
-2. Login to Supabase:
+### Option 2: Install as Project Dependency
+
+If you prefer to install locally in your project:
+
 ```bash
-supabase login
+# Install as dev dependency
+npm install --save-dev supabase
+
+# Run commands with npx
+npx supabase login
+npx supabase link --project-ref [YOUR-PROJECT-REF]
+npx supabase db push
 ```
 
-3. Link your project (get project ref from dashboard URL):
+### Option 3: Platform-Specific Installation
+
+For Windows (using Scoop):
 ```bash
-supabase link --project-ref [YOUR-PROJECT-REF]
+# Add Supabase bucket
+scoop bucket add supabase https://github.com/supabase/scoop-bucket.git
+# Install Supabase CLI
+scoop install supabase
 ```
 
-4. Run the migrations:
+For macOS/Linux (using Homebrew):
 ```bash
-supabase db push
+brew install supabase/tap/supabase
 ```
 
-### Manual Migration (Alternative):
+### Option 4: Manual Migration via Dashboard
 
-1. Go to your Supabase dashboard
-2. Navigate to "SQL Editor"
-3. Run each migration file in order:
-   - `001_initial_cloud_schema.sql`
-   - `002_rls_policies.sql`
-   - `003_functions_and_triggers.sql`
+If CLI methods aren't working, use the Supabase dashboard:
+
+1. Go to your Supabase project dashboard
+2. Navigate to **SQL Editor**
+3. Click **New Query**
+4. Copy and paste the contents of each migration file in order:
+   - First: `supabase/migrations/001_initial_cloud_schema.sql`
+   - Second: `supabase/migrations/002_rls_policies.sql`
+   - Third: `supabase/migrations/003_functions_and_triggers.sql`
+5. Run each query by clicking **Run** or pressing `Ctrl+Enter`
+6. Verify success - you should see "Success. No rows returned"
+
+### Troubleshooting Migration Issues
+
+**"command not found" after global install:**
+- Use `npx supabase` instead of just `supabase`
+- Or install as a project dependency
+
+**"Permission denied" errors:**
+- On Windows, run terminal as Administrator
+- On macOS/Linux, you may need `sudo` for global installs (not recommended)
+
+**"Docker not found" errors:**
+- The Supabase CLI uses Docker for local development
+- For cloud migrations only, Docker is not required
+- Use the dashboard method if you don't have Docker
 
 ## 7. Enable Row Level Security (RLS)
 
