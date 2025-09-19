@@ -73,16 +73,16 @@ VITE_SUPABASE_ANON_KEY=sb_publishable_[YOUR-KEY]
 
 1. In the left sidebar, go to **APIs & Services** > **OAuth consent screen**
 2. Choose **External** user type (unless you have Google Workspace)
-3. Fill in the required fields:
+3. Fill in the required fields only:
    - **App name**: Always Supplied
    - **User support email**: Your email
    - **Developer contact information**: Your email
-4. Add scopes (click "Add or Remove Scopes"):
-   - `openid`
-   - `email`
-   - `profile`
-5. Save and continue through test users (you can add test emails if needed)
-6. Submit for review (not needed for testing with up to 100 users)
+4. Click **Save and Continue**
+5. **Scopes**: You can skip this (just click Save and Continue) - Google will use default scopes
+6. **Test users**: Optional - add test emails if you want to limit access during development
+7. Click **Save and Continue** to finish
+
+Note: The consent screen configuration has been simplified. You don't need to manually add scopes - the basic profile and email scopes are included by default when using OAuth.
 
 ### Step 3: Create OAuth 2.0 Credentials
 
