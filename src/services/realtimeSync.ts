@@ -251,7 +251,7 @@ class RealtimeSyncService {
   // Sync building to local storage
   private async syncBuildingToLocal(cloudBuilding: CloudBuilding): Promise<void> {
     // Import here to avoid circular dependencies
-    const { updateBuilding, addBuilding, getBuilding } = await import('~/composables/useBuildings')
+    const { updateSuppliedBuilding, createSuppliedBuilding } = await import('~/composables/useSuppliedBuildings')
 
     const localBuilding: Building = {
       id: cloudBuilding.local_id,
@@ -277,13 +277,14 @@ class RealtimeSyncService {
 
   // Remove building from local storage
   private async removeBuildingFromLocal(cloudBuilding: CloudBuilding): Promise<void> {
-    const { removeBuilding } = await import('~/composables/useBuildings')
-    removeBuilding(cloudBuilding.local_id)
+    const { deleteSuppliedBuilding } = await import('~/composables/useSuppliedBuildings')
+    deleteSuppliedBuilding(cloudBuilding.local_id)
   }
 
   // Sync supply item to local storage
   private async syncSupplyItemToLocal(cloudItem: CloudSupplyItem, buildingLocalId: string): Promise<void> {
-    const { updateSupplyItem, addSupplyItem, getSupplyItem } = await import('~/composables/useBuildings')
+    // TODO: Integrate with supply items when cloud sync is fully implemented
+    // const { updateSupplyItem, addSupplyItem, getSupplyItem } = await import('~/composables/useSupplyItems')
 
     const localItem: SupplyItem = {
       id: cloudItem.local_id,
@@ -297,23 +298,20 @@ class RealtimeSyncService {
       createdAt: cloudItem.created_at
     }
 
-    const existing = getSupplyItem(buildingLocalId, cloudItem.local_id)
-    if (existing) {
-      updateSupplyItem(buildingLocalId, cloudItem.local_id, localItem)
-    } else {
-      addSupplyItem(buildingLocalId, localItem)
-    }
+    // TODO: Implement supply item sync when cloud integration is complete
+    console.log('Supply item sync not yet implemented:', localItem)
   }
 
   // Remove supply item from local storage
   private async removeSupplyItemFromLocal(cloudItem: CloudSupplyItem, buildingLocalId: string): Promise<void> {
-    const { removeSupplyItem } = await import('~/composables/useBuildings')
-    removeSupplyItem(buildingLocalId, cloudItem.local_id)
+    // TODO: Implement supply item removal when cloud integration is complete
+    console.log('Supply item removal not yet implemented:', cloudItem.local_id)
   }
 
   // Sync buying item to local storage
   private async syncBuyingItemToLocal(cloudItem: CloudBuyingItem, buildingLocalId: string): Promise<void> {
-    const { updateBuyingItem, addBuyingItem, getBuyingItem } = await import('~/composables/useBuildings')
+    // TODO: Integrate with buying items when cloud sync is fully implemented
+    // const { updateBuyingItem, addBuyingItem, getBuyingItem } = await import('~/composables/useBuyingItems')
 
     const localItem: BuyingItem = {
       id: cloudItem.local_id,
@@ -328,18 +326,14 @@ class RealtimeSyncService {
       updatedAt: cloudItem.updated_at
     }
 
-    const existing = getBuyingItem(buildingLocalId, cloudItem.local_id)
-    if (existing) {
-      updateBuyingItem(buildingLocalId, cloudItem.local_id, localItem)
-    } else {
-      addBuyingItem(buildingLocalId, localItem)
-    }
+    // TODO: Implement buying item sync when cloud integration is complete
+    console.log('Buying item sync not yet implemented:', localItem)
   }
 
   // Remove buying item from local storage
   private async removeBuyingItemFromLocal(cloudItem: CloudBuyingItem, buildingLocalId: string): Promise<void> {
-    const { removeBuyingItem } = await import('~/composables/useBuildings')
-    removeBuyingItem(buildingLocalId, cloudItem.local_id)
+    // TODO: Implement buying item removal when cloud integration is complete
+    console.log('Buying item removal not yet implemented:', cloudItem.local_id)
   }
 
   // Add error to list

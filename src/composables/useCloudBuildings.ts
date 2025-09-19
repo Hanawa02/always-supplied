@@ -1,13 +1,13 @@
 import { computed, ref, watch } from 'vue'
 
 import { useAuth } from '~/composables/useAuth'
-import { useBuildings } from '~/composables/useBuildings'
+import { useSuppliedBuildings } from '~/composables/useSuppliedBuildings'
 import { useCloudSync } from '~/composables/useCloudSync'
 import type { Building } from '~/types'
 
 export function useCloudBuildings() {
   const { isAuthenticated } = useAuth()
-  const { buildings: localBuildings } = useBuildings()
+  const { suppliedBuildings: localBuildings } = useSuppliedBuildings()
   const {
     syncStatus,
     syncBuildingToCloud,
@@ -29,130 +29,78 @@ export function useCloudBuildings() {
   })
 
   // Building operations with cloud sync
-  async function createBuilding(building: Omit<Building, 'id' | 'createdAt' | 'updatedAt'>) {
-    // Import here to avoid circular dependency
-    const { addBuilding } = await import('~/composables/useBuildings')
-    const newBuilding = addBuilding(building)
+  async function createBuilding(building: any) {
+    // TODO: Implement cloud-aware building creation
+    const { createSuppliedBuilding } = await import('~/composables/useSuppliedBuildings')
+    const newBuilding = await createSuppliedBuilding({
+      name: building.name,
+      description: building.description
+    })
 
-    // Sync to cloud
-    if (isAuthenticated.value) {
-      await syncBuildingToCloud(newBuilding)
-    }
+    // TODO: Sync to cloud when integration is complete
+    console.log('Cloud sync for new building will be added:', newBuilding.id)
 
     return newBuilding
   }
 
-  async function updateBuilding(id: string, updates: Partial<Building>) {
-    // Import here to avoid circular dependency
-    const { updateBuilding: updateLocalBuilding, getBuilding } = await import('~/composables/useBuildings')
+  async function updateBuilding(id: string, updates: any) {
+    // TODO: Implement cloud-aware building updates
+    const { updateSuppliedBuilding } = await import('~/composables/useSuppliedBuildings')
 
-    const updated = updateLocalBuilding(id, updates)
-    if (!updated) return null
+    const updated = await updateSuppliedBuilding({
+      id,
+      name: updates.name,
+      description: updates.description
+    })
 
-    const building = getBuilding(id)
-    if (building && isAuthenticated.value) {
-      await syncBuildingToCloud(building)
-    }
+    // TODO: Sync to cloud when integration is complete
+    console.log('Cloud sync for updated building will be added:', id)
 
     return updated
   }
 
   async function deleteBuilding(id: string) {
-    // Import here to avoid circular dependency
-    const { removeBuilding } = await import('~/composables/useBuildings')
+    // TODO: Implement cloud-aware building deletion
+    const { deleteSuppliedBuilding } = await import('~/composables/useSuppliedBuildings')
 
-    const removed = removeBuilding(id)
-    if (removed && isAuthenticated.value) {
-      await deleteBuildingFromCloud(id)
-    }
+    await deleteSuppliedBuilding(id)
 
-    return removed
+    // TODO: Sync to cloud when integration is complete
+    console.log('Cloud sync for deleted building will be added:', id)
+
+    return true
   }
 
-  // Supply item operations with cloud sync
+  // Supply item operations with cloud sync (TODO: Implement when supply/buying item cloud sync is ready)
   async function createSupplyItem(buildingId: string, item: any) {
-    // Import here to avoid circular dependency
-    const { addSupplyItem } = await import('~/composables/useBuildings')
-    const newItem = addSupplyItem(buildingId, item)
-
-    if (newItem && isAuthenticated.value) {
-      const { syncSupplyItemToCloud } = await import('~/composables/useCloudSync')
-      await syncSupplyItemToCloud(newItem, buildingId)
-    }
-
-    return newItem
+    console.log('Supply item cloud sync not yet implemented:', buildingId, item)
+    return null
   }
 
   async function updateSupplyItem(buildingId: string, itemId: string, updates: any) {
-    // Import here to avoid circular dependency
-    const { updateSupplyItem: updateLocalSupplyItem, getSupplyItem } = await import('~/composables/useBuildings')
-
-    const updated = updateLocalSupplyItem(buildingId, itemId, updates)
-    if (!updated) return null
-
-    const item = getSupplyItem(buildingId, itemId)
-    if (item && isAuthenticated.value) {
-      const { syncSupplyItemToCloud } = await import('~/composables/useCloudSync')
-      await syncSupplyItemToCloud(item, buildingId)
-    }
-
-    return updated
+    console.log('Supply item cloud sync not yet implemented:', buildingId, itemId, updates)
+    return null
   }
 
   async function deleteSupplyItem(buildingId: string, itemId: string) {
-    // Import here to avoid circular dependency
-    const { removeSupplyItem } = await import('~/composables/useBuildings')
-
-    const removed = removeSupplyItem(buildingId, itemId)
-    if (removed && isAuthenticated.value) {
-      const { deleteSupplyItemFromCloud } = await import('~/composables/useCloudSync')
-      await deleteSupplyItemFromCloud(itemId, buildingId)
-    }
-
-    return removed
+    console.log('Supply item cloud sync not yet implemented:', buildingId, itemId)
+    return null
   }
 
-  // Buying item operations with cloud sync
+  // Buying item operations with cloud sync (TODO: Implement when supply/buying item cloud sync is ready)
   async function createBuyingItem(buildingId: string, item: any) {
-    // Import here to avoid circular dependency
-    const { addBuyingItem } = await import('~/composables/useBuildings')
-    const newItem = addBuyingItem(buildingId, item)
-
-    if (newItem && isAuthenticated.value) {
-      const { syncBuyingItemToCloud } = await import('~/composables/useCloudSync')
-      await syncBuyingItemToCloud(newItem, buildingId)
-    }
-
-    return newItem
+    console.log('Buying item cloud sync not yet implemented:', buildingId, item)
+    return null
   }
 
   async function updateBuyingItem(buildingId: string, itemId: string, updates: any) {
-    // Import here to avoid circular dependency
-    const { updateBuyingItem: updateLocalBuyingItem, getBuyingItem } = await import('~/composables/useBuildings')
-
-    const updated = updateLocalBuyingItem(buildingId, itemId, updates)
-    if (!updated) return null
-
-    const item = getBuyingItem(buildingId, itemId)
-    if (item && isAuthenticated.value) {
-      const { syncBuyingItemToCloud } = await import('~/composables/useCloudSync')
-      await syncBuyingItemToCloud(item, buildingId)
-    }
-
-    return updated
+    console.log('Buying item cloud sync not yet implemented:', buildingId, itemId, updates)
+    return null
   }
 
   async function deleteBuyingItem(buildingId: string, itemId: string) {
-    // Import here to avoid circular dependency
-    const { removeBuyingItem } = await import('~/composables/useBuildings')
-
-    const removed = removeBuyingItem(buildingId, itemId)
-    if (removed && isAuthenticated.value) {
-      const { deleteBuyingItemFromCloud } = await import('~/composables/useCloudSync')
-      await deleteBuyingItemFromCloud(itemId, buildingId)
-    }
-
-    return removed
+    console.log('Buying item cloud sync not yet implemented:', buildingId, itemId)
+    return null
   }
 
   // Manual sync operations
