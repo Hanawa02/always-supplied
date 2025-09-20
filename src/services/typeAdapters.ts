@@ -3,14 +3,14 @@
  * Handles camelCase ↔ snake_case conversion and missing field mapping
  */
 
-import type { BuyingItem, SupplyItem } from '~/types'
-import type { Database } from '~/types/supabase'
-import type { SuppliedBuilding } from '~/types/suppliedBuilding'
+import type { BuyingItem, SupplyItem } from "~/types"
+import type { Database } from "~/types/supabase"
+import type { SuppliedBuilding } from "~/types/suppliedBuilding"
 
 // Cloud types from database
-type CloudBuilding = Database['public']['Tables']['cloud_buildings']['Row']
-type CloudSupplyItem = Database['public']['Tables']['cloud_supply_items']['Row']
-type CloudBuyingItem = Database['public']['Tables']['cloud_buying_items']['Row']
+type CloudBuilding = Database["public"]["Tables"]["cloud_buildings"]["Row"]
+type CloudSupplyItem = Database["public"]["Tables"]["cloud_supply_items"]["Row"]
+type CloudBuyingItem = Database["public"]["Tables"]["cloud_buying_items"]["Row"]
 
 // Extended cloud types with proper relations
 export interface CloudBuildingWithItems extends CloudBuilding {
@@ -21,7 +21,9 @@ export interface CloudBuildingWithItems extends CloudBuilding {
 /**
  * Converts SuppliedBuilding to CloudBuilding format
  */
-export function suppliedBuildingToCloudBuilding(building: SuppliedBuilding): Partial<CloudBuilding> {
+export function suppliedBuildingToCloudBuilding(
+  building: SuppliedBuilding,
+): Partial<CloudBuilding> {
   return {
     local_id: building.id,
     name: building.name,
@@ -29,7 +31,7 @@ export function suppliedBuildingToCloudBuilding(building: SuppliedBuilding): Par
     location: null, // Not available in SuppliedBuilding
     created_at: building.createdAt.toISOString(),
     updated_at: building.updatedAt.toISOString(),
-    synced_at: new Date().toISOString()
+    synced_at: new Date().toISOString(),
   }
 }
 
@@ -42,14 +44,17 @@ export function cloudBuildingToSuppliedBuilding(cloudBuilding: CloudBuilding): S
     name: cloudBuilding.name,
     description: cloudBuilding.description || undefined,
     createdAt: new Date(cloudBuilding.created_at),
-    updatedAt: new Date(cloudBuilding.updated_at)
+    updatedAt: new Date(cloudBuilding.updated_at),
   }
 }
 
 /**
  * Converts SupplyItem to CloudSupplyItem format
  */
-export function supplyItemToCloudSupplyItem(item: SupplyItem, buildingId: string): Partial<CloudSupplyItem> {
+export function supplyItemToCloudSupplyItem(
+  item: SupplyItem,
+  buildingId: string,
+): Partial<CloudSupplyItem> {
   return {
     local_id: item.id,
     building_id: buildingId,
@@ -66,7 +71,7 @@ export function supplyItemToCloudSupplyItem(item: SupplyItem, buildingId: string
     created_at: item.createdAt.toISOString(),
     updated_at: item.updatedAt.toISOString(),
     last_updated: item.updatedAt.toISOString(),
-    synced_at: new Date().toISOString()
+    synced_at: new Date().toISOString(),
   }
 }
 
@@ -85,14 +90,17 @@ export function cloudSupplyItemToSupplyItem(cloudItem: CloudSupplyItem): SupplyI
     preferredBrands: cloudItem.preferred_brands || undefined,
     buildingId: cloudItem.building_id,
     createdAt: new Date(cloudItem.created_at),
-    updatedAt: new Date(cloudItem.last_updated || cloudItem.updated_at)
+    updatedAt: new Date(cloudItem.last_updated || cloudItem.updated_at),
   }
 }
 
 /**
  * Converts BuyingItem to CloudBuyingItem format
  */
-export function buyingItemToCloudBuyingItem(item: BuyingItem, buildingId: string): Partial<CloudBuyingItem> {
+export function buyingItemToCloudBuyingItem(
+  item: BuyingItem,
+  buildingId: string,
+): Partial<CloudBuyingItem> {
   return {
     local_id: item.id,
     building_id: buildingId,
@@ -105,7 +113,7 @@ export function buyingItemToCloudBuyingItem(item: BuyingItem, buildingId: string
     shopping_hint: item.shoppingHint || null,
     preferred_brands: item.preferredBrands || null,
     notes: item.notes || null,
-    urgency: 'medium', // Default value, not available in BuyingItem
+    urgency: "medium", // Default value, not available in BuyingItem
     is_bought: item.isBought,
     is_purchased: item.isBought, // Map isBought to is_purchased
     added_at: item.addedAt.toISOString(),
@@ -113,7 +121,7 @@ export function buyingItemToCloudBuyingItem(item: BuyingItem, buildingId: string
     purchased_date: item.boughtAt?.toISOString() || null,
     created_at: item.addedAt.toISOString(),
     updated_at: new Date().toISOString(),
-    synced_at: new Date().toISOString()
+    synced_at: new Date().toISOString(),
   }
 }
 
@@ -134,33 +142,46 @@ export function cloudBuyingItemToBuyingItem(cloudItem: CloudBuyingItem): BuyingI
     preferredBrands: cloudItem.preferred_brands || undefined,
     isBought: cloudItem.is_purchased || cloudItem.is_bought || false,
     addedAt: new Date(cloudItem.added_at || cloudItem.created_at),
-    boughtAt: cloudItem.purchased_date ? new Date(cloudItem.purchased_date) :
-              (cloudItem.bought_at ? new Date(cloudItem.bought_at) : undefined),
-    notes: cloudItem.notes || undefined
+    boughtAt: cloudItem.purchased_date
+      ? new Date(cloudItem.purchased_date)
+      : cloudItem.bought_at
+        ? new Date(cloudItem.bought_at)
+        : undefined,
+    notes: cloudItem.notes || undefined,
   }
 }
 
 /**
  * Batch conversion functions for arrays
  */
-export function convertSuppliedBuildingsToCloud(buildings: SuppliedBuilding[]): Partial<CloudBuilding>[] {
+export function convertSuppliedBuildingsToCloud(
+  buildings: SuppliedBuilding[],
+): Partial<CloudBuilding>[] {
   return buildings.map(suppliedBuildingToCloudBuilding)
 }
 
-export function convertCloudBuildingsToSupplied(cloudBuildings: CloudBuilding[]): SuppliedBuilding[] {
+export function convertCloudBuildingsToSupplied(
+  cloudBuildings: CloudBuilding[],
+): SuppliedBuilding[] {
   return cloudBuildings.map(cloudBuildingToSuppliedBuilding)
 }
 
-export function convertSupplyItemsToCloud(items: SupplyItem[], buildingId: string): Partial<CloudSupplyItem>[] {
-  return items.map(item => supplyItemToCloudSupplyItem(item, buildingId))
+export function convertSupplyItemsToCloud(
+  items: SupplyItem[],
+  buildingId: string,
+): Partial<CloudSupplyItem>[] {
+  return items.map((item) => supplyItemToCloudSupplyItem(item, buildingId))
 }
 
 export function convertCloudSupplyItemsToLocal(cloudItems: CloudSupplyItem[]): SupplyItem[] {
   return cloudItems.map(cloudSupplyItemToSupplyItem)
 }
 
-export function convertBuyingItemsToCloud(items: BuyingItem[], buildingId: string): Partial<CloudBuyingItem>[] {
-  return items.map(item => buyingItemToCloudBuyingItem(item, buildingId))
+export function convertBuyingItemsToCloud(
+  items: BuyingItem[],
+  buildingId: string,
+): Partial<CloudBuyingItem>[] {
+  return items.map((item) => buyingItemToCloudBuyingItem(item, buildingId))
 }
 
 export function convertCloudBuyingItemsToLocal(cloudItems: CloudBuyingItem[]): BuyingItem[] {
@@ -175,29 +196,33 @@ export function validateCloudBuilding(building: Partial<CloudBuilding>): boolean
 }
 
 export function validateCloudSupplyItem(item: Partial<CloudSupplyItem>): boolean {
-  return !!(item.name && item.building_id && item.local_id && typeof item.quantity === 'number')
+  return !!(item.name && item.building_id && item.local_id && typeof item.quantity === "number")
 }
 
 export function validateCloudBuyingItem(item: Partial<CloudBuyingItem>): boolean {
-  return !!(item.name && item.building_id && item.local_id && typeof item.quantity === 'number')
+  return !!(item.name && item.building_id && item.local_id && typeof item.quantity === "number")
 }
 
 /**
  * Utility functions for handling sync metadata
  */
-export function addSyncTimestamp<T extends Record<string, any>>(data: T): T & { synced_at: string } {
+export function addSyncTimestamp<T extends Record<string, unknown>>(
+  data: T,
+): T & { synced_at: string } {
   return {
     ...data,
-    synced_at: new Date().toISOString()
+    synced_at: new Date().toISOString(),
   }
 }
 
-export function updateSyncTimestamp<T extends Record<string, any>>(data: T): T & { updated_at: string; synced_at: string } {
+export function updateSyncTimestamp<T extends Record<string, unknown>>(
+  data: T,
+): T & { updated_at: string; synced_at: string } {
   const now = new Date().toISOString()
   return {
     ...data,
     updated_at: now,
-    synced_at: now
+    synced_at: now,
   }
 }
 
@@ -220,7 +245,7 @@ export function safeToDate(dateString: string | null | undefined): Date | undefi
 export function safeToISOString(date: Date | string | null | undefined): string | null {
   if (!date) return null
   try {
-    if (typeof date === 'string') {
+    if (typeof date === "string") {
       return new Date(date).toISOString()
     }
     return date.toISOString()

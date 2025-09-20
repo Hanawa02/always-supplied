@@ -15,21 +15,21 @@
       <Card class="mt-8">
         <CardContent class="p-6">
           <form @submit.prevent="handleSubmit" class="space-y-6">
-            <!-- Full Name Field -->
+            <!-- Username Field -->
             <div>
-              <Label for="fullName">{{ m.auth_full_name_label() }}</Label>
+              <Label for="username">{{ m.auth_username_label() }}</Label>
               <Input
-                id="fullName"
-                v-model="form.fullName"
+                id="username"
+                v-model="form.username"
                 type="text"
-                autocomplete="name"
+                autocomplete="username"
                 required
-                :placeholder="m.auth_full_name_placeholder()"
+                :placeholder="m.auth_username_placeholder()"
                 :disabled="isLoading"
                 class="mt-1"
               />
-              <p v-if="errors.fullName" class="mt-1 text-sm text-red-600">
-                {{ errors.fullName }}
+              <p v-if="errors.username" class="mt-1 text-sm text-red-600">
+                {{ errors.username }}
               </p>
             </div>
 
@@ -70,7 +70,10 @@
                   class="absolute inset-y-0 right-0 pr-3 flex items-center"
                   :disabled="isLoading"
                 >
-                  <i :class="showPassword ? 'i-mdi:eye-off' : 'i-mdi:eye'" class="text-gray-400 hover:text-gray-600"></i>
+                  <i
+                    :class="showPassword ? 'i-mdi:eye-off' : 'i-mdi:eye'"
+                    class="text-gray-400 hover:text-gray-600"
+                  ></i>
                 </button>
               </div>
               <p v-if="errors.password" class="mt-1 text-sm text-red-600">
@@ -100,7 +103,10 @@
                   class="absolute inset-y-0 right-0 pr-3 flex items-center"
                   :disabled="isLoading"
                 >
-                  <i :class="showConfirmPassword ? 'i-mdi:eye-off' : 'i-mdi:eye'" class="text-gray-400 hover:text-gray-600"></i>
+                  <i
+                    :class="showConfirmPassword ? 'i-mdi:eye-off' : 'i-mdi:eye'"
+                    class="text-gray-400 hover:text-gray-600"
+                  ></i>
                 </button>
               </div>
               <p v-if="errors.confirmPassword" class="mt-1 text-sm text-red-600">
@@ -110,12 +116,7 @@
 
             <!-- Terms and Conditions -->
             <div class="flex items-start">
-              <Checkbox
-                id="terms"
-                v-model="form.acceptTerms"
-                :disabled="isLoading"
-                class="mt-1"
-              />
+              <Checkbox id="terms" v-model="form.acceptTerms" :disabled="isLoading" class="mt-1" />
               <Label for="terms" class="ml-2 text-sm">
                 {{ m.auth_accept_terms_start() }}
                 <a href="/terms" target="_blank" class="text-primary-600 hover:text-primary-500">
@@ -137,16 +138,15 @@
             </div>
 
             <!-- Success Message -->
-            <div v-if="registrationSuccess" class="p-3 rounded-md bg-green-50 border border-green-200">
+            <div
+              v-if="registrationSuccess"
+              class="p-3 rounded-md bg-green-50 border border-green-200"
+            >
               <p class="text-sm text-green-600">{{ m.auth_registration_success() }}</p>
             </div>
 
             <!-- Submit Button -->
-            <Button
-              type="submit"
-              class="w-full"
-              :disabled="isLoading || !isFormValid"
-            >
+            <Button type="submit" class="w-full" :disabled="isLoading || !isFormValid">
               <i v-if="isLoading" class="i-mdi:loading animate-spin mr-2"></i>
               {{ m.auth_create_account() }}
             </Button>
@@ -165,11 +165,7 @@
           </div>
 
           <!-- Google Sign In -->
-          <GoogleLoginButton
-            :loading="isLoading"
-            @click="handleGoogleSignIn"
-            class="mt-4"
-          />
+          <GoogleLoginButton :loading="isLoading" @click="handleGoogleSignIn" class="mt-4" />
 
           <!-- Sign In Link -->
           <div class="text-center mt-6">
@@ -190,18 +186,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, reactive, ref } from "vue"
+import { useRouter } from "vue-router"
 
-import GoogleLoginButton from '~/components/auth/GoogleLoginButton.vue'
-import { Button } from '~/components/ui/button'
-import { Card, CardContent } from '~/components/ui/card'
-import { Checkbox } from '~/components/ui/checkbox'
-import { Input } from '~/components/ui/input'
-import { Label } from '~/components/ui/label'
-import { toast } from '~/components/ui/toast'
-import { useAuth } from '~/composables/useAuth'
-import { useI18n } from '~/composables/useI18n'
+import GoogleLoginButton from "~/components/auth/GoogleLoginButton.vue"
+import { Button } from "~/components/ui/button"
+import { Card, CardContent } from "~/components/ui/card"
+import { Checkbox } from "~/components/ui/checkbox"
+import { Input } from "~/components/ui/input"
+import { Label } from "~/components/ui/label"
+import { toast } from "~/components/ui/toast"
+import { useAuth } from "~/composables/useAuth"
+import { useI18n } from "~/composables/useI18n"
 
 const { m } = useI18n()
 const { signUp, signInWithGoogle, isLoading } = useAuth()
@@ -209,30 +205,30 @@ const router = useRouter()
 
 // Form state
 const form = reactive({
-  fullName: '',
-  email: '',
-  password: '',
-  confirmPassword: '',
+  username: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
   acceptTerms: false,
 })
 
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
-const authError = ref('')
+const authError = ref("")
 const registrationSuccess = ref(false)
 
 const errors = reactive({
-  fullName: '',
-  email: '',
-  password: '',
-  confirmPassword: '',
-  acceptTerms: '',
+  username: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+  acceptTerms: "",
 })
 
 // Validation
 const isFormValid = computed(() => {
   return (
-    form.fullName.length > 0 &&
+    form.username.length > 0 &&
     form.email.length > 0 &&
     form.password.length >= 6 &&
     form.confirmPassword === form.password &&
@@ -259,12 +255,12 @@ const validateEmail = (email: string) => {
 
 // Clear errors when user types
 const clearErrors = () => {
-  errors.fullName = ''
-  errors.email = ''
-  errors.password = ''
-  errors.confirmPassword = ''
-  errors.acceptTerms = ''
-  authError.value = ''
+  errors.username = ""
+  errors.email = ""
+  errors.password = ""
+  errors.confirmPassword = ""
+  errors.acceptTerms = ""
+  authError.value = ""
 }
 
 // Handle form submission
@@ -272,58 +268,58 @@ const handleSubmit = async () => {
   clearErrors()
 
   // Validate form
-  if (form.fullName.trim().length < 2) {
-    errors.fullName = 'Full name must be at least 2 characters'
+  if (form.username.trim().length < 2) {
+    errors.username = "Username must be at least 2 characters"
     return
   }
 
   if (!validateEmail(form.email)) {
-    errors.email = 'Please enter a valid email address'
+    errors.email = "Please enter a valid email address"
     return
   }
 
   if (form.password.length < 6) {
-    errors.password = 'Password must be at least 6 characters'
+    errors.password = "Password must be at least 6 characters"
     return
   }
 
   if (getPasswordStrength(form.password) < 2) {
-    errors.password = 'Password is too weak. Include uppercase, lowercase, and numbers.'
+    errors.password = "Password is too weak. Include uppercase, lowercase, and numbers."
     return
   }
 
   if (form.password !== form.confirmPassword) {
-    errors.confirmPassword = 'Passwords do not match'
+    errors.confirmPassword = "Passwords do not match"
     return
   }
 
   if (!form.acceptTerms) {
-    errors.acceptTerms = 'You must accept the terms and conditions'
+    errors.acceptTerms = "You must accept the terms and conditions"
     return
   }
 
   // Attempt sign up
   const { data, error } = await signUp(form.email, form.password, {
-    fullName: form.fullName.trim(),
+    username: form.username.trim(),
   })
 
   if (error) {
     authError.value = error.message
     toast({
-      title: 'Registration Failed',
+      title: "Registration Failed",
       description: error.message,
-      variant: 'destructive',
+      variant: "destructive",
     })
   } else if (data.user) {
     registrationSuccess.value = true
     toast({
-      title: 'Account Created!',
-      description: 'Please check your email to verify your account.',
+      title: "Account Created!",
+      description: "Please check your email to verify your account.",
     })
 
     // Redirect to login page after a delay
     setTimeout(() => {
-      router.push('/auth/login')
+      router.push("/auth/login")
     }, 2000)
   }
 }
@@ -335,11 +331,12 @@ const handleGoogleSignIn = async () => {
   const { error } = await signInWithGoogle()
 
   if (error) {
+    console.error(error)
     authError.value = error.message
     toast({
-      title: 'Google Sign In Failed',
+      title: "Google Sign In Failed",
       description: error.message,
-      variant: 'destructive',
+      variant: "destructive",
     })
   }
   // Success handling will be done by auth callback

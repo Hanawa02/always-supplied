@@ -27,7 +27,7 @@ export class AuthService {
       const profileData: CreateUserProfile = {
         id: user.id,
         email: user.email,
-        full_name: user.user_metadata?.full_name || user.user_metadata?.name || null,
+        full_name: user.user_metadata?.username || user.user_metadata?.full_name || user.user_metadata?.name || null,
         avatar_url: user.user_metadata?.avatar_url || null,
         preferred_locale: 'en',
       }
@@ -185,21 +185,73 @@ export class AuthService {
    */
   static async handleAuthCallback(): Promise<{ user: User | null; error: string | null }> {
     try {
-      const { data, error } = await supabase.auth.getSession()
+      console.log('AuthService.handleAuthCallback started')
+
+      // Check URL for tokens first
+      const urlParams = new URLSearchParams(window.location.search)
+      const hasCode = urlParams.has('code')
+      const hasAccessToken = urlParams.has('access_token')
+      const hasError = urlParams.has('error')
+
+      console.log('URL params:', {
+        hasCode,
+        hasAccessToken,
+        hasError,
+        error: urlParams.get('error'),
+        errorDescription: urlParams.get('error_description')
+      })
+
+      if (hasError) {
+        const error = urlParams.get('error') || 'OAuth error'
+        const description = urlParams.get('error_description') || 'Unknown OAuth error'
+        console.error('OAuth error in URL:', error, description)
+        return { user: null, error: `${error}: ${description}` }
+      }
+
+      if (!hasCode && !hasAccessToken) {
+        console.log('No OAuth tokens found in URL')
+        return { user: null, error: 'No authentication tokens found' }
+      }
+
+      // Wait a moment for Supabase to process the URL
+      await new Promise(resolve => setTimeout(resolve, 500))
+
+      // Get the current session after Supabase has processed the OAuth tokens
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession()
+
+      if (sessionError) {
+        console.error('Auth callback session error:', sessionError)
+        return { user: null, error: sessionError.message }
+      }
+
+      if (sessionData.session?.user) {
+        console.log('Auth callback success - user found in session')
+        // Ensure user profile exists
+        await this.ensureUserProfile(sessionData.session.user)
+        return { user: sessionData.session.user, error: null }
+      }
+
+      console.log('No session found, checking for current user...')
+
+      // If no session, try getUser() which might work for some OAuth flows
+      const { data, error } = await supabase.auth.getUser()
 
       if (error) {
+        console.error('Auth callback getUser error:', error)
         return { user: null, error: error.message }
       }
 
-      if (!data.session?.user) {
-        return { user: null, error: 'No user found in session' }
+      if (data.user) {
+        console.log('Auth callback success - user found via getUser')
+        // Ensure user profile exists
+        await this.ensureUserProfile(data.user)
+        return { user: data.user, error: null }
       }
 
-      // Ensure user profile exists
-      await this.ensureUserProfile(data.session.user)
-
-      return { user: data.session.user, error: null }
+      console.log('No user found in auth callback')
+      return { user: null, error: 'No user found in session' }
     } catch (error) {
+      console.error('Auth callback exception:', error)
       return { user: null, error: error instanceof Error ? error.message : 'Unknown error' }
     }
   }

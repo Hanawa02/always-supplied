@@ -58,7 +58,7 @@ export function useAuth() {
   const userAvatar = computed(() => profile.value?.avatar_url)
 
   // Sign up with email and password
-  const signUp = async (email: string, password: string, userData?: { fullName?: string }) => {
+  const signUp = async (email: string, password: string, userData?: { username?: string }) => {
     loading.value = true
 
     try {
@@ -67,7 +67,8 @@ export function useAuth() {
         password,
         options: {
           data: {
-            full_name: userData?.fullName,
+            username: userData?.username,
+            full_name: userData?.username, // Also set as full_name for compatibility
           },
         },
       })
@@ -113,11 +114,20 @@ export function useAuth() {
         provider: 'google',
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+          skipBrowserRedirect: false,
         },
       })
 
-      if (error) throw error
+      if (error) {
+        console.error('Google OAuth error:', error)
+        throw error
+      }
 
+      console.log('Google OAuth initiated successfully')
       return { data, error: null }
     } catch (error) {
       console.error('Google sign in error:', error)
