@@ -50,8 +50,6 @@ export function useI18n() {
     // Locale info
     localeNames: {
       en: "English",
-      es: "Español",
-      pt: "Português",
     } as Record<string, string>,
   }
 }
