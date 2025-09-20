@@ -4,7 +4,7 @@ import { Toaster } from "~/components/ui/toast"
 </script>
 
 <template>
-  <div id="app">
+  <div>
     <AppNavigation />
     <RouterView />
     <Toaster />

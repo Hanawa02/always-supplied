@@ -21,12 +21,12 @@
               {{ m.app_navigation_shopping_list() }}
             </router-link>
             <router-link
-              :to="{
-                name: ROUTES.SUPPLY_CONFIGURATION.name,
-                query: selectedBuildingStore.selectedBuildingId
-                  ? { buildingId: selectedBuildingStore.selectedBuildingId }
-                  : {},
-              }"
+              :to="selectedBuildingStore.selectedBuildingId
+                ? {
+                    name: ROUTES.SUPPLY_CONFIGURATION.name,
+                    params: { buildingId: selectedBuildingStore.selectedBuildingId }
+                  }
+                : { name: ROUTES.SUPPLIED_BUILDINGS.name }"
               class="text-gray-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors flex flex-col items-start"
               active-class="text-primary-700 bg-primary-50"
             >
@@ -45,6 +45,39 @@
 
         <!-- Right side -->
         <div class="flex items-center space-x-4">
+          <!-- Sync Status (Desktop) -->
+          <div class="hidden md:block">
+            <SyncStatusIndicator :compact="true" />
+          </div>
+
+          <!-- Join Building Button (Desktop) -->
+          <Button
+            v-if="isAuthenticated"
+            variant="outline"
+            size="sm"
+            @click="showJoinDialog = true"
+            class="hidden md:flex items-center space-x-1"
+          >
+            <i class="i-mdi:plus-circle w-4 h-4"></i>
+            <span>{{ m.sharing_join_building() }}</span>
+          </Button>
+
+          <!-- User Menu (Desktop) -->
+          <div v-if="isAuthenticated" class="hidden md:block">
+            <UserMenu />
+          </div>
+
+          <!-- Sign In Button (Desktop) -->
+          <Button
+            v-else
+            variant="outline"
+            size="sm"
+            @click="$router.push('/auth/login')"
+            class="hidden md:flex"
+          >
+            {{ m.auth_sign_in() }}
+          </Button>
+
           <!-- Desktop language switcher -->
           <div class="hidden md:block">
             <LanguageSwitcher />
@@ -135,12 +168,12 @@
             </router-link>
 
             <router-link
-              :to="{
-                name: ROUTES.SUPPLY_CONFIGURATION.name,
-                query: selectedBuildingStore.selectedBuildingId
-                  ? { buildingId: selectedBuildingStore.selectedBuildingId }
-                  : {},
-              }"
+              :to="selectedBuildingStore.selectedBuildingId
+                ? {
+                    name: ROUTES.SUPPLY_CONFIGURATION.name,
+                    params: { buildingId: selectedBuildingStore.selectedBuildingId }
+                  }
+                : { name: ROUTES.SUPPLIED_BUILDINGS.name }"
               @click="closeMobileMenu"
               class="flex flex-col px-3 py-3 text-sm font-medium text-gray-600 rounded-lg hover:text-primary-600 hover:bg-primary-50 transition-colors"
               active-class="text-primary-700 bg-primary-50"
@@ -168,8 +201,57 @@
             </router-link>
           </div>
 
-          <!-- Footer -->
-          <div class="border-t border-gray-200 p-4">
+          <!-- Mobile Actions -->
+          <div class="border-t border-gray-200 p-4 space-y-3">
+            <!-- Sync Status (Mobile) -->
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-medium text-gray-700">Sync Status</span>
+              <SyncStatusIndicator :compact="true" />
+            </div>
+
+            <!-- Join Building (Mobile) -->
+            <Button
+              v-if="isAuthenticated"
+              variant="outline"
+              size="sm"
+              @click="showJoinDialog = true; closeMobileMenu()"
+              class="w-full flex items-center justify-center space-x-2"
+            >
+              <i class="i-mdi:plus-circle w-4 h-4"></i>
+              <span>{{ m.sharing_join_building() }}</span>
+            </Button>
+
+            <!-- Auth Actions (Mobile) -->
+            <div v-if="isAuthenticated" class="space-y-2">
+              <router-link
+                to="/account"
+                @click="closeMobileMenu"
+                class="flex items-center px-3 py-2 text-sm font-medium text-gray-600 rounded-lg hover:text-primary-600 hover:bg-primary-50 transition-colors"
+              >
+                <i class="i-mdi:account w-4 h-4 mr-2"></i>
+                {{ m.account_title() }}
+              </router-link>
+              <Button
+                variant="ghost"
+                size="sm"
+                @click="handleSignOut"
+                class="w-full text-left justify-start"
+              >
+                <i class="i-mdi:logout w-4 h-4 mr-2"></i>
+                {{ m.account_sign_out() }}
+              </Button>
+            </div>
+            <Button
+              v-else
+              variant="outline"
+              size="sm"
+              @click="$router.push('/auth/login'); closeMobileMenu()"
+              class="w-full"
+            >
+              {{ m.auth_sign_in() }}
+            </Button>
+
+            <!-- Language -->
             <div class="flex items-center justify-between">
               <span class="text-sm font-medium text-gray-700">Language</span>
               <LanguageSwitcher />
@@ -179,6 +261,12 @@
       </div>
     </div>
   </nav>
+
+  <!-- Join Building Dialog -->
+  <JoinBuildingDialog
+    v-model:open="showJoinDialog"
+    @success="handleJoinSuccess"
+  />
 </template>
 
 <script setup lang="ts">
@@ -186,16 +274,25 @@ import { onMounted, ref } from "vue"
 
 import AppLogo from "~/components/AppLogo.vue"
 import LanguageSwitcher from "~/components/LanguageSwitcher.vue"
+import JoinBuildingDialog from "~/components/sharing/JoinBuildingDialog.vue"
+import { Button } from "~/components/ui/button"
+import SyncStatusIndicator from "~/components/ui/SyncStatusIndicator.vue"
+import { toast } from "~/components/ui/toast"
+import UserMenu from "~/components/UserMenu.vue"
+import { useAuth } from "~/composables/useAuth"
 import { useI18n } from "~/composables/useI18n"
 import { useTypedRouter } from "~/composables/useRouter"
 import { useSelectedBuildingStore } from "~/stores/selectedBuilding"
+import type { Building } from "~/types"
 
 const { ROUTES } = useTypedRouter()
 const { m } = useI18n()
+const { isAuthenticated, signOut } = useAuth()
 const selectedBuildingStore = useSelectedBuildingStore()
 
 // Mobile menu state
 const mobileMenuOpen = ref(false)
+const showJoinDialog = ref(false)
 
 const toggleMobileMenu = () => {
   mobileMenuOpen.value = !mobileMenuOpen.value
@@ -203,6 +300,32 @@ const toggleMobileMenu = () => {
 
 const closeMobileMenu = () => {
   mobileMenuOpen.value = false
+}
+
+// Handle sign out
+const handleSignOut = async () => {
+  try {
+    await signOut()
+    toast({
+      title: 'Signed Out',
+      description: 'You have been signed out successfully.',
+    })
+    closeMobileMenu()
+  } catch {
+    toast({
+      title: 'Sign Out Failed',
+      description: 'An error occurred while signing out.',
+      variant: 'destructive',
+    })
+  }
+}
+
+// Handle successful building join
+const handleJoinSuccess = (building: Building) => {
+  toast({
+    title: 'Building Joined!',
+    description: `You are now a member of "${building.name}".`,
+  })
 }
 
 // Load selected building from storage on mount

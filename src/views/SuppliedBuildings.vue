@@ -28,18 +28,32 @@
             icon-color="primary"
           />
 
-          <!-- Search -->
+          <!-- Search and Sync -->
           <div class="md:col-span-2">
-            <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <i class="i-mdi:magnify text-gray-400"></i>
+            <div class="flex gap-2">
+              <div class="relative flex-1">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <i class="i-mdi:magnify text-gray-400"></i>
+                </div>
+                <input
+                  v-model="searchQuery"
+                  type="text"
+                  :placeholder="m.supplied_buildings_search_placeholder()"
+                  class="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                />
               </div>
-              <input
-                v-model="searchQuery"
-                type="text"
-                :placeholder="m.supplied_buildings_search_placeholder()"
-                class="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-              />
+              <!-- Sync Button (only show when authenticated) -->
+              <Button
+                v-if="isAuthenticated"
+                variant="outline"
+                @click="triggerManualSync"
+                :disabled="isSyncing"
+                class="whitespace-nowrap"
+              >
+                <i v-if="isSyncing" class="i-mdi:sync animate-spin mr-2"></i>
+                <i v-else class="i-mdi:cloud-sync mr-2"></i>
+                {{ isSyncing ? 'Syncing...' : 'Sync to Cloud' }}
+              </Button>
             </div>
           </div>
         </div>
@@ -57,6 +71,8 @@
           @view-supplies="viewSupplies"
           @edit="editBuilding"
           @delete="confirmDelete"
+          @share="shareBuilding"
+          @members="manageMembers"
         />
       </div>
 
@@ -94,6 +110,24 @@
       @confirm="handleDelete"
       @cancel="buildingToDelete = null"
     />
+
+    <!-- Share Building Dialog -->
+    <ShareBuildingDialog
+      v-if="buildingToShare"
+      :open="!!buildingToShare"
+      :building-id="buildingToShare.id"
+      @update:open="buildingToShare = null"
+    />
+
+    <!-- Building Members Dialog -->
+    <BuildingMembersDialog
+      v-if="buildingToManage"
+      :open="!!buildingToManage"
+      :building-id="buildingToManage.id"
+      @update:open="buildingToManage = null"
+      @member-removed="handleMemberRemoved"
+      @building-left="handleBuildingLeft"
+    />
   </div>
 </template>
 
@@ -102,11 +136,17 @@ import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
 
 import DeleteConfirmationModal from "~/components/DeleteConfirmationModal.vue"
+import BuildingMembersDialog from "~/components/sharing/BuildingMembersDialog.vue"
+import ShareBuildingDialog from "~/components/sharing/ShareBuildingDialog.vue"
 import SuppliedBuildingModal from "~/components/SuppliedBuildingModal.vue"
 import BaseButton from "~/components/ui/BaseButton.vue"
+import { Button } from "~/components/ui/button"
 import BuildingCard from "~/components/ui/BuildingCard.vue"
 import EmptyState from "~/components/ui/EmptyState.vue"
 import StatsCard from "~/components/ui/StatsCard.vue"
+import { toast } from "~/components/ui/toast"
+import { useAuth } from "~/composables/useAuth"
+import { useCloudSync } from "~/composables/useCloudSync"
 import { useI18n } from "~/composables/useI18n"
 import { useSuppliedBuildings } from "~/composables/useSuppliedBuildings"
 import { useSupplyItems } from "~/composables/useSupplyItems"
@@ -130,12 +170,17 @@ const {
 } = useSuppliedBuildings()
 
 const { supplyItems } = useSupplyItems()
+const { isAuthenticated } = useAuth()
+const { syncStatus, performInitialSync } = useCloudSync()
 
 // Local state
 const showCreateModal = ref(false)
 const editingBuilding = ref<SuppliedBuilding | null>(null)
 const buildingToDelete = ref<SuppliedBuilding | null>(null)
+const buildingToShare = ref<SuppliedBuilding | null>(null)
+const buildingToManage = ref<SuppliedBuilding | null>(null)
 const searchQuery = ref("")
+const isSyncing = computed(() => syncStatus.value.isSyncing)
 
 // Computed
 const filteredBuildings = computed(() => {
@@ -158,7 +203,7 @@ const viewSupplies = (building: SuppliedBuilding) => {
   // Navigate to supply configuration with building filter
   router.push({
     name: "SupplyConfiguration",
-    query: { buildingId: building.id },
+    params: { buildingId: building.id },
   })
 }
 
@@ -168,6 +213,19 @@ const editBuilding = (building: SuppliedBuilding) => {
 
 const confirmDelete = (building: SuppliedBuilding) => {
   buildingToDelete.value = building
+}
+
+const shareBuilding = (building: SuppliedBuilding) => {
+  buildingToShare.value = building
+}
+
+const manageMembers = (building: SuppliedBuilding) => {
+  buildingToManage.value = building
+}
+
+const triggerManualSync = async () => {
+  console.log('[Manual Sync] Triggering manual sync...')
+  await performInitialSync()
 }
 
 const closeModal = () => {
@@ -208,5 +266,22 @@ const handleDelete = async () => {
   } catch (error) {
     console.error("Failed to delete building:", error)
   }
+}
+
+const handleMemberRemoved = () => {
+  toast({
+    title: 'Member Removed',
+    description: 'The user has been removed from the building.',
+  })
+}
+
+const handleBuildingLeft = () => {
+  toast({
+    title: 'Building Left',
+    description: 'You have left the building and it has been removed from your list.',
+  })
+  // The building should be automatically removed from the local list
+  // when the user leaves via the sharing service
+  buildingToManage.value = null
 }
 </script>

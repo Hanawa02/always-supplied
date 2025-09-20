@@ -200,11 +200,15 @@ const router = useRouter()
 
 // Check for required building selection
 const selectedBuildingId = computed(() => {
-  // First priority: query parameter
+  // First priority: route parameter
+  const paramId = route.params.buildingId as string | undefined
+  if (paramId) return paramId
+
+  // Second priority: query parameter (for backward compatibility)
   const queryId = route.query.buildingId as string | undefined
   if (queryId) return queryId
 
-  // Second priority: selected building from store
+  // Third priority: selected building from store
   return selectedBuildingStore.selectedBuildingId
 })
 
@@ -221,11 +225,11 @@ onMounted(() => {
   // If we still don't have a selected building, redirect
   if (!selectedBuildingId.value) {
     router.replace(ROUTES.SUPPLIED_BUILDINGS.path)
-  } else if (!route.query.buildingId && selectedBuildingStore.selectedBuildingId) {
-    // If we have a selected building but no query param, update the URL
+  } else if (!route.params.buildingId && selectedBuildingStore.selectedBuildingId) {
+    // If we have a selected building but no route param, update the URL
     router.replace({
       name: route.name,
-      query: { ...route.query, buildingId: selectedBuildingStore.selectedBuildingId },
+      params: { ...route.params, buildingId: selectedBuildingStore.selectedBuildingId },
     })
   }
 })
