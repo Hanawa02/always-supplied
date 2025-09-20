@@ -11,7 +11,7 @@
         </div>
         <div class="ml-4 flex items-center space-x-1">
           <!-- Cloud Status Indicator -->
-          <div v-if="isAuthenticated" class="flex items-center mr-2">
+          <div v-if="is_authenticated" class="flex items-center mr-2">
             <i
               v-if="syncStatus?.isSyncing"
               class="i-mdi:sync animate-spin text-blue-500 w-4 h-4"
@@ -54,7 +54,7 @@
                 </DropdownMenuItem>
               </PermissionGuard>
 
-              <DropdownMenuSeparator v-if="isAuthenticated" />
+              <DropdownMenuSeparator v-if="is_authenticated" />
 
               <PermissionGuard
                 :building-id="building.id"
@@ -147,7 +147,7 @@ defineEmits<{
   members: [building: SuppliedBuilding]
 }>()
 
-const { isAuthenticated } = use_auth()
+const { is_authenticated } = use_auth()
 const { syncStatus } = useCloudSync()
 
 const isOnline = computed(() => navigator.onLine)

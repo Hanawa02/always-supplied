@@ -55,7 +55,7 @@
 
           <!-- Join Building Button (Desktop) -->
           <Button
-            v-if="isAuthenticated"
+            v-if="is_authenticated"
             variant="outline"
             size="sm"
             @click="showJoinDialog = true"
@@ -66,7 +66,7 @@
           </Button>
 
           <!-- User Menu (Desktop) -->
-          <div v-if="isAuthenticated" class="hidden md:block">
+          <div v-if="is_authenticated" class="hidden md:block">
             <UserMenu />
           </div>
 
@@ -216,7 +216,7 @@
 
             <!-- Join Building (Mobile) -->
             <Button
-              v-if="isAuthenticated"
+              v-if="is_authenticated"
               variant="outline"
               size="sm"
               @click="handleJoinButton()"
@@ -227,7 +227,7 @@
             </Button>
 
             <!-- Auth Actions (Mobile) -->
-            <div v-if="isAuthenticated" class="space-y-2">
+            <div v-if="is_authenticated" class="space-y-2">
               <router-link
                 to="/account"
                 @click="closeMobileMenu"
@@ -276,7 +276,7 @@ import MobileNavigation from "./navigation/MobileNavigation.vue"
 
 const { ROUTES } = useTypedRouter()
 const { m } = useI18n()
-const { isAuthenticated, signOut } = use_auth()
+const { is_authenticated, log_out } = use_auth()
 const selectedBuildingStore = useSelectedBuildingStore()
 const router = useRouter()
 

@@ -70,12 +70,12 @@ import { use_auth } from "~/composables/use-auth"
 import { useI18n } from "~/composables/useI18n"
 
 const { m } = useI18n()
-const { userName, userEmail, userAvatar, signOut } = use_auth()
+const { userName, userEmail, userAvatar, log_out } = use_auth()
 
 const handleSignOut = async () => {
   console.log("[UserMenu] Starting sign out...")
   try {
-    const { error } = await signOut()
+    const { error } = await log_out()
 
     if (error) {
       console.error("[UserMenu] Sign out error:", error)

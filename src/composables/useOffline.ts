@@ -13,7 +13,7 @@ export interface OfflineStatus {
 }
 
 export function useOffline() {
-  const { isAuthenticated } = use_auth()
+  const { is_authenticated } = use_auth()
 
   // Connection state
   const isOnline = ref(navigator.onLine)
@@ -45,7 +45,7 @@ export function useOffline() {
       console.log("Connection restored")
 
       // Auto-sync when coming back online
-      if (isAuthenticated.value) {
+      if (is_authenticated.value) {
         await attemptSync()
       }
     }
@@ -60,7 +60,7 @@ export function useOffline() {
   // Attempt to sync when connection is restored
   const attemptSync = async () => {
     try {
-      if (!isOnline.value || !isAuthenticated.value) return
+      if (!isOnline.value || !is_authenticated.value) return
 
       // Process pending offline queue
       await offlineQueue.processQueue()
@@ -143,7 +143,7 @@ export function useOffline() {
   onUnmounted(stopMonitoring)
 
   // Watch for authentication changes
-  watch(isAuthenticated, async (authenticated) => {
+  watch(is_authenticated, async (authenticated) => {
     if (authenticated && isOnline.value) {
       // Auto-sync when user authenticates and is online
       await attemptSync()

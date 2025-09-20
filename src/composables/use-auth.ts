@@ -50,7 +50,7 @@ async function loadUserProfile(userId: string) {
 
 export function use_auth() {
   // Computed properties
-  const isAuthenticated = computed(() => !!user.value)
+  const is_authenticated = computed(() => !!user.value)
   const isLoading = computed(() => loading.value)
   const isInitializing = computed(() => initializing.value)
   const userEmail = computed(() => user.value?.email)
@@ -138,7 +138,7 @@ export function use_auth() {
   }
 
   // Log out
-  const logOut = async () => {
+  const log_out = async () => {
     console.log("[use_auth] Starting sign out process...")
     loading.value = true
 
@@ -263,7 +263,7 @@ export function use_auth() {
     try {
       // Note: This requires a database function or admin action
       // For now, we'll just sign out and let admin handle deletion
-      await logOut()
+      await log_out()
       return { error: null }
     } catch (error) {
       console.error("Account deletion error:", error)
@@ -305,7 +305,7 @@ export function use_auth() {
     user: computed(() => user.value),
     session: computed(() => session.value),
     profile: computed(() => profile.value),
-    isAuthenticated,
+    is_authenticated,
     isLoading,
     isInitializing,
     userEmail,
@@ -316,7 +316,7 @@ export function use_auth() {
     signUp,
     signIn,
     signInWithGoogle,
-    logOut,
+    log_out,
     resetPassword,
     updateProfile,
     updatePassword,

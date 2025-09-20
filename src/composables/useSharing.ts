@@ -6,7 +6,7 @@ import { buildingSharing, type Member, type ShareInfo } from "~/services/sharing
 import type { Building } from "~/types"
 
 export function useSharing() {
-  const { isAuthenticated } = use_auth()
+  const { is_authenticated } = use_auth()
 
   // State
   const isGeneratingCode = ref(false)
@@ -21,7 +21,7 @@ export function useSharing() {
       maxUses?: number
     },
   ) {
-    if (!isAuthenticated.value) {
+    if (!is_authenticated.value) {
       throw new Error("Authentication required")
     }
 
@@ -46,7 +46,7 @@ export function useSharing() {
 
   // Join building using share code
   async function joinBuilding(shareCode: string): Promise<Building> {
-    if (!isAuthenticated.value) {
+    if (!is_authenticated.value) {
       throw new Error("Authentication required")
     }
 
@@ -71,7 +71,7 @@ export function useSharing() {
 
   // Get building members
   async function getBuildingMembers(buildingId: string): Promise<Member[]> {
-    if (!isAuthenticated.value) {
+    if (!is_authenticated.value) {
       throw new Error("Authentication required")
     }
 
@@ -86,7 +86,7 @@ export function useSharing() {
 
   // Remove member from building
   async function removeMember(buildingId: string, memberUserId: string) {
-    if (!isAuthenticated.value) {
+    if (!is_authenticated.value) {
       throw new Error("Authentication required")
     }
 
@@ -104,7 +104,7 @@ export function useSharing() {
 
   // Leave building
   async function leaveBuilding(buildingId: string) {
-    if (!isAuthenticated.value) {
+    if (!is_authenticated.value) {
       throw new Error("Authentication required")
     }
 
@@ -122,7 +122,7 @@ export function useSharing() {
 
   // Get active share codes
   async function getActiveShareCodes(buildingId: string): Promise<ShareInfo[]> {
-    if (!isAuthenticated.value) {
+    if (!is_authenticated.value) {
       throw new Error("Authentication required")
     }
 
@@ -131,7 +131,7 @@ export function useSharing() {
 
   // Deactivate share code
   async function deactivateShareCode(shareCode: string) {
-    if (!isAuthenticated.value) {
+    if (!is_authenticated.value) {
       throw new Error("Authentication required")
     }
 
@@ -149,7 +149,7 @@ export function useSharing() {
 
   // Get user's role in a building
   async function getUserRole(buildingId: string): Promise<"owner" | "member" | null> {
-    if (!isAuthenticated.value) {
+    if (!is_authenticated.value) {
       return null
     }
 
@@ -226,6 +226,6 @@ export function useSharing() {
     isValidShareCode,
 
     // Computed
-    isAuthenticated,
+    is_authenticated,
   }
 }

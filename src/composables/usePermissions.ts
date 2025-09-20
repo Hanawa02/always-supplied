@@ -45,12 +45,12 @@ const PERMISSION_CONFIG: PermissionConfig = {
 }
 
 export function usePermissions() {
-  const { isAuthenticated } = use_auth()
+  const { is_authenticated } = use_auth()
   const buildingRoles = ref<Map<string, Role>>(new Map())
 
   // Get user's role for a specific building
   async function getBuildingRole(buildingId: string): Promise<Role> {
-    if (!isAuthenticated.value) return null
+    if (!is_authenticated.value) return null
 
     // Check cache first
     if (buildingRoles.value.has(buildingId)) {
@@ -68,7 +68,7 @@ export function usePermissions() {
 
   // Check if user has a specific permission for a building
   async function hasPermission(buildingId: string, permission: Permission): Promise<boolean> {
-    if (!isAuthenticated.value) {
+    if (!is_authenticated.value) {
       // Allow viewing when not authenticated (local mode)
       return permission.startsWith("view_") || permission.startsWith("edit_")
     }
@@ -126,7 +126,7 @@ export function usePermissions() {
 
   // Get all permissions for a building
   async function getBuildingPermissions(buildingId: string): Promise<Permission[]> {
-    if (!isAuthenticated.value) {
+    if (!is_authenticated.value) {
       // Return basic permissions for local mode
       return [
         "view_building",
@@ -254,7 +254,7 @@ export function usePermissions() {
     getRoleInfo,
 
     // Computed
-    isAuthenticated,
+    is_authenticated,
 
     // Constants
     PERMISSION_CONFIG,

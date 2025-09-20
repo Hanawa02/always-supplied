@@ -17,7 +17,7 @@ export interface SyncStatus {
 }
 
 export function useCloudSync() {
-  const { isAuthenticated } = use_auth()
+  const { is_authenticated } = use_auth()
   const {
     suppliedBuildings: localBuildings,
     updateSuppliedBuilding,
@@ -47,7 +47,7 @@ export function useCloudSync() {
 
   // Auto-sync when authentication state changes
   watch(
-    isAuthenticated,
+    is_authenticated,
     async (authenticated) => {
       if (authenticated && navigator.onLine) {
         await performInitialSync()
@@ -60,7 +60,7 @@ export function useCloudSync() {
   watch(
     () => navigator.onLine,
     async (online) => {
-      if (online && isAuthenticated.value) {
+      if (online && is_authenticated.value) {
         await syncWithCloud()
       }
     },
@@ -68,7 +68,7 @@ export function useCloudSync() {
 
   // Initial sync after authentication
   async function performInitialSync(): Promise<void> {
-    if (!isAuthenticated.value || isSyncing.value) return
+    if (!is_authenticated.value || isSyncing.value) return
 
     console.log("[CloudSync] Starting initial sync...")
     console.log("[CloudSync] Local buildings count:", localBuildings.value.length)
@@ -119,7 +119,7 @@ export function useCloudSync() {
 
   // Migrate local data to cloud
   async function migrateLocalDataToCloud(): Promise<void> {
-    if (!isAuthenticated.value || localBuildings.value.length === 0) return
+    if (!is_authenticated.value || localBuildings.value.length === 0) return
 
     migrationProgress.value = {
       total: localBuildings.value.length,
@@ -149,7 +149,7 @@ export function useCloudSync() {
 
   // Sync from cloud to local
   async function syncFromCloud(): Promise<void> {
-    if (!isAuthenticated.value) return
+    if (!is_authenticated.value) return
 
     // TODO: Implement full sync when type adapters are complete
     console.log("Cloud sync temporarily disabled - integration in progress")
@@ -160,7 +160,7 @@ export function useCloudSync() {
 
   // Sync specific building to cloud
   async function syncBuildingToCloud(building: any): Promise<SyncResult<any>> {
-    if (!isAuthenticated.value) {
+    if (!is_authenticated.value) {
       // Queue operation for later
       offlineQueue.addBuildingOperation("update", building.id, building)
       return { success: true }
@@ -185,7 +185,7 @@ export function useCloudSync() {
     item: SupplyItem,
     buildingId: string,
   ): Promise<SyncResult<any>> {
-    if (!isAuthenticated.value) {
+    if (!is_authenticated.value) {
       offlineQueue.addSupplyItemOperation("update", item.id, buildingId, item)
       return { success: true }
     }
@@ -208,7 +208,7 @@ export function useCloudSync() {
     item: BuyingItem,
     buildingId: string,
   ): Promise<SyncResult<any>> {
-    if (!isAuthenticated.value) {
+    if (!is_authenticated.value) {
       offlineQueue.addBuyingItemOperation("update", item.id, buildingId, item)
       return { success: true }
     }
@@ -228,7 +228,7 @@ export function useCloudSync() {
 
   // Delete operations
   async function deleteBuildingFromCloud(buildingId: string): Promise<SyncResult<void>> {
-    if (!isAuthenticated.value) {
+    if (!is_authenticated.value) {
       offlineQueue.addBuildingOperation("delete", buildingId)
       return { success: true }
     }
@@ -246,7 +246,7 @@ export function useCloudSync() {
     itemId: string,
     buildingId: string,
   ): Promise<SyncResult<void>> {
-    if (!isAuthenticated.value) {
+    if (!is_authenticated.value) {
       offlineQueue.addSupplyItemOperation("delete", itemId, buildingId)
       return { success: true }
     }
@@ -264,7 +264,7 @@ export function useCloudSync() {
     itemId: string,
     buildingId: string,
   ): Promise<SyncResult<void>> {
-    if (!isAuthenticated.value) {
+    if (!is_authenticated.value) {
       offlineQueue.addBuyingItemOperation("delete", itemId, buildingId)
       return { success: true }
     }
@@ -280,7 +280,7 @@ export function useCloudSync() {
 
   // Manual sync trigger
   async function syncWithCloud(): Promise<void> {
-    if (!isAuthenticated.value || isSyncing.value) return
+    if (!is_authenticated.value || isSyncing.value) return
 
     try {
       isSyncing.value = true

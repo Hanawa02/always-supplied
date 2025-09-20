@@ -5,7 +5,7 @@ import { useCloudSync } from "~/composables/useCloudSync"
 import { useSuppliedBuildings } from "~/composables/useSuppliedBuildings"
 
 export function useCloudBuildings() {
-  const { isAuthenticated } = use_auth()
+  const { is_authenticated } = use_auth()
   const { suppliedBuildings: localBuildings } = useSuppliedBuildings()
   const { syncStatus, syncWithCloud, performInitialSync } = useCloudSync()
 
@@ -15,7 +15,7 @@ export function useCloudBuildings() {
   })
 
   // Auto-sync when authenticated
-  watch(isAuthenticated, async (authenticated) => {
+  watch(is_authenticated, async (authenticated) => {
     if (authenticated) {
       await performInitialSync()
     }
@@ -106,7 +106,7 @@ export function useCloudBuildings() {
 
   // Manual sync operations
   async function refreshFromCloud() {
-    if (isAuthenticated.value) {
+    if (is_authenticated.value) {
       await syncWithCloud()
     }
   }
@@ -135,7 +135,7 @@ export function useCloudBuildings() {
     refreshFromCloud,
 
     // Computed
-    isAuthenticated,
+    is_authenticated,
     isOnline: computed(() => navigator.onLine),
     isSyncing: computed(() => syncStatus.value.isSyncing),
     hasPendingOperations: computed(() => syncStatus.value.pendingOperations > 0),

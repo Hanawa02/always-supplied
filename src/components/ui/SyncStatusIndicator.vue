@@ -16,7 +16,7 @@
         class="i-mdi:cloud-upload text-orange-500"
       ></i>
       <i
-        v-else-if="syncStatus.isOnline && isAuthenticated"
+        v-else-if="syncStatus.isOnline && is_authenticated"
         class="i-mdi:cloud-check text-green-500"
       ></i>
       <i v-else-if="!syncStatus.isOnline" class="i-mdi:cloud-off text-gray-400"></i>
@@ -94,7 +94,7 @@ withDefaults(defineProps<Props>(), {
   showSyncStatus: true,
 })
 
-const { isAuthenticated } = use_auth()
+const { is_authenticated } = use_auth()
 const { syncStatus, retryFailedOperations, clearSyncErrors } = useCloudSync()
 
 const showErrorPopover = ref(false)
@@ -104,7 +104,7 @@ const realtimeStatus = computed(() => realtimeSync.status)
 const hasErrors = computed(() => syncStatus.value.errors.length > 0)
 
 const getConnectionStatusClass = () => {
-  if (!isAuthenticated.value) {
+  if (!is_authenticated.value) {
     return "bg-gray-400" // Not authenticated
   }
 
@@ -120,7 +120,7 @@ const getConnectionStatusClass = () => {
 }
 
 const getConnectionStatusText = () => {
-  if (!isAuthenticated.value) {
+  if (!is_authenticated.value) {
     return "Offline"
   }
 
@@ -152,7 +152,7 @@ const getSyncStatusText = () => {
     return "Offline"
   }
 
-  if (!isAuthenticated.value) {
+  if (!is_authenticated.value) {
     return "Local only"
   }
 

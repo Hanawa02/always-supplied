@@ -208,7 +208,7 @@ const {
   userName,
   userAvatar,
   updateProfile: updateAuthProfile,
-  signOut,
+  log_out,
 } = use_auth()
 const { buildings } = useCloudBuildings()
 const router = useRouter()
@@ -332,7 +332,7 @@ const handleSignOut = async () => {
   isSigningOut.value = true
 
   try {
-    const { error } = await signOut()
+    const { error } = await log_out()
 
     if (error) {
       console.error("[AccountPage] Sign out error:", error)

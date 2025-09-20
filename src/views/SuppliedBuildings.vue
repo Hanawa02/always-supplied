@@ -44,7 +44,7 @@
               </div>
               <!-- Sync Button (only show when authenticated) -->
               <Button
-                v-if="isAuthenticated"
+                v-if="is_authenticated"
                 variant="outline"
                 @click="triggerManualSync"
                 :disabled="isSyncing"
@@ -170,7 +170,7 @@ const {
 } = useSuppliedBuildings()
 
 const { supplyItems } = useSupplyItems()
-const { isAuthenticated } = use_auth()
+const { is_authenticated } = use_auth()
 const { syncStatus, performInitialSync } = useCloudSync()
 
 // Local state

@@ -11,7 +11,7 @@ export async function requireAuth(
   from: RouteLocationNormalized,
   next: NavigationGuardNext,
 ) {
-  const { isAuthenticated, isInitializing } = use_auth()
+  const { is_authenticated, isInitializing } = use_auth()
 
   // Wait for auth to initialize
   if (isInitializing.value) {
@@ -19,7 +19,7 @@ export async function requireAuth(
     const unwatch = watch(isInitializing, (initializing) => {
       if (!initializing) {
         unwatch()
-        if (isAuthenticated.value) {
+        if (is_authenticated.value) {
           next()
         } else {
           next({
@@ -32,7 +32,7 @@ export async function requireAuth(
     return
   }
 
-  if (isAuthenticated.value) {
+  if (is_authenticated.value) {
     next()
   } else {
     next({
@@ -50,14 +50,14 @@ export async function requireGuest(
   from: RouteLocationNormalized,
   next: NavigationGuardNext,
 ) {
-  const { isAuthenticated, isInitializing } = use_auth()
+  const { is_authenticated, isInitializing } = use_auth()
 
   // Wait for auth to initialize
   if (isInitializing.value) {
     const unwatch = watch(isInitializing, (initializing) => {
       if (!initializing) {
         unwatch()
-        if (isAuthenticated.value) {
+        if (is_authenticated.value) {
           next("/buildings")
         } else {
           next()
@@ -67,7 +67,7 @@ export async function requireGuest(
     return
   }
 
-  if (isAuthenticated.value) {
+  if (is_authenticated.value) {
     next("/buildings")
   } else {
     next()
