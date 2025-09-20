@@ -138,15 +138,28 @@
             >
               {{ m.account_change_password() }}
             </Button>
-            <Button
-              variant="outline"
-              class="w-full"
-              @click="handleSignOut"
-              :disabled="isSigningOut"
-            >
-              <i v-if="isSigningOut" class="i-mdi:loading animate-spin mr-2"></i>
-              {{ m.account_sign_out() }}
-            </Button>
+            <div class="space-y-2">
+              <Button
+                variant="outline"
+                class="w-full"
+                @click="handleSignOut"
+                :disabled="isSigningOut"
+              >
+                <i v-if="isSigningOut" class="i-mdi:loading animate-spin mr-2"></i>
+                {{ m.account_sign_out() }}
+              </Button>
+              <!-- Emergency logout button -->
+              <Button
+                variant="ghost"
+                size="sm"
+                class="w-full text-xs"
+                @click="handleForceSignOut"
+                :disabled="isSigningOut"
+              >
+                <i class="i-mdi:exit-to-app mr-1"></i>
+                Force Sign Out (if above fails)
+              </Button>
+            </div>
           </CardContent>
         </Card>
 
@@ -321,19 +334,84 @@ const handlePasswordChangeSuccess = () => {
 
 // Handle sign out
 const handleSignOut = async () => {
+  console.log('[AccountPage] Starting sign out...')
   isSigningOut.value = true
 
   try {
-    await signOut()
+    const { error } = await signOut()
+
+    if (error) {
+      console.error('[AccountPage] Sign out error:', error)
+      toast({
+        title: 'Sign Out Failed',
+        description: error.message || 'An error occurred while signing out.',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    console.log('[AccountPage] Sign out successful')
     toast({
       title: 'Signed Out',
       description: 'You have been signed out successfully.',
     })
-    router.push('/auth/login')
-  } catch {
+
+    // Use replace to prevent going back to authenticated page
+    router.replace('/auth/login')
+  } catch (error) {
+    console.error('[AccountPage] Unexpected sign out error:', error)
     toast({
       title: 'Sign Out Failed',
-      description: 'An error occurred while signing out.',
+      description: 'An unexpected error occurred while signing out.',
+      variant: 'destructive',
+    })
+  } finally {
+    isSigningOut.value = false
+  }
+}
+
+// Force sign out (clears everything and redirects)
+const handleForceSignOut = async () => {
+  console.log('[AccountPage] Force sign out initiated...')
+  isSigningOut.value = true
+
+  try {
+    // Clear all authentication data from storage
+    const keysToRemove: string[] = []
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i)
+      if (key && (key.includes('supabase') || key.includes('sb-') || key.includes('auth'))) {
+        keysToRemove.push(key)
+      }
+    }
+    keysToRemove.forEach(key => {
+      console.log('[AccountPage] Force removing:', key)
+      localStorage.removeItem(key)
+    })
+
+    // Clear cookies
+    document.cookie.split(";").forEach((c) => {
+      if (c.includes('sb-') || c.includes('supabase')) {
+        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/")
+      }
+    })
+
+    // Clear session storage
+    sessionStorage.clear()
+
+    console.log('[AccountPage] Force sign out complete, redirecting...')
+    toast({
+      title: 'Force Sign Out',
+      description: 'All authentication data cleared. Redirecting...',
+    })
+
+    // Hard redirect to login
+    window.location.href = '/auth/login'
+  } catch (error) {
+    console.error('[AccountPage] Force sign out error:', error)
+    toast({
+      title: 'Force Sign Out Failed',
+      description: 'Please clear your browser cache manually.',
       variant: 'destructive',
     })
   } finally {

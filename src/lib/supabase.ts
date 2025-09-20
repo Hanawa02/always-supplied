@@ -19,7 +19,8 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
     flowType: "pkce", // Use PKCE flow for better security and compatibility
     debug: false, // Enable auth debug logging
     storage: window?.localStorage, // Explicitly use localStorage
-    storageKey: "supabase.auth.token", // Custom storage key
+    // Remove custom storage key to let Supabase handle it with proper domain isolation
+    // storageKey: "supabase.auth.token", // This was causing conflicts
   },
   realtime: {
     params: {
@@ -46,4 +47,32 @@ export const getCurrentSession = () => {
 // Helper function to sign out
 export const signOut = () => {
   return supabase.auth.signOut()
+}
+
+// Helper function to clear session and retry login (for troubleshooting)
+export const clearAuthSession = async () => {
+  try {
+    // Clear all Supabase-related items from localStorage
+    const keysToRemove: string[] = []
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i)
+      if (key && (key.includes('supabase') || key.includes('sb-'))) {
+        keysToRemove.push(key)
+      }
+    }
+    keysToRemove.forEach(key => localStorage.removeItem(key))
+
+    // Also clear session cookies if any
+    document.cookie.split(";").forEach((c) => {
+      if (c.includes('sb-') || c.includes('supabase')) {
+        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/")
+      }
+    })
+
+    console.log('[Auth] Cleared all Supabase sessions from storage')
+    return { success: true }
+  } catch (error) {
+    console.error('[Auth] Error clearing sessions:', error)
+    return { success: false, error }
+  }
 }

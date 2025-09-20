@@ -139,21 +139,46 @@ export function useAuth() {
 
   // Sign out
   const signOut = async () => {
+    console.log('[useAuth] Starting sign out process...')
     loading.value = true
 
     try {
+      console.log('[useAuth] Calling supabase.auth.signOut()...')
       const { error } = await supabase.auth.signOut()
 
-      if (error) throw error
+      if (error) {
+        console.error('[useAuth] Supabase sign out error:', error)
+        throw error
+      }
+
+      console.log('[useAuth] Supabase sign out successful, clearing local state...')
 
       // Clear local state
       user.value = null
       session.value = null
       profile.value = null
 
+      // Also clear any localStorage items that might be stuck
+      try {
+        const keysToRemove: string[] = []
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i)
+          if (key && (key.includes('supabase') || key.includes('sb-'))) {
+            keysToRemove.push(key)
+          }
+        }
+        keysToRemove.forEach(key => {
+          console.log('[useAuth] Removing localStorage key:', key)
+          localStorage.removeItem(key)
+        })
+      } catch (clearError) {
+        console.error('[useAuth] Error clearing localStorage:', clearError)
+      }
+
+      console.log('[useAuth] Sign out complete')
       return { error: null }
     } catch (error) {
-      console.error('Sign out error:', error)
+      console.error('[useAuth] Sign out error:', error)
       return { error: error as AuthError }
     } finally {
       loading.value = false

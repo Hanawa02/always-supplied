@@ -79,6 +79,15 @@
             <!-- Error Message -->
             <div v-if="authError" class="p-3 rounded-md bg-red-50 border border-red-200">
               <p class="text-sm text-red-600">{{ authError }}</p>
+              <!-- Add clear session button if login is failing -->
+              <button
+                v-if="authError.includes('Invalid login') || authError.includes('session')"
+                @click="handleClearSession"
+                type="button"
+                class="mt-2 text-xs text-red-700 underline hover:no-underline"
+              >
+                Clear cached sessions and try again
+              </button>
             </div>
 
             <!-- Submit Button -->
@@ -142,6 +151,7 @@ import { Label } from '~/components/ui/label'
 import { toast } from '~/components/ui/toast'
 import { useAuth } from '~/composables/useAuth'
 import { useI18n } from '~/composables/useI18n'
+import { clearAuthSession } from '~/lib/supabase'
 
 const { m } = useI18n()
 const { signIn, signInWithGoogle, isLoading } = useAuth()
@@ -195,16 +205,30 @@ const handleSubmit = async () => {
   }
 
   // Attempt sign in
+  console.log('[Login] Attempting sign in for:', form.email)
   const { error } = await signIn(form.email, form.password)
 
   if (error) {
+    console.error('[Login] Sign in error:', error)
     authError.value = error.message
+
+    // Provide more specific error messages
+    let errorMessage = error.message
+    if (error.message.includes('Invalid login credentials')) {
+      errorMessage = 'Invalid email or password. Please check your credentials and try again.'
+    } else if (error.message.includes('Email not confirmed')) {
+      errorMessage = 'Please verify your email address before signing in.'
+    } else if (error.message.includes('Too many requests')) {
+      errorMessage = 'Too many login attempts. Please try again later.'
+    }
+
     toast({
       title: 'Sign In Failed',
-      description: error.message,
+      description: errorMessage,
       variant: 'destructive',
     })
   } else {
+    console.log('[Login] Sign in successful')
     toast({
       title: 'Welcome back!',
       description: 'You have been signed in successfully.',
@@ -231,5 +255,27 @@ const handleGoogleSignIn = async () => {
     })
   }
   // Success handling will be done by auth callback
+}
+
+// Handle clearing session cache (for troubleshooting)
+const handleClearSession = async () => {
+  console.log('[Login] Clearing auth session cache...')
+  const result = await clearAuthSession()
+
+  if (result.success) {
+    toast({
+      title: 'Sessions Cleared',
+      description: 'Authentication cache has been cleared. Please try logging in again.',
+    })
+    authError.value = ''
+    // Reload page to ensure clean state
+    window.location.reload()
+  } else {
+    toast({
+      title: 'Error',
+      description: 'Failed to clear sessions. Please try clearing your browser cache manually.',
+      variant: 'destructive',
+    })
+  }
 }
 </script>

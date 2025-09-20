@@ -76,16 +76,33 @@ const { m } = useI18n()
 const { userName, userEmail, userAvatar, signOut } = useAuth()
 
 const handleSignOut = async () => {
+  console.log('[UserMenu] Starting sign out...')
   try {
-    await signOut()
+    const { error } = await signOut()
+
+    if (error) {
+      console.error('[UserMenu] Sign out error:', error)
+      toast({
+        title: 'Sign Out Failed',
+        description: error.message || 'An error occurred while signing out.',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    console.log('[UserMenu] Sign out successful')
     toast({
       title: 'Signed Out',
       description: 'You have been signed out successfully.',
     })
-  } catch {
+
+    // Force navigation to login
+    window.location.href = '/auth/login'
+  } catch (error) {
+    console.error('[UserMenu] Unexpected sign out error:', error)
     toast({
       title: 'Sign Out Failed',
-      description: 'An error occurred while signing out.',
+      description: 'An unexpected error occurred while signing out.',
       variant: 'destructive',
     })
   }
