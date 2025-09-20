@@ -28,18 +28,32 @@
             icon-color="primary"
           />
 
-          <!-- Search -->
+          <!-- Search and Sync -->
           <div class="md:col-span-2">
-            <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <i class="i-mdi:magnify text-gray-400"></i>
+            <div class="flex gap-2">
+              <div class="relative flex-1">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <i class="i-mdi:magnify text-gray-400"></i>
+                </div>
+                <input
+                  v-model="searchQuery"
+                  type="text"
+                  :placeholder="m.supplied_buildings_search_placeholder()"
+                  class="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                />
               </div>
-              <input
-                v-model="searchQuery"
-                type="text"
-                :placeholder="m.supplied_buildings_search_placeholder()"
-                class="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-              />
+              <!-- Sync Button (only show when authenticated) -->
+              <Button
+                v-if="isAuthenticated"
+                variant="outline"
+                @click="triggerManualSync"
+                :disabled="isSyncing"
+                class="whitespace-nowrap"
+              >
+                <i v-if="isSyncing" class="i-mdi:sync animate-spin mr-2"></i>
+                <i v-else class="i-mdi:cloud-sync mr-2"></i>
+                {{ isSyncing ? 'Syncing...' : 'Sync to Cloud' }}
+              </Button>
             </div>
           </div>
         </div>
@@ -126,10 +140,13 @@ import BuildingMembersDialog from "~/components/sharing/BuildingMembersDialog.vu
 import ShareBuildingDialog from "~/components/sharing/ShareBuildingDialog.vue"
 import SuppliedBuildingModal from "~/components/SuppliedBuildingModal.vue"
 import BaseButton from "~/components/ui/BaseButton.vue"
+import { Button } from "~/components/ui/button"
 import BuildingCard from "~/components/ui/BuildingCard.vue"
 import EmptyState from "~/components/ui/EmptyState.vue"
 import StatsCard from "~/components/ui/StatsCard.vue"
 import { toast } from "~/components/ui/toast"
+import { useAuth } from "~/composables/useAuth"
+import { useCloudSync } from "~/composables/useCloudSync"
 import { useI18n } from "~/composables/useI18n"
 import { useSuppliedBuildings } from "~/composables/useSuppliedBuildings"
 import { useSupplyItems } from "~/composables/useSupplyItems"
@@ -153,6 +170,8 @@ const {
 } = useSuppliedBuildings()
 
 const { supplyItems } = useSupplyItems()
+const { isAuthenticated } = useAuth()
+const { syncStatus, performInitialSync } = useCloudSync()
 
 // Local state
 const showCreateModal = ref(false)
@@ -161,6 +180,7 @@ const buildingToDelete = ref<SuppliedBuilding | null>(null)
 const buildingToShare = ref<SuppliedBuilding | null>(null)
 const buildingToManage = ref<SuppliedBuilding | null>(null)
 const searchQuery = ref("")
+const isSyncing = computed(() => syncStatus.value.isSyncing)
 
 // Computed
 const filteredBuildings = computed(() => {
@@ -201,6 +221,11 @@ const shareBuilding = (building: SuppliedBuilding) => {
 
 const manageMembers = (building: SuppliedBuilding) => {
   buildingToManage.value = building
+}
+
+const triggerManualSync = async () => {
+  console.log('[Manual Sync] Triggering manual sync...')
+  await performInitialSync()
 }
 
 const closeModal = () => {

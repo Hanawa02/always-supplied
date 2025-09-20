@@ -58,18 +58,24 @@ export function useCloudSync() {
   async function performInitialSync(): Promise<void> {
     if (!isAuthenticated.value || isSyncing.value) return
 
+    console.log('[CloudSync] Starting initial sync...')
+    console.log('[CloudSync] Local buildings count:', localBuildings.value.length)
+
     try {
       isSyncing.value = true
       conflictsResolved.value = 0
 
       // Check if this is first time sync (migration needed)
       const cloudResult = await cloudStorage.getBuildings()
+      console.log('[CloudSync] Cloud buildings result:', cloudResult)
 
       if (cloudResult.success && cloudResult.data && cloudResult.data.length === 0 && localBuildings.value.length > 0) {
         // First time sync - migrate local data to cloud
+        console.log('[CloudSync] No cloud data found, migrating local data to cloud...')
         await migrateLocalDataToCloud()
       } else if (cloudResult.success && cloudResult.data) {
         // Sync down from cloud
+        console.log('[CloudSync] Cloud data found, syncing from cloud...')
         await syncFromCloud()
       }
 
@@ -77,6 +83,7 @@ export function useCloudSync() {
       await offlineQueue.processQueue()
 
       lastSync.value = new Date()
+      console.log('[CloudSync] Initial sync completed')
 
       toast({
         title: 'Sync Complete',

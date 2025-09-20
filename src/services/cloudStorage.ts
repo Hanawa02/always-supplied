@@ -27,10 +27,23 @@ export class CloudStorageService {
     // Update user ID when auth state changes
     supabase.auth.onAuthStateChange((event, session) => {
       this.userId = session?.user?.id || null
+      console.log('[CloudStorage] Auth state changed:', event, 'User ID:', this.userId)
     })
+
+    // Also check current session immediately
+    this.initializeUserId()
+  }
+
+  private async initializeUserId() {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      this.userId = user.id
+      console.log('[CloudStorage] Initialized with user ID:', this.userId)
+    }
   }
 
   private ensureAuthenticated(): string {
+    console.log('[CloudStorage] Ensuring authenticated, current userId:', this.userId)
     if (!this.userId) {
       throw new Error('User must be authenticated to access cloud storage')
     }
@@ -106,6 +119,7 @@ export class CloudStorageService {
 
   async getBuildings(): Promise<SyncResult<CloudBuilding[]>> {
     try {
+      console.log('[CloudStorage] Getting buildings from cloud...')
       const userId = this.ensureAuthenticated()
 
       const { data, error } = await supabase
@@ -114,12 +128,17 @@ export class CloudStorageService {
         .eq('user_id', userId)
         .order('updated_at', { ascending: false })
 
+      console.log('[CloudStorage] Get buildings result:', { data, error })
+
       if (error) {
+        console.error('[CloudStorage] Error getting buildings:', error)
         return { success: false, error: error.message }
       }
 
+      console.log('[CloudStorage] Found', data?.length || 0, 'buildings in cloud')
       return { success: true, data: data || [] }
     } catch (error) {
+      console.error('[CloudStorage] Exception getting buildings:', error)
       return { success: false, error: (error as Error).message }
     }
   }
