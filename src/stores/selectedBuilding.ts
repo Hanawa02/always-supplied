@@ -3,7 +3,7 @@ import { computed, ref } from "vue"
 
 import type { SuppliedBuilding } from "~/types/suppliedBuilding"
 
-export const useSelectedBuildingStore = defineStore("selectedBuilding", () => {
+export const use_selected_building_store = defineStore("selectedBuilding", () => {
   // State
   const selectedBuildingId = ref<string | null>(null)
   const selectedBuildingData = ref<SuppliedBuilding | null>(null)

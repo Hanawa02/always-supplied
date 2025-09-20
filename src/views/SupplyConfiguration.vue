@@ -175,7 +175,7 @@ import { useI18n } from "~/composables/useI18n"
 import { useSuppliedBuildings } from "~/composables/useSuppliedBuildings"
 import { useSupplyItems } from "~/composables/useSupplyItems"
 import { ROUTES } from "~/router/routes"
-import { useSelectedBuildingStore } from "~/stores/selectedBuilding"
+import { use_selected_building_store } from "~/stores/selectedBuilding"
 import type { CreateBuyingItem, UpdateBuyingItem } from "~/types/buyingItem"
 import type { CreateSupplyItem, SupplyItem, UpdateSupplyItem } from "~/types/supply"
 
@@ -192,7 +192,7 @@ const {
 const { createFromSupplyItem } = useBuyingItems()
 
 const { getBuildingById } = useSuppliedBuildings()
-const selectedBuildingStore = useSelectedBuildingStore()
+const selectedBuildingStore = use_selected_building_store()
 const { m } = useI18n()
 const { toast } = useToast()
 const route = useRoute()

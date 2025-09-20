@@ -251,5 +251,11 @@
   "toast_account_deletion": "Account Deletion",
   "toast_account_deletion_desc": "Account deletion feature will be available soon.",
   "toast_deletion_failed": "Deletion Failed",
-  "toast_deletion_failed_desc": "An error occurred while deleting your account."
+  "toast_deletion_failed_desc": "An error occurred while deleting your account.",
+  "auth_log_out_button": "Log out",
+  "auth_log_out_success_toast_title": "Logged Out",
+  "auth_log_out_success_toast_description": "You have been logged out successfully.",
+  "auth_log_out_error_toast_title": "Log Out Failed",
+  "auth_log_out_error_toast_description": "An error occurred while logging out.",
+  "auth_log_in_button": "Log In"
 }

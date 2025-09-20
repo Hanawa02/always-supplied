@@ -1,14 +1,16 @@
 import type { AuthError, Session, User } from "@supabase/supabase-js"
 import { computed, ref } from "vue"
 
-import { supabase } from "~/lib/supabase"
+import { toast } from "~/components/ui/toast"
+import { useI18n } from "~/composables/useI18n"
+import { supabase, SUPABASE_TOKEN_STORAGE_KEY } from "~/lib/supabase"
 import type { UserProfile } from "~/types/supabase"
 
 // Global auth state
 const user = ref<User | null>(null)
 const session = ref<Session | null>(null)
 const profile = ref<UserProfile | null>(null)
-const loading = ref(true)
+const loading = ref(false)
 const initializing = ref(true)
 
 // Initialize auth state listener
@@ -49,7 +51,7 @@ async function loadUserProfile(userId: string) {
 }
 
 export function use_auth() {
-  // Computed properties
+  const { m } = useI18n()
   const is_authenticated = computed(() => !!user.value)
   const isLoading = computed(() => loading.value)
   const isInitializing = computed(() => initializing.value)
@@ -137,49 +139,36 @@ export function use_auth() {
     }
   }
 
-  // Log out
   const log_out = async () => {
-    console.log("[use_auth] Starting sign out process...")
     loading.value = true
 
     try {
-      console.log("[use_auth] Calling supabase.auth.signOut()...")
       const { error } = await supabase.auth.signOut()
 
       if (error) {
-        console.error("[use_auth] Supabase sign out error:", error)
         throw error
       }
-
-      console.log("[use_auth] Supabase sign out successful, clearing local state...")
 
       // Clear local state
       user.value = null
       session.value = null
       profile.value = null
 
-      // Also clear any localStorage items that might be stuck
-      try {
-        const keysToRemove: string[] = []
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i)
-          if (key && (key.includes("supabase") || key.includes("sb-"))) {
-            keysToRemove.push(key)
-          }
-        }
-        keysToRemove.forEach((key) => {
-          console.log("[use_auth] Removing localStorage key:", key)
-          localStorage.removeItem(key)
-        })
-      } catch (clearError) {
-        console.error("[use_auth] Error clearing localStorage:", clearError)
-      }
+      // Clear auth token
+      localStorage.removeItem(SUPABASE_TOKEN_STORAGE_KEY)
 
-      console.log("[use_auth] Sign out complete")
-      return { error: null }
+      toast({
+        title: m.auth_log_out_success_toast_title(),
+        description: m.auth_log_out_success_toast_description(),
+      })
     } catch (error) {
-      console.error("[use_auth] Sign out error:", error)
-      return { error: error as AuthError }
+      console.error(error)
+
+      toast({
+        title: m.auth_log_out_error_toast_title(),
+        description: m.auth_log_out_error_toast_description(),
+        variant: "destructive",
+      })
     } finally {
       loading.value = false
     }
@@ -289,7 +278,7 @@ export function use_auth() {
   }
 
   // Refresh session
-  const refreshSession = async () => {
+  const refresh_session = async () => {
     const { data, error } = await supabase.auth.refreshSession()
 
     if (error) {
@@ -322,6 +311,6 @@ export function use_auth() {
     updatePassword,
     deleteAccount,
     getCurrentSession,
-    refreshSession,
+    refresh_session,
   }
 }

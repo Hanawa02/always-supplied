@@ -11,6 +11,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
   )
 }
 
+export const SUPABASE_TOKEN_STORAGE_KEY = "as_supabase_token"
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   auth: {
     autoRefreshToken: true,
@@ -21,6 +22,7 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
     storage: window?.localStorage, // Explicitly use localStorage
     // Remove custom storage key to let Supabase handle it with proper domain isolation
     // storageKey: "supabase.auth.token", // This was causing conflicts
+    storageKey: SUPABASE_TOKEN_STORAGE_KEY,
   },
   realtime: {
     params: {
@@ -44,11 +46,6 @@ export const getCurrentSession = () => {
   return supabase.auth.getSession()
 }
 
-// Helper function to sign out
-export const signOut = () => {
-  return supabase.auth.signOut()
-}
-
 // Helper function to clear session and retry login (for troubleshooting)
 export const clearAuthSession = async () => {
   try {
@@ -56,23 +53,25 @@ export const clearAuthSession = async () => {
     const keysToRemove: string[] = []
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i)
-      if (key && (key.includes('supabase') || key.includes('sb-'))) {
+      if (key && (key.includes("supabase") || key.includes("sb-"))) {
         keysToRemove.push(key)
       }
     }
-    keysToRemove.forEach(key => localStorage.removeItem(key))
+    keysToRemove.forEach((key) => localStorage.removeItem(key))
 
     // Also clear session cookies if any
     document.cookie.split(";").forEach((c) => {
-      if (c.includes('sb-') || c.includes('supabase')) {
-        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/")
+      if (c.includes("sb-") || c.includes("supabase")) {
+        document.cookie = c
+          .replace(/^ +/, "")
+          .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/")
       }
     })
 
-    console.log('[Auth] Cleared all Supabase sessions from storage')
+    console.log("[Auth] Cleared all Supabase sessions from storage")
     return { success: true }
   } catch (error) {
-    console.error('[Auth] Error clearing sessions:', error)
+    console.error("[Auth] Error clearing sessions:", error)
     return { success: false, error }
   }
 }

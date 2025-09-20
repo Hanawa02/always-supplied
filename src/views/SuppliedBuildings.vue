@@ -150,7 +150,7 @@ import { useCloudSync } from "~/composables/useCloudSync"
 import { useI18n } from "~/composables/useI18n"
 import { useSuppliedBuildings } from "~/composables/useSuppliedBuildings"
 import { useSupplyItems } from "~/composables/useSupplyItems"
-import { useSelectedBuildingStore } from "~/stores/selectedBuilding"
+import { use_selected_building_store } from "~/stores/selectedBuilding"
 import type {
   CreateSuppliedBuilding,
   SuppliedBuilding,
@@ -159,7 +159,7 @@ import type {
 
 const router = useRouter()
 const { m } = useI18n()
-const selectedBuildingStore = useSelectedBuildingStore()
+const selectedBuildingStore = use_selected_building_store()
 const {
   suppliedBuildings,
   totalBuildings,

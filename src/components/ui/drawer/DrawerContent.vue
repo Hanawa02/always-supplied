@@ -22,11 +22,11 @@ const forwardedProps = useForwardPropsEmits(delegatedProps, emits)
 
 const POSITION_CLASSES = {
   bottom:
-    "fixed inset-x-0 bottom-0 z-[99] mt-24 flex h-auto flex-col rounded-t-4 border bg-background",
-  top: "fixed inset-x-0 top-0 z-[99] mb-24 flex h-auto flex-col rounded-b-4 border bg-background",
-  left: "fixed inset-y-0 left-0 z-[99] mr-24 flex w-auto flex-col rounded-r-4 border bg-background",
+    "fixed inset-x-0 bottom-0 z-[99] mt-24 flex h-auto flex-col rounded-t-2 border bg-background",
+  top: "fixed inset-x-0 top-0 z-[99] mb-24 flex h-auto flex-col rounded-b-2 border bg-background",
+  left: "fixed inset-y-0 left-0 z-[99] mr-24 flex w-auto flex-col rounded-r-2 border bg-background",
   right:
-    "fixed inset-y-0 right-0 z-[99] ml-24 flex h-auto flex-col rounded-l-4 border bg-background",
+    "fixed inset-y-0 right-0 z-[99] ml-24 flex h-auto flex-col rounded-l-2 border bg-background",
 }
 
 const contentCLasses = computed(() => POSITION_CLASSES[props.position])
@@ -36,7 +36,6 @@ const contentCLasses = computed(() => POSITION_CLASSES[props.position])
   <DrawerPortal>
     <DrawerOverlay />
     <DrawerContent v-bind="forwardedProps" :class="cn(contentCLasses, props.class)">
-      <div class="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted" />
       <slot />
     </DrawerContent>
   </DrawerPortal>

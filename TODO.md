@@ -1,0 +1,6 @@
+- [ ] Update Desktop Menu
+  - Move Join Building button to correct place
+  - move language to dropdown account menu (if logged in)
+  - [ ] Simplify Sync status
+- [ ] Login page
+  - adjust
