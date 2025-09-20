@@ -22,12 +22,14 @@
               {{ m.app_navigation_shopping_list() }}
             </router-link>
             <router-link
-              :to="selectedBuildingStore.selectedBuildingId
-                ? {
-                    name: ROUTES.SUPPLY_CONFIGURATION.name,
-                    params: { buildingId: selectedBuildingStore.selectedBuildingId }
-                  }
-                : { name: ROUTES.SUPPLIED_BUILDINGS.name }"
+              :to="
+                selectedBuildingStore.selectedBuildingId
+                  ? {
+                      name: ROUTES.SUPPLY_CONFIGURATION.name,
+                      params: { buildingId: selectedBuildingStore.selectedBuildingId },
+                    }
+                  : { name: ROUTES.SUPPLIED_BUILDINGS.name }
+              "
               class="text-gray-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors flex flex-col items-start"
               active-class="text-primary-700 bg-primary-50"
             >
@@ -169,12 +171,14 @@
             </router-link>
 
             <router-link
-              :to="selectedBuildingStore.selectedBuildingId
-                ? {
-                    name: ROUTES.SUPPLY_CONFIGURATION.name,
-                    params: { buildingId: selectedBuildingStore.selectedBuildingId }
-                  }
-                : { name: ROUTES.SUPPLIED_BUILDINGS.name }"
+              :to="
+                selectedBuildingStore.selectedBuildingId
+                  ? {
+                      name: ROUTES.SUPPLY_CONFIGURATION.name,
+                      params: { buildingId: selectedBuildingStore.selectedBuildingId },
+                    }
+                  : { name: ROUTES.SUPPLIED_BUILDINGS.name }
+              "
               @click="closeMobileMenu"
               class="flex flex-col px-3 py-3 text-sm font-medium text-gray-600 rounded-lg hover:text-primary-600 hover:bg-primary-50 transition-colors"
               active-class="text-primary-700 bg-primary-50"
@@ -215,7 +219,7 @@
               v-if="isAuthenticated"
               variant="outline"
               size="sm"
-              @click="showJoinDialog = true; closeMobileMenu()"
+              @click="handleJoinButton()"
               class="w-full flex items-center justify-center space-x-2"
             >
               <i class="i-mdi:plus-circle w-4 h-4"></i>
@@ -232,23 +236,8 @@
                 <i class="i-mdi:account w-4 h-4 mr-2"></i>
                 {{ m.account_title() }}
               </router-link>
-              <Button
-                variant="ghost"
-                size="sm"
-                @click="handleSignOut"
-                class="w-full text-left justify-start"
-              >
-                <i class="i-mdi:logout w-4 h-4 mr-2"></i>
-                {{ m.account_sign_out() }}
-              </Button>
             </div>
-            <Button
-              v-else
-              variant="outline"
-              size="sm"
-              @click="$router.push('/auth/login'); closeMobileMenu()"
-              class="w-full"
-            >
+            <Button v-else variant="outline" size="sm" @click="handleSignInClick()" class="w-full">
               {{ m.auth_sign_in() }}
             </Button>
 
@@ -261,17 +250,14 @@
         </div>
       </div>
     </div>
+    <!-- Join Building Dialog -->
+    <JoinBuildingDialog v-model:open="showJoinDialog" @success="handleJoinSuccess" />
   </nav>
-
-  <!-- Join Building Dialog -->
-  <JoinBuildingDialog
-    v-model:open="showJoinDialog"
-    @success="handleJoinSuccess"
-  />
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue"
+import { useRouter } from "vue-router"
 
 import AppLogo from "~/components/AppLogo.vue"
 import LanguageSwitcher from "~/components/LanguageSwitcher.vue"
@@ -280,16 +266,19 @@ import { Button } from "~/components/ui/button"
 import SyncStatusIndicator from "~/components/ui/SyncStatusIndicator.vue"
 import { toast } from "~/components/ui/toast"
 import UserMenu from "~/components/UserMenu.vue"
-import { useAuth } from "~/composables/useAuth"
+import { use_auth } from "~/composables/use-auth"
 import { useI18n } from "~/composables/useI18n"
 import { useTypedRouter } from "~/composables/useRouter"
 import { useSelectedBuildingStore } from "~/stores/selectedBuilding"
 import type { Building } from "~/types"
 
+import MobileNavigation from "./navigation/MobileNavigation.vue"
+
 const { ROUTES } = useTypedRouter()
 const { m } = useI18n()
-const { isAuthenticated, signOut } = useAuth()
+const { isAuthenticated, signOut } = use_auth()
 const selectedBuildingStore = useSelectedBuildingStore()
+const router = useRouter()
 
 // Mobile menu state
 const mobileMenuOpen = ref(false)
@@ -303,30 +292,21 @@ const closeMobileMenu = () => {
   mobileMenuOpen.value = false
 }
 
-// Handle sign out
-const handleSignOut = async () => {
-  try {
-    await signOut()
-    toast({
-      title: 'Signed Out',
-      description: 'You have been signed out successfully.',
-    })
-    closeMobileMenu()
-  } catch {
-    toast({
-      title: 'Sign Out Failed',
-      description: 'An error occurred while signing out.',
-      variant: 'destructive',
-    })
-  }
+const handleJoinButton = () => {
+  showJoinDialog.value = true
+  closeMobileMenu()
 }
-
 // Handle successful building join
 const handleJoinSuccess = (building: Building) => {
   toast({
-    title: 'Building Joined!',
+    title: "Building Joined!",
     description: `You are now a member of "${building.name}".`,
   })
+}
+
+const handleSignInClick = () => {
+  router.push("/auth/login")
+  closeMobileMenu()
 }
 
 // Load selected building from storage on mount

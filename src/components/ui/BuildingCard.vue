@@ -27,11 +27,7 @@
               class="i-mdi:cloud-check text-green-500 w-4 h-4"
               title="Synced to cloud"
             ></i>
-            <i
-              v-else
-              class="i-mdi:cloud-off text-gray-400 w-4 h-4"
-              title="Offline"
-            ></i>
+            <i v-else class="i-mdi:cloud-off text-gray-400 w-4 h-4" title="Offline"></i>
           </div>
 
           <!-- Action Buttons -->
@@ -126,9 +122,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu"
-import { useAuth } from "~/composables/useAuth"
+import { use_auth } from "~/composables/use-auth"
 import { useCloudSync } from "~/composables/useCloudSync"
 import type { SuppliedBuilding } from "~/types/suppliedBuilding"
 
@@ -151,7 +147,7 @@ defineEmits<{
   members: [building: SuppliedBuilding]
 }>()
 
-const { isAuthenticated } = useAuth()
+const { isAuthenticated } = use_auth()
 const { syncStatus } = useCloudSync()
 
 const isOnline = computed(() => navigator.onLine)

@@ -25,7 +25,10 @@
               class="absolute inset-y-0 right-0 pr-3 flex items-center"
               :disabled="isLoading"
             >
-              <i :class="showCurrentPassword ? 'i-mdi:eye-off' : 'i-mdi:eye'" class="text-gray-400 hover:text-gray-600"></i>
+              <i
+                :class="showCurrentPassword ? 'i-mdi:eye-off' : 'i-mdi:eye'"
+                class="text-gray-400 hover:text-gray-600"
+              ></i>
             </button>
           </div>
           <p v-if="errors.currentPassword" class="mt-1 text-sm text-red-600">
@@ -52,7 +55,10 @@
               class="absolute inset-y-0 right-0 pr-3 flex items-center"
               :disabled="isLoading"
             >
-              <i :class="showNewPassword ? 'i-mdi:eye-off' : 'i-mdi:eye'" class="text-gray-400 hover:text-gray-600"></i>
+              <i
+                :class="showNewPassword ? 'i-mdi:eye-off' : 'i-mdi:eye'"
+                class="text-gray-400 hover:text-gray-600"
+              ></i>
             </button>
           </div>
           <p v-if="errors.newPassword" class="mt-1 text-sm text-red-600">
@@ -82,7 +88,10 @@
               class="absolute inset-y-0 right-0 pr-3 flex items-center"
               :disabled="isLoading"
             >
-              <i :class="showConfirmPassword ? 'i-mdi:eye-off' : 'i-mdi:eye'" class="text-gray-400 hover:text-gray-600"></i>
+              <i
+                :class="showConfirmPassword ? 'i-mdi:eye-off' : 'i-mdi:eye'"
+                class="text-gray-400 hover:text-gray-600"
+              ></i>
             </button>
           </div>
           <p v-if="errors.confirmPassword" class="mt-1 text-sm text-red-600">
@@ -97,18 +106,10 @@
 
         <!-- Dialog Footer -->
         <DialogFooter>
-          <Button
-            type="button"
-            variant="outline"
-            @click="handleCancel"
-            :disabled="isLoading"
-          >
+          <Button type="button" variant="outline" @click="handleCancel" :disabled="isLoading">
             {{ m.common_cancel() }}
           </Button>
-          <Button
-            type="submit"
-            :disabled="isLoading || !isFormValid"
-          >
+          <Button type="submit" :disabled="isLoading || !isFormValid">
             <i v-if="isLoading" class="i-mdi:loading animate-spin mr-2"></i>
             {{ m.account_update_password() }}
           </Button>
@@ -119,14 +120,20 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue'
+import { computed, reactive, ref, watch } from "vue"
 
-import { Button } from '~/components/ui/button'
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '~/components/ui/dialog'
-import { Input } from '~/components/ui/input'
-import { Label } from '~/components/ui/label'
-import { useAuth } from '~/composables/useAuth'
-import { useI18n } from '~/composables/useI18n'
+import { Button } from "~/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "~/components/ui/dialog"
+import { Input } from "~/components/ui/input"
+import { Label } from "~/components/ui/label"
+import { use_auth } from "~/composables/use-auth"
+import { useI18n } from "~/composables/useI18n"
 
 interface Props {
   open: boolean
@@ -135,18 +142,18 @@ interface Props {
 const props = defineProps<Props>()
 
 const emit = defineEmits<{
-  'update:open': [value: boolean]
-  'success': []
+  "update:open": [value: boolean]
+  success: []
 }>()
 
 const { m } = useI18n()
-const { updatePassword } = useAuth()
+const { updatePassword } = use_auth()
 
 // Form state
 const form = reactive({
-  currentPassword: '',
-  newPassword: '',
-  confirmPassword: '',
+  currentPassword: "",
+  newPassword: "",
+  confirmPassword: "",
 })
 
 // UI state
@@ -154,12 +161,12 @@ const isLoading = ref(false)
 const showCurrentPassword = ref(false)
 const showNewPassword = ref(false)
 const showConfirmPassword = ref(false)
-const generalError = ref('')
+const generalError = ref("")
 
 const errors = reactive({
-  currentPassword: '',
-  newPassword: '',
-  confirmPassword: '',
+  currentPassword: "",
+  newPassword: "",
+  confirmPassword: "",
 })
 
 // Validation
@@ -183,21 +190,24 @@ const getPasswordStrength = (password: string) => {
 }
 
 // Clear form when dialog closes
-watch(() => props.open, (isOpen) => {
-  if (!isOpen) {
-    resetForm()
-  }
-})
+watch(
+  () => props.open,
+  (isOpen) => {
+    if (!isOpen) {
+      resetForm()
+    }
+  },
+)
 
 // Reset form
 const resetForm = () => {
-  form.currentPassword = ''
-  form.newPassword = ''
-  form.confirmPassword = ''
-  errors.currentPassword = ''
-  errors.newPassword = ''
-  errors.confirmPassword = ''
-  generalError.value = ''
+  form.currentPassword = ""
+  form.newPassword = ""
+  form.confirmPassword = ""
+  errors.currentPassword = ""
+  errors.newPassword = ""
+  errors.confirmPassword = ""
+  generalError.value = ""
   showCurrentPassword.value = false
   showNewPassword.value = false
   showConfirmPassword.value = false
@@ -205,10 +215,10 @@ const resetForm = () => {
 
 // Clear errors when user types
 const clearErrors = () => {
-  errors.currentPassword = ''
-  errors.newPassword = ''
-  errors.confirmPassword = ''
-  generalError.value = ''
+  errors.currentPassword = ""
+  errors.newPassword = ""
+  errors.confirmPassword = ""
+  generalError.value = ""
 }
 
 // Handle form submission
@@ -217,27 +227,27 @@ const handleSubmit = async () => {
 
   // Validate form
   if (form.currentPassword.length === 0) {
-    errors.currentPassword = 'Current password is required'
+    errors.currentPassword = "Current password is required"
     return
   }
 
   if (form.newPassword.length < 6) {
-    errors.newPassword = 'Password must be at least 6 characters'
+    errors.newPassword = "Password must be at least 6 characters"
     return
   }
 
   if (getPasswordStrength(form.newPassword) < 2) {
-    errors.newPassword = 'Password is too weak. Include uppercase, lowercase, and numbers.'
+    errors.newPassword = "Password is too weak. Include uppercase, lowercase, and numbers."
     return
   }
 
   if (form.newPassword !== form.confirmPassword) {
-    errors.confirmPassword = 'Passwords do not match'
+    errors.confirmPassword = "Passwords do not match"
     return
   }
 
   if (form.currentPassword === form.newPassword) {
-    errors.newPassword = 'New password must be different from current password'
+    errors.newPassword = "New password must be different from current password"
     return
   }
 
@@ -249,11 +259,11 @@ const handleSubmit = async () => {
     if (error) {
       generalError.value = error.message
     } else {
-      emit('success')
+      emit("success")
       handleCancel()
     }
   } catch {
-    generalError.value = 'An unexpected error occurred'
+    generalError.value = "An unexpected error occurred"
   } finally {
     isLoading.value = false
   }
@@ -261,13 +271,13 @@ const handleSubmit = async () => {
 
 // Handle cancel
 const handleCancel = () => {
-  emit('update:open', false)
+  emit("update:open", false)
 }
 
 // Handle dialog close
 const handleDialogClose = (open: boolean) => {
   if (!open) {
-    emit('update:open', false)
+    emit("update:open", false)
   }
 }
 </script>

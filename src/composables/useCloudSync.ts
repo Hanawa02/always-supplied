@@ -1,11 +1,11 @@
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch } from "vue"
 
-import { toast } from '~/components/ui/toast'
-import { useAuth } from '~/composables/useAuth'
-import { useSuppliedBuildings } from '~/composables/useSuppliedBuildings'
-import { cloudStorage, type MigrationProgress, type SyncResult } from '~/services/cloudStorage'
-import { offlineQueue, type QueueStatus } from '~/services/offlineQueue'
-import type { Building, BuyingItem,SupplyItem } from '~/types'
+import { toast } from "~/components/ui/toast"
+import { use_auth } from "~/composables/use-auth"
+import { useSuppliedBuildings } from "~/composables/useSuppliedBuildings"
+import { cloudStorage, type MigrationProgress, type SyncResult } from "~/services/cloudStorage"
+import { offlineQueue, type QueueStatus } from "~/services/offlineQueue"
+import type { Building, BuyingItem, SupplyItem } from "~/types"
 
 export interface SyncStatus {
   isOnline: boolean
@@ -17,8 +17,13 @@ export interface SyncStatus {
 }
 
 export function useCloudSync() {
-  const { isAuthenticated } = useAuth()
-  const { suppliedBuildings: localBuildings, updateSuppliedBuilding, createSuppliedBuilding, deleteSuppliedBuilding } = useSuppliedBuildings()
+  const { isAuthenticated } = use_auth()
+  const {
+    suppliedBuildings: localBuildings,
+    updateSuppliedBuilding,
+    createSuppliedBuilding,
+    deleteSuppliedBuilding,
+  } = useSuppliedBuildings()
 
   // Sync state
   const isSyncing = ref(false)
@@ -36,30 +41,37 @@ export function useCloudSync() {
       lastSync: lastSync.value || queueStatus.lastSync,
       conflictsResolved: conflictsResolved.value,
       pendingOperations: queueStatus.pending,
-      errors: queueStatus.errors
+      errors: queueStatus.errors,
     }
   })
 
   // Auto-sync when authentication state changes
-  watch(isAuthenticated, async (authenticated) => {
-    if (authenticated && navigator.onLine) {
-      await performInitialSync()
-    }
-  }, { immediate: true })
+  watch(
+    isAuthenticated,
+    async (authenticated) => {
+      if (authenticated && navigator.onLine) {
+        await performInitialSync()
+      }
+    },
+    { immediate: true },
+  )
 
   // Auto-sync when coming back online
-  watch(() => navigator.onLine, async (online) => {
-    if (online && isAuthenticated.value) {
-      await syncWithCloud()
-    }
-  })
+  watch(
+    () => navigator.onLine,
+    async (online) => {
+      if (online && isAuthenticated.value) {
+        await syncWithCloud()
+      }
+    },
+  )
 
   // Initial sync after authentication
   async function performInitialSync(): Promise<void> {
     if (!isAuthenticated.value || isSyncing.value) return
 
-    console.log('[CloudSync] Starting initial sync...')
-    console.log('[CloudSync] Local buildings count:', localBuildings.value.length)
+    console.log("[CloudSync] Starting initial sync...")
+    console.log("[CloudSync] Local buildings count:", localBuildings.value.length)
 
     try {
       isSyncing.value = true
@@ -67,15 +79,20 @@ export function useCloudSync() {
 
       // Check if this is first time sync (migration needed)
       const cloudResult = await cloudStorage.getBuildings()
-      console.log('[CloudSync] Cloud buildings result:', cloudResult)
+      console.log("[CloudSync] Cloud buildings result:", cloudResult)
 
-      if (cloudResult.success && cloudResult.data && cloudResult.data.length === 0 && localBuildings.value.length > 0) {
+      if (
+        cloudResult.success &&
+        cloudResult.data &&
+        cloudResult.data.length === 0 &&
+        localBuildings.value.length > 0
+      ) {
         // First time sync - migrate local data to cloud
-        console.log('[CloudSync] No cloud data found, migrating local data to cloud...')
+        console.log("[CloudSync] No cloud data found, migrating local data to cloud...")
         await migrateLocalDataToCloud()
       } else if (cloudResult.success && cloudResult.data) {
         // Sync down from cloud
-        console.log('[CloudSync] Cloud data found, syncing from cloud...')
+        console.log("[CloudSync] Cloud data found, syncing from cloud...")
         await syncFromCloud()
       }
 
@@ -83,17 +100,17 @@ export function useCloudSync() {
       await offlineQueue.processQueue()
 
       lastSync.value = new Date()
-      console.log('[CloudSync] Initial sync completed')
+      console.log("[CloudSync] Initial sync completed")
 
       toast({
-        title: 'Sync Complete',
+        title: "Sync Complete",
         description: `Successfully synced ${localBuildings.value.length} buildings.`,
       })
     } catch (error) {
       toast({
-        title: 'Sync Failed',
+        title: "Sync Failed",
         description: (error as Error).message,
-        variant: 'destructive',
+        variant: "destructive",
       })
     } finally {
       isSyncing.value = false
@@ -107,27 +124,24 @@ export function useCloudSync() {
     migrationProgress.value = {
       total: localBuildings.value.length,
       completed: 0,
-      errors: []
+      errors: [],
     }
 
-    const progress = await cloudStorage.migrateLocalData(
-      localBuildings.value,
-      (p) => {
-        migrationProgress.value = p
-      }
-    )
+    const progress = await cloudStorage.migrateLocalData(localBuildings.value, (p) => {
+      migrationProgress.value = p
+    })
 
     migrationProgress.value = progress
 
     if (progress.errors.length > 0) {
       toast({
-        title: 'Migration Completed with Errors',
+        title: "Migration Completed with Errors",
         description: `${progress.completed}/${progress.total} buildings migrated. ${progress.errors.length} errors occurred.`,
-        variant: 'destructive',
+        variant: "destructive",
       })
     } else {
       toast({
-        title: 'Migration Complete',
+        title: "Migration Complete",
         description: `Successfully migrated ${progress.completed} buildings to cloud.`,
       })
     }
@@ -138,7 +152,7 @@ export function useCloudSync() {
     if (!isAuthenticated.value) return
 
     // TODO: Implement full sync when type adapters are complete
-    console.log('Cloud sync temporarily disabled - integration in progress')
+    console.log("Cloud sync temporarily disabled - integration in progress")
 
     // For now, just mark as synced to avoid errors
     lastSync.value = new Date()
@@ -148,7 +162,7 @@ export function useCloudSync() {
   async function syncBuildingToCloud(building: any): Promise<SyncResult<any>> {
     if (!isAuthenticated.value) {
       // Queue operation for later
-      offlineQueue.addBuildingOperation('update', building.id, building)
+      offlineQueue.addBuildingOperation("update", building.id, building)
       return { success: true }
     }
 
@@ -160,16 +174,19 @@ export function useCloudSync() {
 
     if (!result.success) {
       // Queue operation for retry
-      offlineQueue.addBuildingOperation('update', building.id, building)
+      offlineQueue.addBuildingOperation("update", building.id, building)
     }
 
     return result
   }
 
   // Sync specific supply item to cloud
-  async function syncSupplyItemToCloud(item: SupplyItem, buildingId: string): Promise<SyncResult<any>> {
+  async function syncSupplyItemToCloud(
+    item: SupplyItem,
+    buildingId: string,
+  ): Promise<SyncResult<any>> {
     if (!isAuthenticated.value) {
-      offlineQueue.addSupplyItemOperation('update', item.id, buildingId, item)
+      offlineQueue.addSupplyItemOperation("update", item.id, buildingId, item)
       return { success: true }
     }
 
@@ -180,16 +197,19 @@ export function useCloudSync() {
     }
 
     if (!result.success) {
-      offlineQueue.addSupplyItemOperation('update', item.id, buildingId, item)
+      offlineQueue.addSupplyItemOperation("update", item.id, buildingId, item)
     }
 
     return result
   }
 
   // Sync specific buying item to cloud
-  async function syncBuyingItemToCloud(item: BuyingItem, buildingId: string): Promise<SyncResult<any>> {
+  async function syncBuyingItemToCloud(
+    item: BuyingItem,
+    buildingId: string,
+  ): Promise<SyncResult<any>> {
     if (!isAuthenticated.value) {
-      offlineQueue.addBuyingItemOperation('update', item.id, buildingId, item)
+      offlineQueue.addBuyingItemOperation("update", item.id, buildingId, item)
       return { success: true }
     }
 
@@ -200,7 +220,7 @@ export function useCloudSync() {
     }
 
     if (!result.success) {
-      offlineQueue.addBuyingItemOperation('update', item.id, buildingId, item)
+      offlineQueue.addBuyingItemOperation("update", item.id, buildingId, item)
     }
 
     return result
@@ -209,44 +229,50 @@ export function useCloudSync() {
   // Delete operations
   async function deleteBuildingFromCloud(buildingId: string): Promise<SyncResult<void>> {
     if (!isAuthenticated.value) {
-      offlineQueue.addBuildingOperation('delete', buildingId)
+      offlineQueue.addBuildingOperation("delete", buildingId)
       return { success: true }
     }
 
     const result = await cloudStorage.deleteBuilding(buildingId)
 
     if (!result.success) {
-      offlineQueue.addBuildingOperation('delete', buildingId)
+      offlineQueue.addBuildingOperation("delete", buildingId)
     }
 
     return result
   }
 
-  async function deleteSupplyItemFromCloud(itemId: string, buildingId: string): Promise<SyncResult<void>> {
+  async function deleteSupplyItemFromCloud(
+    itemId: string,
+    buildingId: string,
+  ): Promise<SyncResult<void>> {
     if (!isAuthenticated.value) {
-      offlineQueue.addSupplyItemOperation('delete', itemId, buildingId)
+      offlineQueue.addSupplyItemOperation("delete", itemId, buildingId)
       return { success: true }
     }
 
     const result = await cloudStorage.deleteSupplyItem(itemId, buildingId)
 
     if (!result.success) {
-      offlineQueue.addSupplyItemOperation('delete', itemId, buildingId)
+      offlineQueue.addSupplyItemOperation("delete", itemId, buildingId)
     }
 
     return result
   }
 
-  async function deleteBuyingItemFromCloud(itemId: string, buildingId: string): Promise<SyncResult<void>> {
+  async function deleteBuyingItemFromCloud(
+    itemId: string,
+    buildingId: string,
+  ): Promise<SyncResult<void>> {
     if (!isAuthenticated.value) {
-      offlineQueue.addBuyingItemOperation('delete', itemId, buildingId)
+      offlineQueue.addBuyingItemOperation("delete", itemId, buildingId)
       return { success: true }
     }
 
     const result = await cloudStorage.deleteBuyingItem(itemId, buildingId)
 
     if (!result.success) {
-      offlineQueue.addBuyingItemOperation('delete', itemId, buildingId)
+      offlineQueue.addBuyingItemOperation("delete", itemId, buildingId)
     }
 
     return result
@@ -267,15 +293,15 @@ export function useCloudSync() {
 
       if (syncStatus.value.pendingOperations === 0) {
         toast({
-          title: 'Sync Complete',
-          description: 'All data is up to date.',
+          title: "Sync Complete",
+          description: "All data is up to date.",
         })
       }
     } catch (error) {
       toast({
-        title: 'Sync Failed',
+        title: "Sync Failed",
         description: (error as Error).message,
-        variant: 'destructive',
+        variant: "destructive",
       })
     } finally {
       isSyncing.value = false
@@ -312,6 +338,6 @@ export function useCloudSync() {
     // Computed
     isOnline: computed(() => navigator.onLine),
     hasPendingOperations: computed(() => syncStatus.value.pendingOperations > 0),
-    hasErrors: computed(() => syncStatus.value.errors.length > 0)
+    hasErrors: computed(() => syncStatus.value.errors.length > 0),
   }
 }

@@ -52,7 +52,10 @@
                   class="absolute inset-y-0 right-0 pr-3 flex items-center"
                   :disabled="isLoading"
                 >
-                  <i :class="showPassword ? 'i-mdi:eye-off' : 'i-mdi:eye'" class="text-gray-400 hover:text-gray-600"></i>
+                  <i
+                    :class="showPassword ? 'i-mdi:eye-off' : 'i-mdi:eye'"
+                    class="text-gray-400 hover:text-gray-600"
+                  ></i>
                 </button>
               </div>
               <p v-if="errors.password" class="mt-1 text-sm text-red-600">
@@ -91,11 +94,7 @@
             </div>
 
             <!-- Submit Button -->
-            <Button
-              type="submit"
-              class="w-full"
-              :disabled="isLoading || !isFormValid"
-            >
+            <Button type="submit" class="w-full" :disabled="isLoading || !isFormValid">
               <i v-if="isLoading" class="i-mdi:loading animate-spin mr-2"></i>
               {{ m.auth_sign_in() }}
             </Button>
@@ -114,11 +113,7 @@
           </div>
 
           <!-- Google Sign In -->
-          <GoogleLoginButton
-            :loading="isLoading"
-            @click="handleGoogleSignIn"
-            class="mt-4"
-          />
+          <GoogleLoginButton :loading="isLoading" @click="handleGoogleSignIn" class="mt-4" />
 
           <!-- Sign Up Link -->
           <div class="text-center mt-6">
@@ -139,36 +134,36 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, reactive, ref } from "vue"
+import { useRouter } from "vue-router"
 
-import GoogleLoginButton from '~/components/auth/GoogleLoginButton.vue'
-import { Button } from '~/components/ui/button'
-import { Card, CardContent } from '~/components/ui/card'
-import { Checkbox } from '~/components/ui/checkbox'
-import { Input } from '~/components/ui/input'
-import { Label } from '~/components/ui/label'
-import { toast } from '~/components/ui/toast'
-import { useAuth } from '~/composables/useAuth'
-import { useI18n } from '~/composables/useI18n'
-import { clearAuthSession } from '~/lib/supabase'
+import GoogleLoginButton from "~/components/auth/GoogleLoginButton.vue"
+import { Button } from "~/components/ui/button"
+import { Card, CardContent } from "~/components/ui/card"
+import { Checkbox } from "~/components/ui/checkbox"
+import { Input } from "~/components/ui/input"
+import { Label } from "~/components/ui/label"
+import { toast } from "~/components/ui/toast"
+import { use_auth } from "~/composables/use-auth"
+import { useI18n } from "~/composables/useI18n"
+import { clearAuthSession } from "~/lib/supabase"
 
 const { m } = useI18n()
-const { signIn, signInWithGoogle, isLoading } = useAuth()
+const { signIn, signInWithGoogle, isLoading } = use_auth()
 const router = useRouter()
 
 // Form state
 const form = reactive({
-  email: '',
-  password: '',
+  email: "",
+  password: "",
   remember: false,
 })
 
 const showPassword = ref(false)
-const authError = ref('')
+const authError = ref("")
 const errors = reactive({
-  email: '',
-  password: '',
+  email: "",
+  password: "",
 })
 
 // Validation
@@ -184,9 +179,9 @@ const validateEmail = (email: string) => {
 
 // Clear errors when user types
 const clearErrors = () => {
-  errors.email = ''
-  errors.password = ''
-  authError.value = ''
+  errors.email = ""
+  errors.password = ""
+  authError.value = ""
 }
 
 // Handle form submission
@@ -195,48 +190,48 @@ const handleSubmit = async () => {
 
   // Validate form
   if (!validateEmail(form.email)) {
-    errors.email = 'Please enter a valid email address'
+    errors.email = "Please enter a valid email address"
     return
   }
 
   if (form.password.length < 6) {
-    errors.password = 'Password must be at least 6 characters'
+    errors.password = "Password must be at least 6 characters"
     return
   }
 
   // Attempt sign in
-  console.log('[Login] Attempting sign in for:', form.email)
+  console.log("[Login] Attempting sign in for:", form.email)
   const { error } = await signIn(form.email, form.password)
 
   if (error) {
-    console.error('[Login] Sign in error:', error)
+    console.error("[Login] Sign in error:", error)
     authError.value = error.message
 
     // Provide more specific error messages
     let errorMessage = error.message
-    if (error.message.includes('Invalid login credentials')) {
-      errorMessage = 'Invalid email or password. Please check your credentials and try again.'
-    } else if (error.message.includes('Email not confirmed')) {
-      errorMessage = 'Please verify your email address before signing in.'
-    } else if (error.message.includes('Too many requests')) {
-      errorMessage = 'Too many login attempts. Please try again later.'
+    if (error.message.includes("Invalid login credentials")) {
+      errorMessage = "Invalid email or password. Please check your credentials and try again."
+    } else if (error.message.includes("Email not confirmed")) {
+      errorMessage = "Please verify your email address before signing in."
+    } else if (error.message.includes("Too many requests")) {
+      errorMessage = "Too many login attempts. Please try again later."
     }
 
     toast({
-      title: 'Sign In Failed',
+      title: "Sign In Failed",
       description: errorMessage,
-      variant: 'destructive',
+      variant: "destructive",
     })
   } else {
-    console.log('[Login] Sign in successful')
+    console.log("[Login] Sign in successful")
     toast({
-      title: 'Welcome back!',
-      description: 'You have been signed in successfully.',
+      title: "Welcome back!",
+      description: "You have been logged in successfully.",
     })
 
     // Redirect to intended page or dashboard
     const redirect = router.currentRoute.value.query.redirect as string
-    router.push(redirect || '/buildings')
+    router.push(redirect || "/buildings")
   }
 }
 
@@ -249,9 +244,9 @@ const handleGoogleSignIn = async () => {
   if (error) {
     authError.value = error.message
     toast({
-      title: 'Google Sign In Failed',
+      title: "Google Sign In Failed",
       description: error.message,
-      variant: 'destructive',
+      variant: "destructive",
     })
   }
   // Success handling will be done by auth callback
@@ -259,22 +254,22 @@ const handleGoogleSignIn = async () => {
 
 // Handle clearing session cache (for troubleshooting)
 const handleClearSession = async () => {
-  console.log('[Login] Clearing auth session cache...')
+  console.log("[Login] Clearing auth session cache...")
   const result = await clearAuthSession()
 
   if (result.success) {
     toast({
-      title: 'Sessions Cleared',
-      description: 'Authentication cache has been cleared. Please try logging in again.',
+      title: "Sessions Cleared",
+      description: "Authentication cache has been cleared. Please try logging in again.",
     })
-    authError.value = ''
+    authError.value = ""
     // Reload page to ensure clean state
     window.location.reload()
   } else {
     toast({
-      title: 'Error',
-      description: 'Failed to clear sessions. Please try clearing your browser cache manually.',
-      variant: 'destructive',
+      title: "Error",
+      description: "Failed to clear sessions. Please try clearing your browser cache manually.",
+      variant: "destructive",
     })
   }
 }

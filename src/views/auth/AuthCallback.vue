@@ -154,7 +154,7 @@ onMounted(async () => {
     console.log("Authentication successful")
     toast({
       title: "Welcome!",
-      description: "You have been signed in successfully.",
+      description: "You have been logged in successfully.",
     })
 
     // Redirect to intended page or buildings page

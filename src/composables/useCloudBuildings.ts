@@ -1,17 +1,13 @@
-import { computed, watch } from 'vue'
+import { computed, watch } from "vue"
 
-import { useAuth } from '~/composables/useAuth'
-import { useCloudSync } from '~/composables/useCloudSync'
-import { useSuppliedBuildings } from '~/composables/useSuppliedBuildings'
+import { use_auth } from "~/composables/use-auth"
+import { useCloudSync } from "~/composables/useCloudSync"
+import { useSuppliedBuildings } from "~/composables/useSuppliedBuildings"
 
 export function useCloudBuildings() {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated } = use_auth()
   const { suppliedBuildings: localBuildings } = useSuppliedBuildings()
-  const {
-    syncStatus,
-    syncWithCloud,
-    performInitialSync
-  } = useCloudSync()
+  const { syncStatus, syncWithCloud, performInitialSync } = useCloudSync()
 
   // Combined local and cloud state for buildings
   const buildings = computed(() => {
@@ -31,11 +27,11 @@ export function useCloudBuildings() {
     const { createSuppliedBuilding } = useSuppliedBuildings()
     const newBuilding = await createSuppliedBuilding({
       name: building.name,
-      description: building.description
+      description: building.description,
     })
 
     // TODO: Sync to cloud when integration is complete
-    console.log('Cloud sync for new building will be added:', newBuilding.id)
+    console.log("Cloud sync for new building will be added:", newBuilding.id)
 
     return newBuilding
   }
@@ -47,11 +43,11 @@ export function useCloudBuildings() {
     const updated = await updateSuppliedBuilding({
       id,
       name: updates.name,
-      description: updates.description
+      description: updates.description,
     })
 
     // TODO: Sync to cloud when integration is complete
-    console.log('Cloud sync for updated building will be added:', id)
+    console.log("Cloud sync for updated building will be added:", id)
 
     return updated
   }
@@ -63,40 +59,48 @@ export function useCloudBuildings() {
     await deleteSuppliedBuilding(id)
 
     // TODO: Sync to cloud when integration is complete
-    console.log('Cloud sync for deleted building will be added:', id)
+    console.log("Cloud sync for deleted building will be added:", id)
 
     return true
   }
 
   // Supply item operations with cloud sync (TODO: Implement when supply/buying item cloud sync is ready)
   async function createSupplyItem(buildingId: string, item: Record<string, unknown>) {
-    console.log('Supply item cloud sync not yet implemented:', buildingId, item)
+    console.log("Supply item cloud sync not yet implemented:", buildingId, item)
     return null
   }
 
-  async function updateSupplyItem(buildingId: string, itemId: string, updates: Record<string, unknown>) {
-    console.log('Supply item cloud sync not yet implemented:', buildingId, itemId, updates)
+  async function updateSupplyItem(
+    buildingId: string,
+    itemId: string,
+    updates: Record<string, unknown>,
+  ) {
+    console.log("Supply item cloud sync not yet implemented:", buildingId, itemId, updates)
     return null
   }
 
   async function deleteSupplyItem(buildingId: string, itemId: string) {
-    console.log('Supply item cloud sync not yet implemented:', buildingId, itemId)
+    console.log("Supply item cloud sync not yet implemented:", buildingId, itemId)
     return null
   }
 
   // Buying item operations with cloud sync (TODO: Implement when supply/buying item cloud sync is ready)
   async function createBuyingItem(buildingId: string, item: Record<string, unknown>) {
-    console.log('Buying item cloud sync not yet implemented:', buildingId, item)
+    console.log("Buying item cloud sync not yet implemented:", buildingId, item)
     return null
   }
 
-  async function updateBuyingItem(buildingId: string, itemId: string, updates: Record<string, unknown>) {
-    console.log('Buying item cloud sync not yet implemented:', buildingId, itemId, updates)
+  async function updateBuyingItem(
+    buildingId: string,
+    itemId: string,
+    updates: Record<string, unknown>,
+  ) {
+    console.log("Buying item cloud sync not yet implemented:", buildingId, itemId, updates)
     return null
   }
 
   async function deleteBuyingItem(buildingId: string, itemId: string) {
-    console.log('Buying item cloud sync not yet implemented:', buildingId, itemId)
+    console.log("Buying item cloud sync not yet implemented:", buildingId, itemId)
     return null
   }
 
@@ -135,6 +139,6 @@ export function useCloudBuildings() {
     isOnline: computed(() => navigator.onLine),
     isSyncing: computed(() => syncStatus.value.isSyncing),
     hasPendingOperations: computed(() => syncStatus.value.pendingOperations > 0),
-    hasErrors: computed(() => syncStatus.value.errors.length > 0)
+    hasErrors: computed(() => syncStatus.value.errors.length > 0),
   }
 }

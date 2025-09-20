@@ -1,20 +1,20 @@
-import { ref } from 'vue'
+import { ref } from "vue"
 
-import { useAuth } from '~/composables/useAuth'
-import { buildingSharing } from '~/services/sharingService'
+import { use_auth } from "~/composables/use-auth"
+import { buildingSharing } from "~/services/sharingService"
 
 export type Permission =
-  | 'view_building'
-  | 'edit_building'
-  | 'delete_building'
-  | 'share_building'
-  | 'manage_members'
-  | 'view_supplies'
-  | 'edit_supplies'
-  | 'view_shopping_list'
-  | 'edit_shopping_list'
+  | "view_building"
+  | "edit_building"
+  | "delete_building"
+  | "share_building"
+  | "manage_members"
+  | "view_supplies"
+  | "edit_supplies"
+  | "view_shopping_list"
+  | "edit_shopping_list"
 
-export type Role = 'owner' | 'member' | 'viewer' | null
+export type Role = "owner" | "member" | "viewer" | null
 
 export interface PermissionConfig {
   owner: Permission[]
@@ -24,32 +24,28 @@ export interface PermissionConfig {
 
 const PERMISSION_CONFIG: PermissionConfig = {
   owner: [
-    'view_building',
-    'edit_building',
-    'delete_building',
-    'share_building',
-    'manage_members',
-    'view_supplies',
-    'edit_supplies',
-    'view_shopping_list',
-    'edit_shopping_list'
+    "view_building",
+    "edit_building",
+    "delete_building",
+    "share_building",
+    "manage_members",
+    "view_supplies",
+    "edit_supplies",
+    "view_shopping_list",
+    "edit_shopping_list",
   ],
   member: [
-    'view_building',
-    'view_supplies',
-    'edit_supplies',
-    'view_shopping_list',
-    'edit_shopping_list'
+    "view_building",
+    "view_supplies",
+    "edit_supplies",
+    "view_shopping_list",
+    "edit_shopping_list",
   ],
-  viewer: [
-    'view_building',
-    'view_supplies',
-    'view_shopping_list'
-  ]
+  viewer: ["view_building", "view_supplies", "view_shopping_list"],
 }
 
 export function usePermissions() {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated } = use_auth()
   const buildingRoles = ref<Map<string, Role>>(new Map())
 
   // Get user's role for a specific building
@@ -74,7 +70,7 @@ export function usePermissions() {
   async function hasPermission(buildingId: string, permission: Permission): Promise<boolean> {
     if (!isAuthenticated.value) {
       // Allow viewing when not authenticated (local mode)
-      return permission.startsWith('view_') || permission.startsWith('edit_')
+      return permission.startsWith("view_") || permission.startsWith("edit_")
     }
 
     const role = await getBuildingRole(buildingId)
@@ -86,46 +82,46 @@ export function usePermissions() {
   // Check multiple permissions at once
   async function hasPermissions(buildingId: string, permissions: Permission[]): Promise<boolean[]> {
     const results = await Promise.all(
-      permissions.map(permission => hasPermission(buildingId, permission))
+      permissions.map((permission) => hasPermission(buildingId, permission)),
     )
     return results
   }
 
   // Check if user can perform an action (wrapper for common use cases)
   async function canViewBuilding(buildingId: string): Promise<boolean> {
-    return await hasPermission(buildingId, 'view_building')
+    return await hasPermission(buildingId, "view_building")
   }
 
   async function canEditBuilding(buildingId: string): Promise<boolean> {
-    return await hasPermission(buildingId, 'edit_building')
+    return await hasPermission(buildingId, "edit_building")
   }
 
   async function canDeleteBuilding(buildingId: string): Promise<boolean> {
-    return await hasPermission(buildingId, 'delete_building')
+    return await hasPermission(buildingId, "delete_building")
   }
 
   async function canShareBuilding(buildingId: string): Promise<boolean> {
-    return await hasPermission(buildingId, 'share_building')
+    return await hasPermission(buildingId, "share_building")
   }
 
   async function canManageMembers(buildingId: string): Promise<boolean> {
-    return await hasPermission(buildingId, 'manage_members')
+    return await hasPermission(buildingId, "manage_members")
   }
 
   async function canViewSupplies(buildingId: string): Promise<boolean> {
-    return await hasPermission(buildingId, 'view_supplies')
+    return await hasPermission(buildingId, "view_supplies")
   }
 
   async function canEditSupplies(buildingId: string): Promise<boolean> {
-    return await hasPermission(buildingId, 'edit_supplies')
+    return await hasPermission(buildingId, "edit_supplies")
   }
 
   async function canViewShoppingList(buildingId: string): Promise<boolean> {
-    return await hasPermission(buildingId, 'view_shopping_list')
+    return await hasPermission(buildingId, "view_shopping_list")
   }
 
   async function canEditShoppingList(buildingId: string): Promise<boolean> {
-    return await hasPermission(buildingId, 'edit_shopping_list')
+    return await hasPermission(buildingId, "edit_shopping_list")
   }
 
   // Get all permissions for a building
@@ -133,13 +129,13 @@ export function usePermissions() {
     if (!isAuthenticated.value) {
       // Return basic permissions for local mode
       return [
-        'view_building',
-        'edit_building',
-        'delete_building',
-        'view_supplies',
-        'edit_supplies',
-        'view_shopping_list',
-        'edit_shopping_list'
+        "view_building",
+        "edit_building",
+        "delete_building",
+        "view_supplies",
+        "edit_supplies",
+        "view_shopping_list",
+        "edit_shopping_list",
       ]
     }
 
@@ -163,41 +159,41 @@ export function usePermissions() {
   function getPermissionInfo(permission: Permission): { label: string; description: string } {
     const permissionInfo: Record<Permission, { label: string; description: string }> = {
       view_building: {
-        label: 'View Building',
-        description: 'Can view building details and basic information'
+        label: "View Building",
+        description: "Can view building details and basic information",
       },
       edit_building: {
-        label: 'Edit Building',
-        description: 'Can modify building name, description, and settings'
+        label: "Edit Building",
+        description: "Can modify building name, description, and settings",
       },
       delete_building: {
-        label: 'Delete Building',
-        description: 'Can permanently delete the building'
+        label: "Delete Building",
+        description: "Can permanently delete the building",
       },
       share_building: {
-        label: 'Share Building',
-        description: 'Can generate share codes and invite other users'
+        label: "Share Building",
+        description: "Can generate share codes and invite other users",
       },
       manage_members: {
-        label: 'Manage Members',
-        description: 'Can add, remove, and manage building members'
+        label: "Manage Members",
+        description: "Can add, remove, and manage building members",
       },
       view_supplies: {
-        label: 'View Supplies',
-        description: 'Can view supply inventory and stock levels'
+        label: "View Supplies",
+        description: "Can view supply inventory and stock levels",
       },
       edit_supplies: {
-        label: 'Edit Supplies',
-        description: 'Can add, edit, and remove supply items'
+        label: "Edit Supplies",
+        description: "Can add, edit, and remove supply items",
       },
       view_shopping_list: {
-        label: 'View Shopping List',
-        description: 'Can view items on the shopping list'
+        label: "View Shopping List",
+        description: "Can view items on the shopping list",
       },
       edit_shopping_list: {
-        label: 'Edit Shopping List',
-        description: 'Can add, edit, and remove items from shopping list'
-      }
+        label: "Edit Shopping List",
+        description: "Can add, edit, and remove items from shopping list",
+      },
     }
 
     return permissionInfo[permission]
@@ -207,22 +203,25 @@ export function usePermissions() {
   function getRoleInfo(role: Role): { label: string; description: string; color: string } | null {
     if (!role) return null
 
-    const roleInfo: Record<NonNullable<Role>, { label: string; description: string; color: string }> = {
+    const roleInfo: Record<
+      NonNullable<Role>,
+      { label: string; description: string; color: string }
+    > = {
       owner: {
-        label: 'Owner',
-        description: 'Full access to all building features and settings',
-        color: 'blue'
+        label: "Owner",
+        description: "Full access to all building features and settings",
+        color: "blue",
       },
       member: {
-        label: 'Member',
-        description: 'Can view and edit supplies and shopping lists',
-        color: 'green'
+        label: "Member",
+        description: "Can view and edit supplies and shopping lists",
+        color: "green",
       },
       viewer: {
-        label: 'Viewer',
-        description: 'Can only view building information and lists',
-        color: 'gray'
-      }
+        label: "Viewer",
+        description: "Can only view building information and lists",
+        color: "gray",
+      },
     }
 
     return roleInfo[role]
@@ -258,6 +257,6 @@ export function usePermissions() {
     isAuthenticated,
 
     // Constants
-    PERMISSION_CONFIG
+    PERMISSION_CONFIG,
   }
 }

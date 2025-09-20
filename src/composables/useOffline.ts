@@ -1,7 +1,7 @@
-import { computed, onMounted, onUnmounted,ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from "vue"
 
-import { useAuth } from '~/composables/useAuth'
-import { offlineQueue, type QueueStatus } from '~/services/offlineQueue'
+import { use_auth } from "~/composables/use-auth"
+import { offlineQueue, type QueueStatus } from "~/services/offlineQueue"
 
 export interface OfflineStatus {
   isOnline: boolean
@@ -13,7 +13,7 @@ export interface OfflineStatus {
 }
 
 export function useOffline() {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated } = use_auth()
 
   // Connection state
   const isOnline = ref(navigator.onLine)
@@ -31,7 +31,7 @@ export function useOffline() {
       lastOnlineTime: lastOnlineTime.value || undefined,
       reconnectAttempts: reconnectAttempts.value,
       pendingChanges: queueStatus.pending,
-      isProcessingQueue: queueStatus.processing
+      isProcessingQueue: queueStatus.processing,
     }
   })
 
@@ -42,7 +42,7 @@ export function useOffline() {
     reconnectAttempts.value = 0
 
     if (wasOffline) {
-      console.log('Connection restored')
+      console.log("Connection restored")
 
       // Auto-sync when coming back online
       if (isAuthenticated.value) {
@@ -54,7 +54,7 @@ export function useOffline() {
   const handleOffline = () => {
     isOnline.value = false
     lastOnlineTime.value = new Date()
-    console.log('Connection lost - entering offline mode')
+    console.log("Connection lost - entering offline mode")
   }
 
   // Attempt to sync when connection is restored
@@ -66,21 +66,24 @@ export function useOffline() {
       await offlineQueue.processQueue()
 
       // Import and trigger cloud sync
-      const { syncWithCloud } = await import('~/composables/useCloudSync')
+      const { syncWithCloud } = await import("~/composables/useCloudSync")
       await syncWithCloud()
 
-      console.log('Offline sync completed successfully')
+      console.log("Offline sync completed successfully")
     } catch (error) {
-      console.error('Offline sync failed:', error)
+      console.error("Offline sync failed:", error)
 
       // Increment reconnect attempts
       reconnectAttempts.value++
 
       // Retry sync if we haven't exceeded max attempts
       if (reconnectAttempts.value < maxReconnectAttempts) {
-        setTimeout(() => {
-          attemptSync()
-        }, Math.pow(2, reconnectAttempts.value) * 1000) // Exponential backoff
+        setTimeout(
+          () => {
+            attemptSync()
+          },
+          Math.pow(2, reconnectAttempts.value) * 1000,
+        ) // Exponential backoff
       }
     }
   }
@@ -108,8 +111,8 @@ export function useOffline() {
 
   // Monitor connection status
   const startMonitoring = () => {
-    window.addEventListener('online', handleOnline)
-    window.addEventListener('offline', handleOffline)
+    window.addEventListener("online", handleOnline)
+    window.addEventListener("offline", handleOffline)
 
     // Periodic connection check (every 30 seconds when offline)
     const connectionCheck = setInterval(() => {
@@ -121,8 +124,8 @@ export function useOffline() {
     }, 30000)
 
     return () => {
-      window.removeEventListener('online', handleOnline)
-      window.removeEventListener('offline', handleOffline)
+      window.removeEventListener("online", handleOnline)
+      window.removeEventListener("offline", handleOffline)
       clearInterval(connectionCheck)
     }
   }
@@ -167,10 +170,11 @@ export function useOffline() {
     // Computed helpers
     hasPendingChanges: computed(() => status.value.pendingChanges > 0),
     isProcessingQueue: computed(() => status.value.isProcessingQueue),
-    needsAttention: computed(() =>
-      status.value.isOffline ||
-      status.value.pendingChanges > 0 ||
-      status.value.reconnectAttempts > 0
-    )
+    needsAttention: computed(
+      () =>
+        status.value.isOffline ||
+        status.value.pendingChanges > 0 ||
+        status.value.reconnectAttempts > 0,
+    ),
   }
 }

@@ -1,8 +1,8 @@
-import type { AuthError,Session, User } from '@supabase/supabase-js'
-import { computed, ref } from 'vue'
+import type { AuthError, Session, User } from "@supabase/supabase-js"
+import { computed, ref } from "vue"
 
-import { supabase } from '~/lib/supabase'
-import type { UserProfile } from '~/types/supabase'
+import { supabase } from "~/lib/supabase"
+import type { UserProfile } from "~/types/supabase"
 
 // Global auth state
 const user = ref<User | null>(null)
@@ -16,9 +16,9 @@ supabase.auth.onAuthStateChange(async (event, newSession) => {
   session.value = newSession
   user.value = newSession?.user ?? null
 
-  if (event === 'SIGNED_IN' && newSession?.user) {
+  if (event === "SIGNED_IN" && newSession?.user) {
     await loadUserProfile(newSession.user.id)
-  } else if (event === 'SIGNED_OUT') {
+  } else if (event === "SIGNED_OUT") {
     profile.value = null
   }
 
@@ -32,29 +32,29 @@ supabase.auth.onAuthStateChange(async (event, newSession) => {
 async function loadUserProfile(userId: string) {
   try {
     const { data, error } = await supabase
-      .from('user_profiles')
-      .select('*')
-      .eq('id', userId)
+      .from("user_profiles")
+      .select("*")
+      .eq("id", userId)
       .single()
 
     if (error) {
-      console.error('Error loading user profile:', error)
+      console.error("Error loading user profile:", error)
       return
     }
 
     profile.value = data
   } catch (error) {
-    console.error('Error loading user profile:', error)
+    console.error("Error loading user profile:", error)
   }
 }
 
-export function useAuth() {
+export function use_auth() {
   // Computed properties
   const isAuthenticated = computed(() => !!user.value)
   const isLoading = computed(() => loading.value)
   const isInitializing = computed(() => initializing.value)
   const userEmail = computed(() => user.value?.email)
-  const userName = computed(() => profile.value?.full_name || userEmail.value?.split('@')[0])
+  const userName = computed(() => profile.value?.full_name || userEmail.value?.split("@")[0])
   const userAvatar = computed(() => profile.value?.avatar_url)
 
   // Sign up with email and password
@@ -77,7 +77,7 @@ export function useAuth() {
 
       return { data, error: null }
     } catch (error) {
-      console.error('Sign up error:', error)
+      console.error("Sign up error:", error)
       return { data: null, error: error as AuthError }
     } finally {
       loading.value = false
@@ -98,7 +98,7 @@ export function useAuth() {
 
       return { data, error: null }
     } catch (error) {
-      console.error('Sign in error:', error)
+      console.error("Sign in error:", error)
       return { data: null, error: error as AuthError }
     } finally {
       loading.value = false
@@ -111,47 +111,47 @@ export function useAuth() {
 
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
+        provider: "google",
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
           queryParams: {
-            access_type: 'offline',
-            prompt: 'consent',
+            access_type: "offline",
+            prompt: "consent",
           },
           skipBrowserRedirect: false,
         },
       })
 
       if (error) {
-        console.error('Google OAuth error:', error)
+        console.error("Google OAuth error:", error)
         throw error
       }
 
-      console.log('Google OAuth initiated successfully')
+      console.log("Google OAuth initiated successfully")
       return { data, error: null }
     } catch (error) {
-      console.error('Google sign in error:', error)
+      console.error("Google sign in error:", error)
       return { data: null, error: error as AuthError }
     } finally {
       loading.value = false
     }
   }
 
-  // Sign out
-  const signOut = async () => {
-    console.log('[useAuth] Starting sign out process...')
+  // Log out
+  const logOut = async () => {
+    console.log("[use_auth] Starting sign out process...")
     loading.value = true
 
     try {
-      console.log('[useAuth] Calling supabase.auth.signOut()...')
+      console.log("[use_auth] Calling supabase.auth.signOut()...")
       const { error } = await supabase.auth.signOut()
 
       if (error) {
-        console.error('[useAuth] Supabase sign out error:', error)
+        console.error("[use_auth] Supabase sign out error:", error)
         throw error
       }
 
-      console.log('[useAuth] Supabase sign out successful, clearing local state...')
+      console.log("[use_auth] Supabase sign out successful, clearing local state...")
 
       // Clear local state
       user.value = null
@@ -163,22 +163,22 @@ export function useAuth() {
         const keysToRemove: string[] = []
         for (let i = 0; i < localStorage.length; i++) {
           const key = localStorage.key(i)
-          if (key && (key.includes('supabase') || key.includes('sb-'))) {
+          if (key && (key.includes("supabase") || key.includes("sb-"))) {
             keysToRemove.push(key)
           }
         }
-        keysToRemove.forEach(key => {
-          console.log('[useAuth] Removing localStorage key:', key)
+        keysToRemove.forEach((key) => {
+          console.log("[use_auth] Removing localStorage key:", key)
           localStorage.removeItem(key)
         })
       } catch (clearError) {
-        console.error('[useAuth] Error clearing localStorage:', clearError)
+        console.error("[use_auth] Error clearing localStorage:", clearError)
       }
 
-      console.log('[useAuth] Sign out complete')
+      console.log("[use_auth] Sign out complete")
       return { error: null }
     } catch (error) {
-      console.error('[useAuth] Sign out error:', error)
+      console.error("[use_auth] Sign out error:", error)
       return { error: error as AuthError }
     } finally {
       loading.value = false
@@ -196,7 +196,7 @@ export function useAuth() {
 
       return { error: null }
     } catch (error) {
-      console.error('Password reset error:', error)
+      console.error("Password reset error:", error)
       return { error: error as AuthError }
     }
   }
@@ -204,19 +204,19 @@ export function useAuth() {
   // Update user profile
   const updateProfile = async (updates: Partial<UserProfile>) => {
     if (!user.value) {
-      throw new Error('No authenticated user')
+      throw new Error("No authenticated user")
     }
 
     loading.value = true
 
     try {
       const { data, error } = await supabase
-        .from('user_profiles')
+        .from("user_profiles")
         .update({
           ...updates,
           updated_at: new Date().toISOString(),
         })
-        .eq('id', user.value.id)
+        .eq("id", user.value.id)
         .select()
         .single()
 
@@ -225,7 +225,7 @@ export function useAuth() {
       profile.value = data
       return { data, error: null }
     } catch (error) {
-      console.error('Profile update error:', error)
+      console.error("Profile update error:", error)
       return { data: null, error: error as Error }
     } finally {
       loading.value = false
@@ -245,7 +245,7 @@ export function useAuth() {
 
       return { error: null }
     } catch (error) {
-      console.error('Password update error:', error)
+      console.error("Password update error:", error)
       return { error: error as AuthError }
     } finally {
       loading.value = false
@@ -255,7 +255,7 @@ export function useAuth() {
   // Delete user account
   const deleteAccount = async () => {
     if (!user.value) {
-      throw new Error('No authenticated user')
+      throw new Error("No authenticated user")
     }
 
     loading.value = true
@@ -263,10 +263,10 @@ export function useAuth() {
     try {
       // Note: This requires a database function or admin action
       // For now, we'll just sign out and let admin handle deletion
-      await signOut()
+      await logOut()
       return { error: null }
     } catch (error) {
-      console.error('Account deletion error:', error)
+      console.error("Account deletion error:", error)
       return { error: error as Error }
     } finally {
       loading.value = false
@@ -275,10 +275,13 @@ export function useAuth() {
 
   // Get current session
   const getCurrentSession = async () => {
-    const { data: { session: currentSession }, error } = await supabase.auth.getSession()
+    const {
+      data: { session: currentSession },
+      error,
+    } = await supabase.auth.getSession()
 
     if (error) {
-      console.error('Error getting session:', error)
+      console.error("Error getting session:", error)
       return null
     }
 
@@ -290,7 +293,7 @@ export function useAuth() {
     const { data, error } = await supabase.auth.refreshSession()
 
     if (error) {
-      console.error('Error refreshing session:', error)
+      console.error("Error refreshing session:", error)
       return { data: null, error }
     }
 
@@ -313,7 +316,7 @@ export function useAuth() {
     signUp,
     signIn,
     signInWithGoogle,
-    signOut,
+    logOut,
     resetPassword,
     updateProfile,
     updatePassword,

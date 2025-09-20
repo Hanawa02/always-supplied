@@ -57,6 +57,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - run lint and formatting command: `npm run validate-code`
 - check if any translation is present on english, but missing in other language files
 
-## Best Practices
+## Standards and Best Practices
 
-If a @click or similar event needs to apply changes to state, a function to handle that event should be generated instead of having logic on the template part of the component.
+- If a @click or similar event needs to apply changes to state, a function to handle that event should be generated instead of having logic on the template part of the component.
+- As much as possible use snake case for variables and method names.

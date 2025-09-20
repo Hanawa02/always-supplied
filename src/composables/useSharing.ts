@@ -1,12 +1,12 @@
-import { computed,ref } from 'vue'
+import { computed, ref } from "vue"
 
-import { toast } from '~/components/ui/toast'
-import { useAuth } from '~/composables/useAuth'
-import { buildingSharing, type Member, type ShareInfo } from '~/services/sharingService'
-import type { Building } from '~/types'
+import { toast } from "~/components/ui/toast"
+import { use_auth } from "~/composables/use-auth"
+import { buildingSharing, type Member, type ShareInfo } from "~/services/sharingService"
+import type { Building } from "~/types"
 
 export function useSharing() {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated } = use_auth()
 
   // State
   const isGeneratingCode = ref(false)
@@ -19,10 +19,10 @@ export function useSharing() {
     options?: {
       expiresIn?: number
       maxUses?: number
-    }
+    },
   ) {
     if (!isAuthenticated.value) {
-      throw new Error('Authentication required')
+      throw new Error("Authentication required")
     }
 
     isGeneratingCode.value = true
@@ -32,8 +32,8 @@ export function useSharing() {
 
       if (result.success) {
         toast({
-          title: 'Share Code Generated',
-          description: 'Building share code has been created successfully.',
+          title: "Share Code Generated",
+          description: "Building share code has been created successfully.",
         })
         return result.shareCode
       } else {
@@ -47,7 +47,7 @@ export function useSharing() {
   // Join building using share code
   async function joinBuilding(shareCode: string): Promise<Building> {
     if (!isAuthenticated.value) {
-      throw new Error('Authentication required')
+      throw new Error("Authentication required")
     }
 
     isJoining.value = true
@@ -57,7 +57,7 @@ export function useSharing() {
 
       if (result.success && result.building) {
         toast({
-          title: 'Building Joined!',
+          title: "Building Joined!",
           description: `You are now a member of "${result.building.name}".`,
         })
         return result.building
@@ -72,7 +72,7 @@ export function useSharing() {
   // Get building members
   async function getBuildingMembers(buildingId: string): Promise<Member[]> {
     if (!isAuthenticated.value) {
-      throw new Error('Authentication required')
+      throw new Error("Authentication required")
     }
 
     isLoadingMembers.value = true
@@ -87,15 +87,15 @@ export function useSharing() {
   // Remove member from building
   async function removeMember(buildingId: string, memberUserId: string) {
     if (!isAuthenticated.value) {
-      throw new Error('Authentication required')
+      throw new Error("Authentication required")
     }
 
     const result = await buildingSharing.removeMember(buildingId, memberUserId)
 
     if (result.success) {
       toast({
-        title: 'Member Removed',
-        description: 'User has been removed from the building.',
+        title: "Member Removed",
+        description: "User has been removed from the building.",
       })
     } else {
       throw new Error(result.error)
@@ -105,15 +105,15 @@ export function useSharing() {
   // Leave building
   async function leaveBuilding(buildingId: string) {
     if (!isAuthenticated.value) {
-      throw new Error('Authentication required')
+      throw new Error("Authentication required")
     }
 
     const result = await buildingSharing.leaveBuilding(buildingId)
 
     if (result.success) {
       toast({
-        title: 'Building Left',
-        description: 'You have successfully left the building.',
+        title: "Building Left",
+        description: "You have successfully left the building.",
       })
     } else {
       throw new Error(result.error)
@@ -123,7 +123,7 @@ export function useSharing() {
   // Get active share codes
   async function getActiveShareCodes(buildingId: string): Promise<ShareInfo[]> {
     if (!isAuthenticated.value) {
-      throw new Error('Authentication required')
+      throw new Error("Authentication required")
     }
 
     return await buildingSharing.getActiveShareCodes(buildingId)
@@ -132,15 +132,15 @@ export function useSharing() {
   // Deactivate share code
   async function deactivateShareCode(shareCode: string) {
     if (!isAuthenticated.value) {
-      throw new Error('Authentication required')
+      throw new Error("Authentication required")
     }
 
     const result = await buildingSharing.deactivateShareCode(shareCode)
 
     if (result.success) {
       toast({
-        title: 'Code Deactivated',
-        description: 'Share code has been deactivated.',
+        title: "Code Deactivated",
+        description: "Share code has been deactivated.",
       })
     } else {
       throw new Error(result.error)
@@ -148,7 +148,7 @@ export function useSharing() {
   }
 
   // Get user's role in a building
-  async function getUserRole(buildingId: string): Promise<'owner' | 'member' | null> {
+  async function getUserRole(buildingId: string): Promise<"owner" | "member" | null> {
     if (!isAuthenticated.value) {
       return null
     }
@@ -159,13 +159,13 @@ export function useSharing() {
   // Check if user can manage a building
   async function canManageBuilding(buildingId: string): Promise<boolean> {
     const role = await getUserRole(buildingId)
-    return role === 'owner'
+    return role === "owner"
   }
 
   // Check if user can edit building content
   async function canEditBuilding(buildingId: string): Promise<boolean> {
     const role = await getUserRole(buildingId)
-    return role === 'owner' || role === 'member'
+    return role === "owner" || role === "member"
   }
 
   // Copy share code to clipboard
@@ -173,28 +173,28 @@ export function useSharing() {
     try {
       await navigator.clipboard.writeText(text)
       toast({
-        title: 'Copied!',
-        description: 'Text copied to clipboard.',
+        title: "Copied!",
+        description: "Text copied to clipboard.",
       })
     } catch {
       // Fallback for older browsers
-      const textArea = document.createElement('textarea')
+      const textArea = document.createElement("textarea")
       textArea.value = text
       document.body.appendChild(textArea)
       textArea.select()
-      document.execCommand('copy')
+      document.execCommand("copy")
       document.body.removeChild(textArea)
 
       toast({
-        title: 'Copied!',
-        description: 'Text copied to clipboard.',
+        title: "Copied!",
+        description: "Text copied to clipboard.",
       })
     }
   }
 
   // Format share code for display
   function formatShareCode(code: string): string {
-    return code.replace(/(.{3})(.{3})/, '$1-$2')
+    return code.replace(/(.{3})(.{3})/, "$1-$2")
   }
 
   // Validate share code format
@@ -226,6 +226,6 @@ export function useSharing() {
     isValidShareCode,
 
     // Computed
-    isAuthenticated
+    isAuthenticated,
   }
 }

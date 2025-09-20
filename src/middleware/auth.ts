@@ -1,7 +1,7 @@
-import { watch } from 'vue'
-import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
+import { watch } from "vue"
+import type { NavigationGuardNext, RouteLocationNormalized } from "vue-router"
 
-import { useAuth } from '~/composables/useAuth'
+import { use_auth } from "~/composables/use-auth"
 
 /**
  * Auth middleware to protect routes that require authentication
@@ -9,9 +9,9 @@ import { useAuth } from '~/composables/useAuth'
 export async function requireAuth(
   to: RouteLocationNormalized,
   from: RouteLocationNormalized,
-  next: NavigationGuardNext
+  next: NavigationGuardNext,
 ) {
-  const { isAuthenticated, isInitializing } = useAuth()
+  const { isAuthenticated, isInitializing } = use_auth()
 
   // Wait for auth to initialize
   if (isInitializing.value) {
@@ -23,7 +23,7 @@ export async function requireAuth(
           next()
         } else {
           next({
-            path: '/auth/login',
+            path: "/auth/login",
             query: { redirect: to.fullPath },
           })
         }
@@ -36,7 +36,7 @@ export async function requireAuth(
     next()
   } else {
     next({
-      path: '/auth/login',
+      path: "/auth/login",
       query: { redirect: to.fullPath },
     })
   }
@@ -48,9 +48,9 @@ export async function requireAuth(
 export async function requireGuest(
   to: RouteLocationNormalized,
   from: RouteLocationNormalized,
-  next: NavigationGuardNext
+  next: NavigationGuardNext,
 ) {
-  const { isAuthenticated, isInitializing } = useAuth()
+  const { isAuthenticated, isInitializing } = use_auth()
 
   // Wait for auth to initialize
   if (isInitializing.value) {
@@ -58,7 +58,7 @@ export async function requireGuest(
       if (!initializing) {
         unwatch()
         if (isAuthenticated.value) {
-          next('/buildings')
+          next("/buildings")
         } else {
           next()
         }
@@ -68,7 +68,7 @@ export async function requireGuest(
   }
 
   if (isAuthenticated.value) {
-    next('/buildings')
+    next("/buildings")
   } else {
     next()
   }
@@ -80,7 +80,7 @@ export async function requireGuest(
 export async function optionalAuth(
   to: RouteLocationNormalized,
   from: RouteLocationNormalized,
-  next: NavigationGuardNext
+  next: NavigationGuardNext,
 ) {
   // Always allow access for optional auth routes
   next()

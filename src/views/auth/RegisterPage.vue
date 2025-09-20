@@ -196,11 +196,11 @@ import { Checkbox } from "~/components/ui/checkbox"
 import { Input } from "~/components/ui/input"
 import { Label } from "~/components/ui/label"
 import { toast } from "~/components/ui/toast"
-import { useAuth } from "~/composables/useAuth"
+import { use_auth } from "~/composables/use-auth"
 import { useI18n } from "~/composables/useI18n"
 
 const { m } = useI18n()
-const { signUp, signInWithGoogle, isLoading } = useAuth()
+const { signUp, signInWithGoogle, isLoading } = use_auth()
 const router = useRouter()
 
 // Form state

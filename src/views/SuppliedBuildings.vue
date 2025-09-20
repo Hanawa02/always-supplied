@@ -52,7 +52,7 @@
               >
                 <i v-if="isSyncing" class="i-mdi:sync animate-spin mr-2"></i>
                 <i v-else class="i-mdi:cloud-sync mr-2"></i>
-                {{ isSyncing ? 'Syncing...' : 'Sync to Cloud' }}
+                {{ isSyncing ? "Syncing..." : "Sync to Cloud" }}
               </Button>
             </div>
           </div>
@@ -140,12 +140,12 @@ import BuildingMembersDialog from "~/components/sharing/BuildingMembersDialog.vu
 import ShareBuildingDialog from "~/components/sharing/ShareBuildingDialog.vue"
 import SuppliedBuildingModal from "~/components/SuppliedBuildingModal.vue"
 import BaseButton from "~/components/ui/BaseButton.vue"
-import { Button } from "~/components/ui/button"
 import BuildingCard from "~/components/ui/BuildingCard.vue"
+import { Button } from "~/components/ui/button"
 import EmptyState from "~/components/ui/EmptyState.vue"
 import StatsCard from "~/components/ui/StatsCard.vue"
 import { toast } from "~/components/ui/toast"
-import { useAuth } from "~/composables/useAuth"
+import { use_auth } from "~/composables/use-auth"
 import { useCloudSync } from "~/composables/useCloudSync"
 import { useI18n } from "~/composables/useI18n"
 import { useSuppliedBuildings } from "~/composables/useSuppliedBuildings"
@@ -170,7 +170,7 @@ const {
 } = useSuppliedBuildings()
 
 const { supplyItems } = useSupplyItems()
-const { isAuthenticated } = useAuth()
+const { isAuthenticated } = use_auth()
 const { syncStatus, performInitialSync } = useCloudSync()
 
 // Local state
@@ -224,7 +224,7 @@ const manageMembers = (building: SuppliedBuilding) => {
 }
 
 const triggerManualSync = async () => {
-  console.log('[Manual Sync] Triggering manual sync...')
+  console.log("[Manual Sync] Triggering manual sync...")
   await performInitialSync()
 }
 
@@ -270,15 +270,15 @@ const handleDelete = async () => {
 
 const handleMemberRemoved = () => {
   toast({
-    title: 'Member Removed',
-    description: 'The user has been removed from the building.',
+    title: "Member Removed",
+    description: "The user has been removed from the building.",
   })
 }
 
 const handleBuildingLeft = () => {
   toast({
-    title: 'Building Left',
-    description: 'You have left the building and it has been removed from your list.',
+    title: "Building Left",
+    description: "You have left the building and it has been removed from your list.",
   })
   // The building should be automatically removed from the local list
   // when the user leaves via the sharing service

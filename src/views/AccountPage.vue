@@ -89,10 +89,7 @@
               </div>
 
               <div class="flex justify-end">
-                <Button
-                  type="submit"
-                  :disabled="isUpdatingProfile || !hasProfileChanges"
-                >
+                <Button type="submit" :disabled="isUpdatingProfile || !hasProfileChanges">
                   <i v-if="isUpdatingProfile" class="i-mdi:loading animate-spin mr-2"></i>
                   {{ m.account_save_profile() }}
                 </Button>
@@ -131,11 +128,7 @@
             <CardTitle>{{ m.account_security_section() }}</CardTitle>
           </CardHeader>
           <CardContent class="space-y-4">
-            <Button
-              variant="outline"
-              class="w-full"
-              @click="showPasswordChangeDialog = true"
-            >
+            <Button variant="outline" class="w-full" @click="showPasswordChangeDialog = true">
               {{ m.account_change_password() }}
             </Button>
             <div class="space-y-2">
@@ -146,7 +139,7 @@
                 :disabled="isSigningOut"
               >
                 <i v-if="isSigningOut" class="i-mdi:loading animate-spin mr-2"></i>
-                {{ m.account_sign_out() }}
+                {{ m.account_log_out() }}
               </Button>
               <!-- Emergency logout button -->
               <Button
@@ -157,7 +150,7 @@
                 :disabled="isSigningOut"
               >
                 <i class="i-mdi:exit-to-app mr-1"></i>
-                Force Sign Out (if above fails)
+                Force Log Out (if above fails)
               </Button>
             </div>
           </CardContent>
@@ -172,11 +165,7 @@
             <p class="text-sm text-gray-600 mb-4">
               {{ m.account_delete_warning() }}
             </p>
-            <Button
-              variant="destructive"
-              class="w-full"
-              @click="showDeleteAccountDialog = true"
-            >
+            <Button variant="destructive" class="w-full" @click="showDeleteAccountDialog = true">
               {{ m.account_delete_account() }}
             </Button>
           </CardContent>
@@ -191,39 +180,44 @@
     />
 
     <!-- Delete Account Dialog -->
-    <DeleteAccountDialog
-      v-model:open="showDeleteAccountDialog"
-      @confirm="handleDeleteAccount"
-    />
+    <DeleteAccountDialog v-model:open="showDeleteAccountDialog" @confirm="handleDeleteAccount" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, onMounted, reactive, ref, watch } from "vue"
+import { useRouter } from "vue-router"
 
-import DeleteAccountDialog from '~/components/account/DeleteAccountDialog.vue'
-import PasswordChangeDialog from '~/components/account/PasswordChangeDialog.vue'
-import { Badge } from '~/components/ui/badge'
-import { Button } from '~/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
-import { Input } from '~/components/ui/input'
-import { Label } from '~/components/ui/label'
-import { toast } from '~/components/ui/toast'
-import { useAuth } from '~/composables/useAuth'
-import { useCloudBuildings } from '~/composables/useCloudBuildings'
-import { useI18n } from '~/composables/useI18n'
+import DeleteAccountDialog from "~/components/account/DeleteAccountDialog.vue"
+import PasswordChangeDialog from "~/components/account/PasswordChangeDialog.vue"
+import { Badge } from "~/components/ui/badge"
+import { Button } from "~/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card"
+import { Input } from "~/components/ui/input"
+import { Label } from "~/components/ui/label"
+import { toast } from "~/components/ui/toast"
+import { use_auth } from "~/composables/use-auth"
+import { useCloudBuildings } from "~/composables/useCloudBuildings"
+import { useI18n } from "~/composables/useI18n"
 
 const { m } = useI18n()
-const { user, profile, userEmail, userName, userAvatar, updateProfile: updateAuthProfile, signOut } = useAuth()
+const {
+  user,
+  profile,
+  userEmail,
+  userName,
+  userAvatar,
+  updateProfile: updateAuthProfile,
+  signOut,
+} = use_auth()
 const { buildings } = useCloudBuildings()
 const router = useRouter()
 
 // Form state
 const profileForm = reactive({
-  full_name: '',
-  email: '',
-  preferred_locale: 'en',
+  full_name: "",
+  email: "",
+  preferred_locale: "en",
 })
 
 // UI state
@@ -238,14 +232,14 @@ const hasProfileChanges = computed(() => {
   if (!profile.value) return false
 
   return (
-    profileForm.full_name !== (profile.value.full_name || '') ||
-    profileForm.email !== (profile.value.email || '') ||
-    profileForm.preferred_locale !== (profile.value.preferred_locale || 'en')
+    profileForm.full_name !== (profile.value.full_name || "") ||
+    profileForm.email !== (profile.value.email || "") ||
+    profileForm.preferred_locale !== (profile.value.preferred_locale || "en")
   )
 })
 
 const memberSince = computed(() => {
-  if (!user.value?.created_at) return ''
+  if (!user.value?.created_at) return ""
   return new Date(user.value.created_at).toLocaleDateString()
 })
 
@@ -256,9 +250,9 @@ const buildingsCount = computed(() => {
 // Initialize form with profile data
 const initializeForm = () => {
   if (profile.value) {
-    profileForm.full_name = profile.value.full_name || ''
-    profileForm.email = profile.value.email || userEmail.value || ''
-    profileForm.preferred_locale = profile.value.preferred_locale || 'en'
+    profileForm.full_name = profile.value.full_name || ""
+    profileForm.email = profile.value.email || userEmail.value || ""
+    profileForm.preferred_locale = profile.value.preferred_locale || "en"
   }
 }
 
@@ -282,21 +276,21 @@ const updateProfile = async () => {
 
     if (error) {
       toast({
-        title: 'Update Failed',
+        title: "Update Failed",
         description: error.message,
-        variant: 'destructive',
+        variant: "destructive",
       })
     } else {
       toast({
-        title: 'Profile Updated',
-        description: 'Your profile has been updated successfully.',
+        title: "Profile Updated",
+        description: "Your profile has been updated successfully.",
       })
     }
   } catch {
     toast({
-      title: 'Update Failed',
-      description: 'An unexpected error occurred.',
-      variant: 'destructive',
+      title: "Update Failed",
+      description: "An unexpected error occurred.",
+      variant: "destructive",
     })
   } finally {
     isUpdatingProfile.value = false
@@ -316,54 +310,54 @@ const handleAvatarUpload = async (event: Event) => {
 
   // For now, just show a message that avatar upload isn't implemented
   toast({
-    title: 'Feature Coming Soon',
-    description: 'Avatar upload will be available in a future update.',
+    title: "Feature Coming Soon",
+    description: "Avatar upload will be available in a future update.",
   })
 
   // Reset input
-  target.value = ''
+  target.value = ""
 }
 
 // Handle password change success
 const handlePasswordChangeSuccess = () => {
   toast({
-    title: 'Password Updated',
-    description: 'Your password has been changed successfully.',
+    title: "Password Updated",
+    description: "Your password has been changed successfully.",
   })
 }
 
 // Handle sign out
 const handleSignOut = async () => {
-  console.log('[AccountPage] Starting sign out...')
+  console.log("[AccountPage] Starting sign out...")
   isSigningOut.value = true
 
   try {
     const { error } = await signOut()
 
     if (error) {
-      console.error('[AccountPage] Sign out error:', error)
+      console.error("[AccountPage] Sign out error:", error)
       toast({
-        title: 'Sign Out Failed',
-        description: error.message || 'An error occurred while signing out.',
-        variant: 'destructive',
+        title: "Log Out Failed",
+        description: error.message || "An error occurred while signing out.",
+        variant: "destructive",
       })
       return
     }
 
-    console.log('[AccountPage] Sign out successful')
+    console.log("[AccountPage] Sign out successful")
     toast({
-      title: 'Signed Out',
-      description: 'You have been signed out successfully.',
+      title: "Logged Out",
+      description: "You have been logged out successfully.",
     })
 
     // Use replace to prevent going back to authenticated page
-    router.replace('/auth/login')
+    router.replace("/auth/login")
   } catch (error) {
-    console.error('[AccountPage] Unexpected sign out error:', error)
+    console.error("[AccountPage] Unexpected sign out error:", error)
     toast({
-      title: 'Sign Out Failed',
-      description: 'An unexpected error occurred while signing out.',
-      variant: 'destructive',
+      title: "Sign Out Failed",
+      description: "An unexpected error occurred while signing out.",
+      variant: "destructive",
     })
   } finally {
     isSigningOut.value = false
@@ -372,7 +366,7 @@ const handleSignOut = async () => {
 
 // Force sign out (clears everything and redirects)
 const handleForceSignOut = async () => {
-  console.log('[AccountPage] Force sign out initiated...')
+  console.log("[AccountPage] Force sign out initiated...")
   isSigningOut.value = true
 
   try {
@@ -380,39 +374,41 @@ const handleForceSignOut = async () => {
     const keysToRemove: string[] = []
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i)
-      if (key && (key.includes('supabase') || key.includes('sb-') || key.includes('auth'))) {
+      if (key && (key.includes("supabase") || key.includes("sb-") || key.includes("auth"))) {
         keysToRemove.push(key)
       }
     }
-    keysToRemove.forEach(key => {
-      console.log('[AccountPage] Force removing:', key)
+    keysToRemove.forEach((key) => {
+      console.log("[AccountPage] Force removing:", key)
       localStorage.removeItem(key)
     })
 
     // Clear cookies
     document.cookie.split(";").forEach((c) => {
-      if (c.includes('sb-') || c.includes('supabase')) {
-        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/")
+      if (c.includes("sb-") || c.includes("supabase")) {
+        document.cookie = c
+          .replace(/^ +/, "")
+          .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/")
       }
     })
 
     // Clear session storage
     sessionStorage.clear()
 
-    console.log('[AccountPage] Force sign out complete, redirecting...')
+    console.log("[AccountPage] Force sign out complete, redirecting...")
     toast({
-      title: 'Force Sign Out',
-      description: 'All authentication data cleared. Redirecting...',
+      title: "Force Log Out",
+      description: "All authentication data cleared. Redirecting...",
     })
 
     // Hard redirect to login
-    window.location.href = '/auth/login'
+    window.location.href = "/auth/login"
   } catch (error) {
-    console.error('[AccountPage] Force sign out error:', error)
+    console.error("[AccountPage] Force sign out error:", error)
     toast({
-      title: 'Force Sign Out Failed',
-      description: 'Please clear your browser cache manually.',
-      variant: 'destructive',
+      title: "Force Log Out Failed",
+      description: "Please clear your browser cache manually.",
+      variant: "destructive",
     })
   } finally {
     isSigningOut.value = false
@@ -424,14 +420,14 @@ const handleDeleteAccount = async () => {
   try {
     // Note: This would typically call a backend endpoint to delete the account
     toast({
-      title: 'Account Deletion',
-      description: 'Account deletion feature will be available soon.',
+      title: "Account Deletion",
+      description: "Account deletion feature will be available soon.",
     })
   } catch {
     toast({
-      title: 'Deletion Failed',
-      description: 'An error occurred while deleting your account.',
-      variant: 'destructive',
+      title: "Deletion Failed",
+      description: "An error occurred while deleting your account.",
+      variant: "destructive",
     })
   }
 }
