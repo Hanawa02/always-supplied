@@ -1,14 +1,15 @@
 <template>
-  <nav class="bg-white border-b border-gray-200">
+  <nav class="bg-white border-b border-gray-200 shadow-sm">
+    <MobileNavigation />
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between h-16">
+      <div class="flex justify-between h-12 md:h-16">
         <!-- Left side -->
         <div class="flex items-center">
           <router-link
             :to="{ name: ROUTES.SUPPLIED_BUILDINGS.name }"
             class="flex items-center space-x-3 hover:opacity-80 transition-opacity"
           >
-            <AppLogo class="h-8" variant="full" />
+            <AppLogo class="h-6 md:h-8" variant="full" />
           </router-link>
 
           <!-- Desktop navigation -->

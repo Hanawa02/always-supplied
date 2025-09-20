@@ -4,11 +4,9 @@ import { Toaster } from "~/components/ui/toast"
 </script>
 
 <template>
-  <div>
-    <AppNavigation />
+  <div class="relative">
+    <AppNavigation class="sticky top-0" />
     <RouterView />
     <Toaster />
   </div>
 </template>
-
-<style scoped></style>
