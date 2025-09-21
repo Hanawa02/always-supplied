@@ -15,31 +15,17 @@
           <i class="i-mdi:cart w-4 h-4 text-green-600"></i>
           {{ m.app_navigation_shopping_list() }}
         </MobileNavigationLink>
+        <MobileNavigationLink :to="ROUTES.SUPPLY_CONFIGURATION.path" @click="close_navigation">
+          <i class="i-mdi:package-variant w-4 h-4 text-green-600"></i>
+          {{ m.app_navigation_supply_configuration() }}
+        </MobileNavigationLink>
         <MobileNavigationLink :to="ROUTES.SUPPLIED_BUILDINGS.path" @click="close_navigation">
           <i class="i-mdi:office-building w-4 h-4 text-green-600"></i>
           {{ m.app_navigation_supplied_buildings() }}
         </MobileNavigationLink>
-        <MobileNavigationLink
-          v-if="selected_building_store.selectedBuilding"
-          :to="{
-            name: ROUTES.ACCOUNT.name,
-            params: { buildingId: selected_building_store.selectedBuildingId },
-          }"
-          class="relative"
-          @click="close_navigation"
-        >
-          <i class="i-mdi:package-variant w-4 h-4 text-green-600"></i>
-          {{ m.app_navigation_supply_configuration() }}
-          <span class="absolute left-2 top-5 text-xs text-green-800 font-light ml-8 mt-1">
-            ({{ selected_building_store.selectedBuilding.name }})
-          </span>
-        </MobileNavigationLink>
-        <MobileNavigationLink :to="ROUTES.SHOPPING_LIST.path" @click="close_navigation">
-          <i class="i-mdi:cart w-4 h-4 text-green-600"></i>
-          {{ m.app_navigation_shopping_list() }}
-        </MobileNavigationLink>
       </div>
       <DrawerFooter>
+        <LanguageSwitcher />
         <div v-if="is_authenticated" class="mb-4">
           <MobileNavigationLink :to="ROUTES.ACCOUNT.path" @click="close_navigation">
             <i class="i-mdi:account w-4 h-4 text-green-600"></i>
@@ -68,6 +54,8 @@
 import { ref } from "vue"
 import { useRouter } from "vue-router"
 
+import LanguageSwitcher from "~/components/LanguageSwitcher.vue"
+import MobileNavigationLink from "~/components/navigation/MobileNavigationLink.vue"
 import { Button } from "~/components/ui/button"
 import {
   Drawer,
@@ -79,14 +67,10 @@ import {
 import { use_auth } from "~/composables/use-auth"
 import { useI18n } from "~/composables/useI18n"
 import { ROUTES } from "~/router/routes"
-import { use_selected_building_store } from "~/stores/selectedBuilding"
-
-import MobileNavigationLink from "./MobileNavigationLink.vue"
 
 const drawer_direction = "right"
 const is_open = ref(false)
 
-const selected_building_store = use_selected_building_store()
 const { m } = useI18n()
 const { is_authenticated, log_out } = use_auth()
 
