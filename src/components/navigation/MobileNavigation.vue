@@ -26,7 +26,22 @@
       </div>
       <DrawerFooter>
         <LanguageSwitcher />
+        <SelectSeparator />
         <div v-if="is_authenticated" class="mb-4">
+          <div
+            v-if="userName"
+            :to="ROUTES.ACCOUNT.path"
+            @click="close_navigation"
+            class="flex gap-2 py-2"
+          >
+            <div
+              class="w-6 h-6 border-green-600 border bg-green-600 text-white text-sm uppercase rounded-full flex items-center justify-center"
+            >
+              {{ userName?.charAt(0) || userEmail?.charAt(0) }}
+            </div>
+            {{ userName ?? userEmail }}
+          </div>
+
           <MobileNavigationLink :to="ROUTES.ACCOUNT.path" @click="close_navigation">
             <i class="i-mdi:account w-4 h-4 text-green-600"></i>
             {{ m.account_title() }}
@@ -68,11 +83,13 @@ import { use_auth } from "~/composables/use-auth"
 import { useI18n } from "~/composables/useI18n"
 import { ROUTES } from "~/router/routes"
 
+import SelectSeparator from "../ui/select/SelectSeparator.vue"
+
 const drawer_direction = "right"
 const is_open = ref(false)
 
 const { m } = useI18n()
-const { is_authenticated, log_out } = use_auth()
+const { is_authenticated, log_out, userName, userEmail } = use_auth()
 
 const router = useRouter()
 

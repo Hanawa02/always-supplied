@@ -1,7 +1,7 @@
 <template>
   <div class="group relative">
     <Select v-model="locale">
-      <SelectTrigger class="w-full min-w-24">
+      <SelectTrigger class="w-full min-w-24 md:cursor-pointer">
         <SelectValue :placeholder="localeNames[locale]" />
       </SelectTrigger>
       <SelectContent>

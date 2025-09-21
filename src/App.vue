@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AppNavigation from "~/components/AppNavigation.vue"
+import AppNavigation from "~/components/navigation/AppNavigation.vue"
 import { Toaster } from "~/components/ui/toast"
 </script>
 
