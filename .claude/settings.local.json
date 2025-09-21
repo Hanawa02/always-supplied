@@ -12,7 +12,8 @@
       "Bash(npm run lint)",
       "WebSearch",
       "WebFetch(domain:supabase.com)",
-      "Bash(npx shadcn-vue@latest add:*)"
+      "Bash(npx shadcn-vue@latest add:*)",
+      "Bash(npm run dev:*)"
     ],
     "deny": [],
     "ask": []

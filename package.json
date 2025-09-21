@@ -20,6 +20,9 @@
     "supabase:migrate": "echo 'Please run these migration files in your Supabase SQL Editor:' && echo '1. supabase/migrations/001_initial_cloud_schema.sql' && echo '2. supabase/migrations/002_rls_policies.sql' && echo '3. supabase/migrations/003_functions_and_triggers.sql'"
   },
   "dependencies": {
+    "@formkit/addons": "^1.6.9",
+    "@formkit/vue": "^1.6.9",
+    "@formkit/zod": "^1.6.9",
     "@inlang/paraglide-js": "^2.2.0",
     "@supabase/supabase-js": "^2.57.4",
     "@unocss/reset": "^66.5.0",
