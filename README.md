@@ -1,6 +1,15 @@
 # always-supplied
 
-This template should help get you started developing with Vue 3 in Vite.
+## Frameworks used
+
+- Vite
+- Vue3
+- Vue Router
+- Prettier
+- Eslint
+- UnoCss (with presets)
+- Vitest
+- Playwright
 
 ## Recommended IDE Setup
 
