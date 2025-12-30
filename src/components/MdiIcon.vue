@@ -8,23 +8,23 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed } from "vue"
 
-type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
+type Size = "xs" | "sm" | "md" | "lg" | "xl" | "2xl"
 
 const SIZE_CLASSES: Record<Size, string> = {
-  xs: 'h-2 w-2',
-  sm: 'h-3 w-3',
-  md: 'h-4 w-4',
-  lg: 'h-5 w-5',
-  xl: 'h-6 w-6',
-  '2xl': 'h-8 w-8',
+  xs: "h-2 w-2",
+  sm: "h-3 w-3",
+  md: "h-4 w-4",
+  lg: "h-5 w-5",
+  xl: "h-6 w-6",
+  "2xl": "h-8 w-8",
 }
 interface IProps {
   icon: string
   size?: Size
 }
-const props = withDefaults(defineProps<IProps>(), { size: 'md' })
+const props = withDefaults(defineProps<IProps>(), { size: "md" })
 
 const sizeClass = computed(() => SIZE_CLASSES[props.size])
 </script>
