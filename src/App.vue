@@ -1,5 +1,5 @@
 <template>
-  <nav class="grid grid-cols-2 bg-nav-background py-1 px-4">
+  <nav class="sticky top-0 z-90 grid grid-cols-2 bg-nav-background py-1 px-4">
     <RouterLink to="/stock-config" class="text-center"><MdiIcon icon="cog" size="lg" /></RouterLink>
     <RouterLink to="/shopping-list" class="text-center"
       ><MdiIcon icon="shopping-cart" size="lg"
