@@ -1,13 +1,15 @@
 <template>
-  <h1>Hello App!</h1>
-  <p><strong>Current route path:</strong> {{ $route.fullPath }}</p>
-  <nav class="grid grid-cols-1">
-    <RouterLink to="/stock-config" class="bg-blue-300">Go to Stock Config </RouterLink>
-    <RouterLink to="/shopping-list">Go to Shopping List</RouterLink>
+  <nav class="grid grid-cols-2 bg-nav-background py-1 px-4">
+    <RouterLink to="/stock-config" class="text-center"><MdiIcon icon="cog" size="lg" /></RouterLink>
+    <RouterLink to="/shopping-list" class="text-center"
+      ><MdiIcon icon="shopping-cart" size="lg"
+    /></RouterLink>
   </nav>
-  <main>
+  <main class="px-4 py-6">
     <RouterView />
   </main>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import MdiIcon from "./components/base/MdiIcon.vue"
+</script>
