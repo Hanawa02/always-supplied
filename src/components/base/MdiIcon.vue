@@ -1,10 +1,10 @@
 <template>
-  <div class="flex-inline w-fit items-center">
+  <component :is="tag" class="flex-inline w-fit items-center">
     <div
       :class="['icon-base', sizeClass]"
       :style="{ '--un-icon': `url('https://api.iconify.design/mdi:${icon}.svg')` }"
     ></div>
-  </div>
+  </component>
 </template>
 
 <script setup lang="ts">
@@ -22,9 +22,10 @@ const SIZE_CLASSES: Record<Size, string> = {
 }
 interface IProps {
   icon: string
+  tag?: keyof HTMLElementTagNameMap
   size?: Size
 }
-const props = withDefaults(defineProps<IProps>(), { size: "md" })
+const props = withDefaults(defineProps<IProps>(), { size: "md", tag: "div" })
 
 const sizeClass = computed(() => SIZE_CLASSES[props.size])
 </script>
