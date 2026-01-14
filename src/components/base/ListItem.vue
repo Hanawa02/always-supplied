@@ -1,9 +1,11 @@
 <template>
+  <!-- TODO: add event on touch, long press, double click -->
   <button
     type="button"
     @click="onButtonClick"
+    @touchend="onButtonTouch"
     :class="[
-      'flex items-center aspect-5/4 relative bg-primary-200  rounded-md p-3 text-center shadow leading-[1.25]',
+      'flex items-center aspect-6/4 relative bg-primary-200  rounded-md p-3 text-center shadow leading-[1.25]',
       'lg:hover:bg-primary-300 lg:hover:cursor-pointer',
     ]"
   >
@@ -33,10 +35,16 @@ const showQuantity = computed(() => props.quantity > 1)
 
 const emit = defineEmits<{
   (e: "clicked", id: string): void
+  (e: "touched", id: string): void
 }>()
 
 const onButtonClick = () => {
   // TypeScript will error here if you pass a string instead of a number
   emit("clicked", props.id)
+}
+
+const onButtonTouch = () => {
+  // TypeScript will error here if you pass a string instead of a number
+  emit("touched", props.id)
 }
 </script>

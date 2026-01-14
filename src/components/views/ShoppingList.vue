@@ -1,7 +1,7 @@
 <template>
   <div class="mb-4">Shopping List View</div>
 
-  <ul class="grid grid-cols-3 gap-2 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-12 mb-12">
+  <ul class="grid grid-cols-3 gap-3 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-12 mb-12">
     <li v-for="item of fakeList" :key="item.name">
       <ShoppingListItem
         class="w-full"
@@ -21,8 +21,8 @@
 </template>
 
 <script setup lang="ts">
-import ShoppingListAddForm from "../shopping-list/ShoppingListAddForm.vue"
-import ShoppingListItem from "../shopping-list/ShoppingListItem.vue"
+import ShoppingListAddForm from "~/components/shopping-list/ShoppingListAddForm.vue"
+import ShoppingListItem from "~/components/base/ListItem.vue"
 
 const fakeList = [
   { name: "Curry Mango Sauce", quantity: 1 },
@@ -30,29 +30,10 @@ const fakeList = [
   { name: "Joghurt Monte", quantity: 4 },
   { name: "Ketchup", quantity: 1 },
   { name: "Chicken Fillets", quantity: 2 },
-  { name: "SomeTe", quantity: 6 },
-  { name: "SomeTex", quantity: 7 },
-  { name: "SomeText", quantity: 8 },
-  { name: "SomeTextL", quantity: 9 },
-  { name: "SomeTextLo", quantity: 10 },
-  { name: "SomeTextLon", quantity: 11 },
-  { name: "SomeTextLong", quantity: 12 },
-  { name: "SomeTextLongText", quantity: 16 },
-  { name: "Somereallylongnonstoptext with extra text", quantity: 16 },
-  { name: "Curry Mango Sauce", quantity: 1 },
-  { name: "Salmon for bread", quantity: 1 },
-  { name: "Joghurt Monte", quantity: 4 },
-  { name: "Ketchup", quantity: 1 },
-  { name: "Chicken Fillets", quantity: 2 },
-  { name: "SomeTe", quantity: 6 },
-  { name: "SomeTex", quantity: 7 },
-  { name: "SomeText", quantity: 8 },
-  { name: "SomeTextL", quantity: 9 },
-  { name: "SomeTextLo", quantity: 10 },
-  { name: "SomeTextLon", quantity: 11 },
-  { name: "SomeTextLong", quantity: 12 },
-  { name: "SomeTextLongText", quantity: 16 },
-  { name: "Somereallylongnonstoptext with extra text", quantity: 16 },
+  { name: "Potatoes", quantity: 6 },
+  { name: "Strawberry", quantity: 7 },
+  { name: "Cola", quantity: 8 },
+  { name: "Water", quantity: 9 },
 ]
 
 const handleClicked = (id: string) => {
