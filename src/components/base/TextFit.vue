@@ -10,9 +10,11 @@
 </template>
 
 <script setup lang="ts">
+import { useResizeObserver } from "@vueuse/core"
 import { onMounted, onUpdated, ref, useTemplateRef } from "vue"
 
 const container = useTemplateRef("container")
+const currentWidth = ref(0)
 
 const dynamicFactor = ref(1)
 
@@ -23,18 +25,33 @@ onMounted(() => {
 onUpdated(() => {
   updateFontSize()
 })
+useResizeObserver(container, (entries) => {
+  const entry = entries[0]
+  if (!entry) {
+    return
+  }
 
-function updateFontSize() {
+  const { width } = entry?.contentRect
+
+  const updateMode = currentWidth.value < width ? "increasing" : "decreasing"
+  updateFontSize(updateMode)
+})
+
+function updateFontSize(updateMode: "increasing" | "decreasing" = "decreasing") {
   const target = container.value as HTMLDivElement
+
+  if (target == null) return
 
   const scrollHeight = target?.scrollHeight
   const scrollWidth = target?.scrollWidth
 
-  const maxHeight = target.clientHeight
-  const maxWidth = target.clientWidth
+  const maxHeight = target?.clientHeight
+  const maxWidth = target?.clientWidth
 
-  if (target && (scrollHeight > maxHeight || scrollWidth > maxWidth)) {
+  if (scrollHeight > maxHeight || scrollWidth > maxWidth) {
     dynamicFactor.value = dynamicFactor.value - 0.05
+  } else if (updateMode === "increasing") {
+    dynamicFactor.value = dynamicFactor.value + 0.05
   }
 }
 </script>
