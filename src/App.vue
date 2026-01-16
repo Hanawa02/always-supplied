@@ -8,8 +8,10 @@
   <main class="px-4 py-6">
     <RouterView />
   </main>
+  <AddToShoppingListModal />
 </template>
 
 <script setup lang="ts">
-import MdiIcon from "./components/base/MdiIcon.vue"
+import MdiIcon from "~/components/base/MdiIcon.vue"
+import AddToShoppingListModal from "~/components/shopping-list/AddToShoppingListModal.vue"
 </script>

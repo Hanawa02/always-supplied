@@ -1,6 +1,5 @@
 <template>
   <div class="mb-4">Stock Config View</div>
-
   <div
     :class="{
       'mb-12': mode === 'controls',
@@ -59,6 +58,10 @@ import StockConfigAddItemForm from "~/components/stock-config/StockConfigAddItem
 import StockConfigAddAreaForm from "~/components/stock-config/StockConfigAddAreaForm.vue"
 import BaseButton from "~/components/base/BaseButton.vue"
 import MdiIcon from "../base/MdiIcon.vue"
+import { useShoppingListModalStore } from "~/stores/shopping-list-modal.store"
+import type { ShoppingItem } from "~/types/shopping-item"
+
+const store = useShoppingListModalStore()
 
 type Mode = "controls" | "addItem" | "addArea"
 const mode = ref<Mode>("controls")
@@ -129,8 +132,9 @@ const itemsPerArea = computed(() => {
   return result
 })
 
-const handleClicked = (id: string) => {
-  console.info("Item clicked:", id)
+const handleClicked = (item: ShoppingItem) => {
+  store.open(item)
+  console.info("Item clicked:", item)
 }
 
 const setMode = (newMode: Mode) => {

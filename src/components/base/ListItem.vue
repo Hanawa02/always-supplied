@@ -26,25 +26,25 @@ import TextFit from "~/components/base/TextFit.vue"
 interface IProps {
   id: string
   name: string
-  quantity?: number
+  quantity: number
 }
 
-const props = withDefaults(defineProps<IProps>(), { quantity: 1 })
+const props = defineProps<IProps>()
 
 const showQuantity = computed(() => props.quantity > 1)
 
 const emit = defineEmits<{
-  (e: "clicked", id: string): void
-  (e: "touched", id: string): void
+  (e: "clicked", item: IProps): void
+  (e: "touched", item: IProps): void
 }>()
 
 const onButtonClick = () => {
   // TypeScript will error here if you pass a string instead of a number
-  emit("clicked", props.id)
+  emit("clicked", props)
 }
 
 const onButtonTouch = () => {
   // TypeScript will error here if you pass a string instead of a number
-  emit("touched", props.id)
+  emit("touched", props)
 }
 </script>
