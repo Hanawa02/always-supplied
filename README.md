@@ -2,7 +2,6 @@
 
 TODOs:
 
-- add translation (paraglide)
 - CI/CD (deploy for testing on phone)
 - add mobile DB integration
 - add tailwind merge part to clsx handling (should I do that? we don't use tailwind itself :thinking:)
