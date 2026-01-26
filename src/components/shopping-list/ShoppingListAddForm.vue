@@ -4,7 +4,7 @@
       v-model="itemName"
       v-bind="itemNameProps"
       id="itemName"
-      placeholder="e.g. Apples"
+      :placeholder="common_shopping_item_name_placeholder()"
       class="border rounded p-2 w-full"
       :class="{ 'border-red-500': errors.itemName }"
     />
@@ -33,6 +33,14 @@ import { toTypedSchema } from "@vee-validate/zod"
 import * as z from "zod"
 import MdiIcon from "~/components/base/MdiIcon.vue"
 import { UiInput } from "~/components/ui"
+import {
+  common_shopping_item_name_placeholder,
+  common_form_errors_name_required,
+  common_form_errors_name_too_long,
+  common_form_errors_quantity_number,
+  common_form_errors_quantity_min,
+  common_form_errors_quantity_max,
+} from "~translations"
 
 type FormValues = {
   itemName: string
@@ -42,11 +50,14 @@ type FormValues = {
 // 1. Define your schema with Zod
 const schema = toTypedSchema(
   z.object({
-    itemName: z.string().min(1, "Item name is required").max(50, "Name too long"),
+    itemName: z
+      .string()
+      .min(1, common_form_errors_name_required())
+      .max(50, common_form_errors_name_too_long()),
     quantity: z.coerce
-      .number({ message: "Must be a number" })
-      .min(1, "Quantity must be at least 1")
-      .max(999, "Cannot exceed 999 units"),
+      .number({ message: common_form_errors_quantity_number() })
+      .min(1, common_form_errors_quantity_min())
+      .max(999, common_form_errors_quantity_max()),
   }),
 )
 

@@ -9,12 +9,12 @@
       'lg:hover:bg-primary-300 lg:hover:cursor-pointer',
     ]"
   >
-    <TextFit>{{ name }}</TextFit>
+    <TextFit>{{ item.name }}</TextFit>
     <div
       v-if="showQuantity"
       class="absolute top-0.5 right-0.5 text-[0.65rem] bg-white rounded-full w-4 h-4 flex items-center justify-center"
     >
-      {{ quantity }}
+      {{ item.quantity }}
     </div>
   </button>
 </template>
@@ -22,29 +22,28 @@
 <script setup lang="ts">
 import { computed } from "vue"
 import TextFit from "~/components/base/TextFit.vue"
+import type { ShoppingItem } from "~/types/shopping-item"
 
 interface IProps {
-  id: string
-  name: string
-  quantity: number
+  item: ShoppingItem
 }
 
 const props = defineProps<IProps>()
 
-const showQuantity = computed(() => props.quantity > 1)
+const showQuantity = computed(() => props.item.quantity > 1)
 
 const emit = defineEmits<{
-  (e: "clicked", item: IProps): void
-  (e: "touched", item: IProps): void
+  (e: "clicked", item: ShoppingItem): void
+  (e: "touched", item: ShoppingItem): void
 }>()
 
 const onButtonClick = () => {
   // TypeScript will error here if you pass a string instead of a number
-  emit("clicked", props)
+  emit("clicked", props.item)
 }
 
 const onButtonTouch = () => {
   // TypeScript will error here if you pass a string instead of a number
-  emit("touched", props)
+  emit("touched", props.item)
 }
 </script>

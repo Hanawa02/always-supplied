@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-4">Stock Config View</div>
+  <div class="mb-4">{{ stock_config_title() }}</div>
   <div
     :class="{
       'mb-12': mode === 'controls',
@@ -11,13 +11,7 @@
       <h2 class="font-semibold border-b mb-2 border-gray-400 text-primary-900">{{ area }}</h2>
       <ul class="grid grid-cols-3 gap-3 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-12 mb-6">
         <li v-for="item of itemsPerArea[area]" :key="item.name">
-          <ShoppingListItem
-            class="w-full"
-            :id="item.name"
-            :name="item.name"
-            :quantity="item.quantity"
-            @clicked="handleClicked"
-          />
+          <ListItem class="w-full" :item="item" @clicked="handleClicked" />
         </li>
       </ul>
     </div>
@@ -40,10 +34,12 @@
         />
       </div>
       <div v-if="mode === 'controls'" class="flex gap-4">
-        <BaseButton class="w-full" variant="outline" @click="setMode('addArea')"
-          >Add Area</BaseButton
-        >
-        <BaseButton class="w-full" @click="setMode('addItem')">Add Item</BaseButton>
+        <BaseButton class="w-full" variant="outline" @click="setMode('addArea')">{{
+          stock_config_add_area()
+        }}</BaseButton>
+        <BaseButton class="w-full" @click="setMode('addItem')">{{
+          stock_config_add_item()
+        }}</BaseButton>
       </div>
       <StockConfigAddItemForm v-if="mode === 'addItem'" />
       <StockConfigAddAreaForm v-if="mode === 'addArea'"></StockConfigAddAreaForm>
@@ -53,13 +49,15 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue"
-import ShoppingListItem from "~/components/base/ListItem.vue"
+import ListItem from "~/components/base/ListItem.vue"
 import StockConfigAddItemForm from "~/components/stock-config/StockConfigAddItemForm.vue"
 import StockConfigAddAreaForm from "~/components/stock-config/StockConfigAddAreaForm.vue"
 import BaseButton from "~/components/base/BaseButton.vue"
 import MdiIcon from "../base/MdiIcon.vue"
 import { useShoppingListModalStore } from "~/stores/shopping-list-modal.store"
 import type { ShoppingItem } from "~/types/shopping-item"
+
+import { stock_config_title, stock_config_add_area, stock_config_add_item } from "~translations"
 
 const store = useShoppingListModalStore()
 

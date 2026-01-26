@@ -1,0 +1,24 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+
+  "common_cancel": "cancel",
+  "common_add": "add",
+
+  "common_shopping_item_name_placeholder": "e.g. Apples",
+  "common_area_name_placeholder": "e.g. Kitchen",
+
+  "common_form_errors_name_required": "Name is required",
+  "common_form_errors_name_too_long": "Name too long",
+
+  "common_form_errors_quantity_number": "Must be a number",
+  "common_form_errors_quantity_min": "Quantity must be at least 1",
+  "common_form_errors_quantity_max": "Cannot exceed 999 units",
+
+  "add_to_shopping_list_modal_title": "Add to Shopping List",
+
+  "shopping_list_title": "Shopping List",
+
+  "stock_config_title": "What's your ideal stock?",
+  "stock_config_add_area": "Add Area",
+  "stock_config_add_item": "Add Item"
+}

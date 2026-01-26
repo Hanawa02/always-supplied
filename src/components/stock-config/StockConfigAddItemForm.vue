@@ -5,7 +5,7 @@
         v-model="itemName"
         v-bind="itemNameProps"
         id="itemName"
-        placeholder="e.g. Apples"
+        :placeholder="common_shopping_item_name_placeholder()"
         class="border rounded p-2 w-full"
         :class="{ 'border-red-500': errors.itemName }"
       />
@@ -23,7 +23,7 @@
         v-model="area"
         v-bind="areaProps"
         id="area"
-        placeholder="e.g. Bathroom"
+        :placeholder="common_area_name_placeholder()"
         class="border rounded p-2 w-full"
         :class="{ 'border-red-500': errors.area }"
       />
@@ -46,6 +46,7 @@ import { toTypedSchema } from "@vee-validate/zod"
 import * as z from "zod"
 import MdiIcon from "~/components/base/MdiIcon.vue"
 import { UiInput } from "~/components/ui"
+import { common_area_name_placeholder, common_shopping_item_name_placeholder } from "~translations"
 
 type FormValues = {
   itemName: string

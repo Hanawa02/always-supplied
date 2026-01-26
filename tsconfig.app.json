@@ -6,7 +6,9 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
 
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
+      "~translations": ["./src/i18n/generated/messages.js"],
+      "~i18n": ["./src/i18n/generated/runtime.js"]
     }
   }
 }

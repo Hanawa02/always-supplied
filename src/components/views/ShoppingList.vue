@@ -1,15 +1,9 @@
 <template>
-  <div class="mb-4">Shopping List View</div>
+  <div class="mb-4">{{ shopping_list_title() }}</div>
 
   <ul class="grid grid-cols-3 gap-3 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-12 mb-12">
     <li v-for="item of fakeList" :key="item.name">
-      <ShoppingListItem
-        class="w-full"
-        :id="item.name"
-        :name="item.name"
-        :quantity="item.quantity"
-        @clicked="handleClicked"
-      />
+      <ListItem class="w-full" :item="item" @clicked="handleClicked" />
     </li>
   </ul>
 
@@ -22,7 +16,9 @@
 
 <script setup lang="ts">
 import ShoppingListAddForm from "~/components/shopping-list/ShoppingListAddForm.vue"
-import ShoppingListItem from "~/components/base/ListItem.vue"
+import ListItem from "~/components/base/ListItem.vue"
+import { shopping_list_title } from "~translations"
+import type { ShoppingItem } from "~/types/shopping-item"
 
 const fakeList = [
   { name: "Curry Mango Sauce", quantity: 1 },
@@ -36,7 +32,7 @@ const fakeList = [
   { name: "Water", quantity: 9 },
 ]
 
-const handleClicked = (id: string) => {
-  console.info("Item clicked:", id)
+const handleClicked = (item: ShoppingItem) => {
+  console.info("Item clicked:", item)
 }
 </script>

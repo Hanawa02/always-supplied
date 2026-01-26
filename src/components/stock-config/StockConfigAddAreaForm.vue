@@ -25,6 +25,7 @@ import { toTypedSchema } from "@vee-validate/zod"
 import * as z from "zod"
 import MdiIcon from "~/components/base/MdiIcon.vue"
 import { UiInput } from "~/components/ui"
+import { common_form_errors_name_required, common_form_errors_name_too_long } from "~translations"
 
 type FormValues = {
   area: string
@@ -33,7 +34,10 @@ type FormValues = {
 // 1. Define your schema with Zod
 const schema = toTypedSchema(
   z.object({
-    area: z.string().min(1, "Area name is required").max(50, "Name too long"),
+    area: z
+      .string()
+      .min(1, common_form_errors_name_required())
+      .max(50, common_form_errors_name_too_long()),
   }),
 )
 
