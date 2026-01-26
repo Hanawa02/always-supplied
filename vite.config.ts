@@ -13,6 +13,7 @@ export default defineConfig({
       project: "./project.inlang",
       outdir: "./src/i18n/generated",
       strategy: ["preferredLanguage", "cookie", "baseLocale"],
+      emitTsDeclarations: true,
     }),
     vue(),
     vueDevTools(),
