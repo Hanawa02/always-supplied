@@ -6,7 +6,72 @@ TODOs:
 - add tailwind merge part to clsx handling (should I do that? we don't use tailwind itself :thinking:)
 -
 
-## Frameworks used
+## Data Structure
+
+- pk: primary key
+- fk: foreign key
+- ?: nullable
+- \*: part of index / unique restrain
+
+### Stock Items
+
+- id [pk]\*
+- name
+- quantity
+- area id [fk]
+
+### Shopping Items
+
+- id [pk]\*
+- stock item id? [fk]
+- name
+- quantity
+
+### Building
+
+- id [pk]\*
+- name
+
+### User
+
+- id [pk]\*
+- username
+- password
+
+### Area
+
+- id [pk]\*
+- name
+
+### Building Users
+
+- building id [fk]\*
+- user id [fk]\*
+
+### Building Stock
+
+- building id [fk]\*
+- stock item id [fk]\*
+
+### Building Shopping List
+
+- building id [fk]\*
+- shopping item id [fk]\*
+
+### Building Areas
+
+- building id [fk]\*
+- area id [fk]\*
+
+### Logs
+
+- id
+- building id [fk]
+- user id [fk]
+- log message
+- tags
+
+### Frameworks used
 
 - Vite
 - Vue3
