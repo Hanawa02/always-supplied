@@ -19,6 +19,8 @@ import ShoppingListAddForm from "~/components/shopping-list/ShoppingListAddForm.
 import ListItem from "~/components/base/ListItem.vue"
 import { shopping_list_title } from "~translations"
 import type { ShoppingItem } from "~/types/shopping-item"
+import { useBuildingsStore } from "~/stores/buildings.store"
+import { onMounted } from "vue"
 
 const fakeList = [
   { name: "Curry Mango Sauce", quantity: 1 },
@@ -35,4 +37,9 @@ const fakeList = [
 const handleClicked = (item: ShoppingItem) => {
   console.info("Item clicked:", item)
 }
+const buildingsStore = useBuildingsStore()
+onMounted(async () => {
+  await buildingsStore.fetchBuildings()
+  await buildingsStore.addBuilding("Test Building")
+})
 </script>
