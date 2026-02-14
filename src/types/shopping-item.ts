@@ -1,5 +1,5 @@
-export type ShoppingItem = {
-  id?: string
-  name: string
-  quantity: number
+import type { BaseItem } from "./base-item"
+
+export interface ShoppingItem extends BaseItem {
+  stockItemId: string
 }
