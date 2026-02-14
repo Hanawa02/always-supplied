@@ -20,6 +20,7 @@
     "i18n-compile": "npx @inlang/paraglide-js compile --project ./project.inlang --outdir ./src/i18n/generated"
   },
   "dependencies": {
+    "@sqlite.org/sqlite-wasm": "^3.51.2-build6",
     "@vee-validate/zod": "^4.15.1",
     "@vueuse/core": "^14.1.0",
     "clsx": "^2.1.1",
@@ -57,6 +58,7 @@
     "typescript": "~5.9.3",
     "unocss": "^66.5.12",
     "vite": "^7.3.0",
+    "vite-plugin-pwa": "^1.2.0",
     "vite-plugin-vue-devtools": "^8.0.5",
     "vitest": "^4.0.16",
     "vue-tsc": "^3.2.1"
